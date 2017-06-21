@@ -10,8 +10,8 @@
 clc; clear ; %close all;
 
 % Specify directories
-codeDir = 'Users/Shared/Matlab/Experiments/ColorMaterial/code/';
-mainDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/'; 
+codeDir = fullfile(tbLocateProject('ColorMaterial'),'code'); %'Users/Shared/Matlab/Experiments/ColorMaterial/code/';
+mainDir = getpref('ColorMaterial',mainDir); %'/Users/ana/Dropbox (Aguirre-Brainard Lab)/'; 
 whichExperiment = 'E1P2';
 materialCoords  = [-3:1:3];
 colorCoords  =  [-3:1:3];
