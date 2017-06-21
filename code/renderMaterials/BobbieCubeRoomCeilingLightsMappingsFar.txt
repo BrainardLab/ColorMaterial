@@ -1,0 +1,58 @@
+% flip the camera handedness to match Blender-Collada output to Mitsuba and PBRT
+Collada {
+    Camera:scale|sid=scale = -1 1 1
+
+
+}
+
+% materials
+Generic {
+	backWallMat-material:material:matte
+	backWallMat-material:diffuseReflectance.spectrum = mccBabel-8.spd
+    backWallMat-material:ensureEnergyConservation.boolean = true
+
+	CubeMat-material:material:matte
+	CubeMat-material:diffuseReflectance.spectrum = (reflectance)
+    CubeMat-material:ensureEnergyConservation.boolean = false
+
+	pedestalMaterial-material:material:matte
+	pedestalMaterial-material:diffuseReflectance.spectrum = mccBabel-8.spd
+    pedestalMaterial-material:ensureEnergyConservation.boolean = true
+
+	roomMaterial-material:material:matte
+	roomMaterial-material:diffuseReflectance.spectrum = mccBabel-8.spd
+    roomMaterial-material:ensureEnergyConservation.boolean = true
+
+	roomMaterial1-material:material:matte
+	roomMaterial1-material:diffuseReflectance.spectrum = mccBabel-4.spd
+    roomMaterial1-material:ensureEnergyConservation.boolean = true
+	
+    roomMaterial2-material:material:matte
+	roomMaterial2-material:diffuseReflectance.spectrum = mccBabel-16.spd
+    roomMaterial2-material:ensureEnergyConservation.boolean = true
+
+    ceiling-material:material:matte
+	ceiling-material:diffuseReflectance.spectrum = mccBabel-4.spd
+
+
+}
+
+
+% lights
+Generic {
+    ceiling-mesh:light:area
+	ceiling-mesh:intensity.spectrum = (illuminant)
+
+
+}
+
+Mitsuba {
+    integrator:integrator:bdpt
+    integrator:maxDepth.integer     = 7
+    integrator:sampleDirect.boolean = true
+    integrator:lightImage.boolean   = true
+
+    Camera-camera_sampler:sampler:ldsampler
+    Camera-camera_sampler:sampleCount.integer  = 1024
+    Camera-camera_sampler:pixelSamples.integer = 2048
+}
