@@ -12,11 +12,11 @@ function ColorMaterialLocalHook
 % You will need to edit the project location and i/o directory locations
 % to match what is true on your computer.
 
-%% Say hello
-fprintf('Running ColorMaterial local hook\n');
-
 %% Define project
 projectName = 'ColorMaterial';
+
+%% Say hello
+fprintf('Running % local hook\n',projectName);
 
 %% Clear out old preferences
 if (ispref(projectName))
