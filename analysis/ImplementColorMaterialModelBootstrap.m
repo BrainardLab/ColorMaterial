@@ -6,6 +6,7 @@ clear; close
 % Specify basic experiment parameters
 whichExperiment = 'Pilot';
 mainDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/';
+codeDir = '/Users/ana/Documents/MATLAB/toolboxes/BrainardLabToolbox/ColorMaterialModel'; 
 switch whichExperiment
     case 'Pilot'
         % Specify other experimental parameters
@@ -29,7 +30,7 @@ switch whichExperiment
 end
 nSubjects = length(subjectList);
 nConditions = length(conditionCode);
-nRepetitions = 100;
+nRepetitions = 1;
 
 %% Set up main params
 params.targetIndex = 4;
@@ -72,12 +73,12 @@ params.whichMethod = 'lookup'; % could be also 'simulate' or 'analytic'
 params.nSimulate = 1000; % for method 'simulate'
 
 % Load lookup table
-load ([codeDir 'colorMaterialInterpolateFunCubiceuclidean.mat'])
+load colorMaterialInterpolateFunCubiceuclidean.mat
 params.F = colorMaterialInterpolatorFunction;
 params.maxPositionValue = max(params.F.GridVectors{1});
 
 % For each subject and each condition, run the model and basic plots
-for s = 1%:nSubjects
+for s = 1:nSubjects
     if strcmp(whichExperiment, 'E1P2FULL')
         load([figAndDataDir '/' subjectList{s} 'SummarizedDataFULL.mat']);
     else
@@ -85,52 +86,17 @@ for s = 1%:nSubjects
     end
     subject{s} = thisSubject; clear thisSubject;
     
-    
     for whichCondition = 1:nConditions
         nTrials = subject{s}.condition{whichCondition}.totalTrials;
-        
-        %         [subject{s}.condition{whichCondition}.returnedParams, ...
-        %             subject{s}.condition{whichCondition}.logLikelyFit, ...
-        %             subject{s}.condition{whichCondition}.predictedProbabilitiesBasedOnSolution] = ...
-        %             FitColorMaterialModelMLDS(pairColorMatchColorCoords, pairMaterialMatchColorCoords,...
-        %             pairColorMatchMaterialCoords, pairMaterialMatchMaterialCoords,...
-        %             subject{s}.condition{whichCondition}.firstChosen , nTrials,params);
-        
         subject{s}.condition{whichCondition}.bootstrapStructure = ...
-            ColorMaterialModelBootstrapData(subject{s}.condition{1}.firstChosenPerTrial,...
+            ColorMaterialModelBootstrapData(subject{s}.condition{whichCondition}.firstChosenPerTrial,...
             nBlocks, nRepetitions, pairInfo, params);
-        
-        [subject{s}.condition{whichCondition}.returnedMaterialMatchColorCoords, ...
-            subject{s}.condition{whichCondition}.returnedColorMatchMaterialCoords, ...
-            subject{s}.condition{whichCondition}.returnedW,...
-            subject{s}.condition{whichCondition}.returnedSigma]  = ColorMaterialModelXToParams(subject{s}.condition{whichCondition}.returnedParams, params);
-        
-        % entry % row % column % first or second
-%         subject{s}.condition{whichCondition}.resizedDataProb = nan(7,7);
-%         subject{s}.condition{whichCondition}.resizedSolutionProb = nan(7,7);
-%         for i = 1:size(trackIndices,1)
-%             entryIndex = trackIndices(i,1);
-%             if trackIndices(i,end) == 1
-%                 subject{s}.condition{whichCondition}.resizedDataProb(trackIndices(i,2), trackIndices(i,3)) = ...
-%                     subject{s}.condition{whichCondition}.pFirstChosen(trackIndices(i,1));
-%                 subject{s}.condition{whichCondition}.resizedSolutionProb(trackIndices(i,2), trackIndices(i,3)) = ...
-%                     subject{s}.condition{whichCondition}.predictedProbabilitiesBasedOnSolution(trackIndices(i,1));
-%             elseif trackIndices(i,end) == 2
-%                 subject{s}.condition{whichCondition}.resizedDataProb(trackIndices(i,2), trackIndices(i,3)) = ...
-%                     1 - subject{s}.condition{whichCondition}.pFirstChosen(trackIndices(i,1));
-%                 subject{s}.condition{whichCondition}.resizedSolutionProb(trackIndices(i,2), trackIndices(i,3)) = ...
-%                     1 - subject{s}.condition{whichCondition}.predictedProbabilitiesBasedOnSolution(trackIndices(i,1));
-%             end
-%         end
-        
-        subject{s}.condition{whichCondition}.rmse= ComputeRealRMSE(subject{s}.condition{whichCondition}.pFirstChosen, ...
-            subject{s}.condition{whichCondition}.predictedProbabilitiesBasedOnSolution');
     end
     thisSubject = subject{s};
     cd (figAndDataDir)
     if strcmp(params.whichWeight, 'weightFixed')
-        save([subjectList{s} 'SolutionBS' num2str(nRepetitions) '-' params.whichWeight '-' num2str(tryWeightValues*10)], 'thisSubject', 'params'); clear thisSubject
+        save([subjectList{s} 'SolutionBS' num2str(nRepetitions) '-' params.whichWeight '-' num2str(tryWeightValues*10) '-' params.whichPositions], 'thisSubject', 'params'); clear thisSubject
     else
-        save([subjectList{s} 'SolutionBS' num2str(nRepetitions) '-' params.whichWeight], 'thisSubject', 'params'); clear thisSubject
+        save([subjectList{s} 'SolutionBS' num2str(nRepetitions) '-' params.whichWeight '-' params.whichPositions], 'thisSubject', 'params'); clear thisSubject
     end
 end
