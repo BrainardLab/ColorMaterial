@@ -1,20 +1,20 @@
-% AnalyzeColorMaterialExperiments
+% AnalyzeColorMaterialExperimentsNew
 % The script extracts the choice patterns and other data needed for
 % modeling and analysis from experimental code.
 %
 % 09/30/16 ar Adapted it from the previous experimental code.
 % 12/06/16 ar Modified, added comments. Made sure it gives the same result
 %             as the origanal code.
+% 07/02/17 ar Reviewed it and added comments. 
 
 % Initialize.
-clc; clear ; %close all;
+clear ; close all;
 
 % Specify directories
 codeDir = fullfile(tbLocateProject('ColorMaterial'),'code'); %'Users/Shared/Matlab/Experiments/ColorMaterial/code/';
-mainDir = getpref('ColorMaterial',mainDir); %'/Users/ana/Dropbox (Aguirre-Brainard Lab)/'; 
-whichExperiment = 'E1P2';
-materialCoords  = [-3:1:3];
-colorCoords  =  [-3:1:3];
+%mainDir = getpref('ColorMaterial',mainDir); %'/Users/ana/Dropbox (Aguirre-Brainard Lab)/'; 
+mainDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/'; 
+whichExperiment = 'E1P2b';
 
 switch whichExperiment
     case 'E1P2'
@@ -25,7 +25,7 @@ switch whichExperiment
         nBlocks = 24;
         conditionCode = {'NC', 'CY', 'CB'};
         dataDir = [mainDir 'CNST_data/ColorMaterial/'];
-        figAndDataDir = [mainDir 'CNST_analysis/ColorMaterial/Experiment1'];
+        figAndDataDir = [mainDir 'CNST_analysis/ColorMaterial/Experiment1/'];
         competitorImageName1 = [11, 14];
         competitorImageName2 = [21, 24];
         
@@ -36,7 +36,7 @@ switch whichExperiment
         nBlocks = 25;
         conditionCode = {'NC'};
         figAndDataDir = [mainDir, 'CNST_analysis/ColorMaterial/Pilot'];
-        dataDir = '/Users/Shared/Matlab/Experiments/ColorMaterial/data/';
+        dataDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/CNST_data/ColorMaterial/';
         competitorImageName1 = [1, 4];
         competitorImageName2 = [6, 9];
         
@@ -47,14 +47,17 @@ switch whichExperiment
         nBlocks = 24;
         conditionCode = {'NC', 'CY', 'CB'};
         dataDir = [mainDir 'CNST_data/ColorMaterial/'];
-        figAndDataDir = [mainDir 'CNST_analysis/ColorMaterial/Experiment1'];
+        figAndDataDir = [mainDir 'CNST_analysis/ColorMaterial/Experiment1/'];
         competitorImageName1 = [11, 14];
         competitorImageName2 = [21, 24];
 end
+
 nSubjects = length(subjectList);
 nConditions  = length(conditionCode);
 colorCoordIndexInName = 2;
 matCoordIndexInName = 4;
+materialCoords  = [-3:1:3];
+colorCoords  =  [-3:1:3];
 
 for s = 1:nSubjects
     subject{s}.Name = subjectList{s};
@@ -67,9 +70,8 @@ for s = 1:nSubjects
         load([dataDir, whichExperiment, '/', subjectList{s}, '/', subjectList{s} '-' whichExperiment, '-', num2str(b), '.mat']);
         subject{s}.block(b) = params;
         subject{s}.nTrialsPerCondition = length(subject{s}.block(b).trial)/nConditions; 
-    
-       
         clear params exp
+        
         for t = 1: length(subject{s}.block(b).trial)
             % Record the number of trials an image was chosen
             % Note: left and right test positions in the exp. are randomized.
@@ -92,12 +94,12 @@ for s = 1:nSubjects
     if strcmp(whichExperiment, 'E1P2')
         % This is the stimulus list. It's the same list we have been using
         % in the experiment.
-        load(['/Users/Shared/Matlab/Experiments/ColorMaterial/code/' subject{s}.Name 'stimulusList.mat']);
+        load([codeDir '/' subject{s}.Name 'stimulusList.mat']);
     elseif strcmp(whichExperiment, 'E1P2b')
-        compList = load(['/Users/Shared/Matlab/Experiments/ColorMaterial/code/' subject{s}.Name 'stimulusList.mat']);
-        load(['/Users/Shared/Matlab/Experiments/ColorMaterial/code/' subject{s}.Name 'stimulusList2b.mat']);
+        compList = load([codeDir '/' subject{s}.Name 'stimulusList.mat']);
+        load([codeDir '/' subject{s}.Name 'stimulusList2b.mat']);
     elseif strcmp(whichExperiment, 'Pilot')
-        load('/Users/Shared/Matlab/Experiments/ColorMaterial/code/PilotImageList.mat')
+        load([codeDir '/PilotImageList.mat'])
         competitorPairs = nchoosek(1:length(imageNames),2);
         for whichCondition = 1:nConditions
             for i = 1:length(competitorPairs) % reconstruct the image names, using the same logic as in the exp. code.
@@ -116,6 +118,7 @@ for s = 1:nSubjects
         subject{s}.condition{whichCondition}.totalTrials = tempTotalTrialsChosen(startFrom:endAt);
         subject{s}.condition{whichCondition}.firstChosenPerTrial = subject{s}.firstChosenAcrossTrials(startFrom:endAt,:);
         
+        % Get the pairs. For each stimulus image, recover which color-material competitors were presented 
         for i = 1:length(subject{s}.condition{whichCondition}.imageList)
             if whichCondition == 1 && s == 1
                 firstComp = subject{s}.condition{whichCondition}.imageList{i}(competitorImageName1(1):competitorImageName1(2));
@@ -126,10 +129,10 @@ for s = 1:nSubjects
                 colorMatchMaterialCoordIndex(i) = str2num(firstComp(matCoordIndexInName));
                 materialMatchMaterialCoordIndex(i) = str2num(secondComp(matCoordIndexInName));
                 
-                colorMatchColorCoord(i) = colorCoords(colorMatchColorCoordIndex(i));
-                materialMatchColorCoord(i) = colorCoords(materialMatchColorCoordIndex(i));
-                colorMatchMaterialCoord(i) = materialCoords(colorMatchMaterialCoordIndex(i));
-                materialMatchMaterialCoord(i) = materialCoords(materialMatchMaterialCoordIndex(i));
+                pairColorMatchColorCoords(i) = colorCoords(colorMatchColorCoordIndex(i));
+                pairMaterialMatchColorCoords(i) = colorCoords(materialMatchColorCoordIndex(i));
+                pairColorMatchMaterialCoords(i) = materialCoords(colorMatchMaterialCoordIndex(i));
+                pairMaterialMatchMaterialCoords(i) = materialCoords(materialMatchMaterialCoordIndex(i));
             end
         end
     end
@@ -139,12 +142,9 @@ for s = 1:nSubjects
     for whichCondition = 1:nConditions
         subject{s}.condition{whichCondition}.pColorMatchChosen = NaN(nLevels, nLevels);
         subject{s}.condition{whichCondition}.colorMatchChosen = NaN(nLevels, nLevels);
-        subject{s}.condition{whichCondition}.pMaterialMatchChosen = NaN(nLevels, nLevels);
-        subject{s}.condition{whichCondition}.materialMatchChosen = NaN(nLevels, nLevels);
-        subject{s}.condition{whichCondition}.totalTrialsColorMatch = NaN(nLevels, nLevels);
         trackIndices = [];
-        
-        %% Got to here.
+       
+        % Create the relevant strings
         for whichMaterialOfTheColorMatch = 1:nLevels % for each of these material changes
             for whichColorOfTheMaterialMatch = 1:nLevels % and each of these color levels
                 if strcmp(whichExperiment, 'E1P2') || strcmp(whichExperiment, 'E1P2b')
@@ -157,17 +157,8 @@ for s = 1:nSubjects
                 colorMatchFirstString = {[colorMatchString '-' materialMatchString]}; % search for these strings.
                 colorMatchSecondString = {[materialMatchString '-' colorMatchString]};
                 
-                % Record pairs of stimuli. This will set up matrices of indices that will allow us to relate
-                % entries of the response matrix to the indices of the
-                % stimuli and the reponse matrix.We only need to do this on
-                % the first condition and first subject
-                % since it is the same for each condition/subject.
-                
+                % Search through the stimulus list. 
                 for i = 1:length(subject{s}.condition{whichCondition}.imageList)
-                    % Set up a total number of trials matrix for both
-                    % color- and material-match-based modeling.
-                    subject{s}.condition{whichCondition}.totalTrialsColorMatch(whichColorOfTheMaterialMatch,whichMaterialOfTheColorMatch) = ...
-                        subject{s}.condition{whichCondition}.totalTrials(i);
                     
                     clear tempString
                     if strcmp(whichExperiment, 'E1P2')
@@ -185,13 +176,16 @@ for s = 1:nSubjects
                         if strcmp(tempString(1:length(colorMatchString)), colorMatchString)
                             trackIndices = [trackIndices; i, whichColorOfTheMaterialMatch,whichMaterialOfTheColorMatch, 1];
                             % if the color match string is first
-                            subject{s}.condition{whichCondition}.pColorMatchChosen(whichColorOfTheMaterialMatch,whichMaterialOfTheColorMatch) = subject{s}.condition{whichCondition}.pFirstChosen(i);
-                            subject{s}.condition{whichCondition}.colorMatchChosen(whichColorOfTheMaterialMatch,whichMaterialOfTheColorMatch) = subject{s}.condition{whichCondition}.firstChosen(i);
+                            subject{s}.condition{whichCondition}.pColorMatchChosen(whichColorOfTheMaterialMatch,whichMaterialOfTheColorMatch) = ...
+                                subject{s}.condition{whichCondition}.pFirstChosen(i);
+                            subject{s}.condition{whichCondition}.colorMatchChosen(whichColorOfTheMaterialMatch,whichMaterialOfTheColorMatch) = ...
+                                subject{s}.condition{whichCondition}.firstChosen(i);
                             
                         elseif strcmp(tempString((end-length(colorMatchString)+1):end), colorMatchString)
-                            trackIndices = [trackIndices; i, whichColorOfTheMaterialMatch,whichMaterialOfTheColorMatch, 2];
+                            trackIndices = [trackIndices; i, whichColorOfTheMaterialMatch, whichMaterialOfTheColorMatch, 2];
                             % if color match string is second
-                            subject{s}.condition{whichCondition}.pColorMatchChosen(whichColorOfTheMaterialMatch,whichMaterialOfTheColorMatch) = 1-subject{s}.condition{whichCondition}.pFirstChosen(i);
+                            subject{s}.condition{whichCondition}.pColorMatchChosen(whichColorOfTheMaterialMatch,whichMaterialOfTheColorMatch) = ...
+                                1-subject{s}.condition{whichCondition}.pFirstChosen(i);
                             subject{s}.condition{whichCondition}.colorMatchChosen(whichColorOfTheMaterialMatch,whichMaterialOfTheColorMatch) = ...
                                 subject{s}.condition{whichCondition}.totalTrials(i)-subject{s}.condition{whichCondition}.firstChosen(i);
                         else
@@ -202,17 +196,6 @@ for s = 1:nSubjects
                 clear targetString otherString whichString1 whichString2
             end
         end
-        
-%         % implement fix for a data point that is not run in the pilot
-%         % experiment
-%         if strcmp(whichExperiment, 'Pilot')
-%             nanIndex = ~isnan(subject{s}.condition{whichCondition}.colorMatchChosen);
-%             
-%             subject{s}.condition{whichCondition}.colorMatchChosen = subject{s}.condition{whichCondition}.colorMatchChosen(nanIndex);
-%             subject{s}.condition{whichCondition}.totalTrialsColorMatch = subject{s}.condition{whichCondition}.totalTrialsColorMatch(nanIndex);
-%             subject{s}.condition{whichCondition}.pColorMatchChosen = subject{s}.condition{whichCondition}.pColorMatchChosen(nanIndex);
-%             
-%         end
     end
     % Save summarized results.
     cd (figAndDataDir)
@@ -223,10 +206,6 @@ for s = 1:nSubjects
         save([subject{s}.Name, 'SummarizedData'], 'thisSubject');
     end
 end
-pairColorMatchColorCoords = colorMatchColorCoord;
-pairMaterialMatchColorCoords = materialMatchColorCoord;
-pairColorMatchMaterialCoords = colorMatchMaterialCoord;
-pairMaterialMatchMaterialCoords  = materialMatchMaterialCoord;
 
 % Also save pair indices for each experiment.
 if strcmp(whichExperiment, 'E1P2')
