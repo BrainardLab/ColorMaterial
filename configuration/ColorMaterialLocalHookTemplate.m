@@ -40,7 +40,7 @@ switch (sysInfo.localHostName)
             % Could put user specific things in, but at the moment generic
             % is good enough.
             otherwise
-                baseDir = ['/Users/' sysInfo.userShortName 'Dropbox (Aguirre-Brainard Lab)'];
+                baseDir = fullfile('/Users/',sysInfo.userShortName,'Dropbox (Aguirre-Brainard Lab)');
         end
 end
 
