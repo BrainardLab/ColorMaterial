@@ -16,7 +16,7 @@ function ColorMaterialLocalHook
 projectName = 'ColorMaterial';
 
 %% Say hello
-fprintf('Running % local hook\n',projectName);
+fprintf('Running %s local hook\n',projectName);
 
 %% Clear out old preferences
 if (ispref(projectName))
@@ -40,7 +40,7 @@ switch (sysInfo.localHostName)
             % Could put user specific things in, but at the moment generic
             % is good enough.
             otherwise
-                baseDir = ['/Users/' sysInfo.userShortName 'Dropbox (Aguirre-Brainard Lab)'];
+                baseDir = fullfile('/Users/',sysInfo.userShortName,'Dropbox (Aguirre-Brainard Lab)');
         end
 end
 
@@ -48,6 +48,9 @@ end
 %% Set preferences for project output
 %
 % This will need to be locally configured.
-setpref(projectName,'mainDir',baseDir);
+setpref('ColorMaterial','simulatedDataDir',fullfile(projectBaseDir,'SimulatedData'));
+setpref('ColorMaterial','mainExpDir',projectBaseDir);
+setpref('ColorMaterial','analysisDir',fullfile(baseDir,'CNST_analysis','ColorMaterial'));
+
 
 
