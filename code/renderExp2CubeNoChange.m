@@ -7,7 +7,7 @@ setpref('RenderToolbox3', 'workingFolder', '/Users1/Shared/Matlab/Experiments/Bl
 
 % renderDir
 currentDir = pwd;
-renderDir = '/Users/Shared/Matlab/Experiments/ColorMaterial/code/renderMaterials';
+renderDir = '/Users/radonjic/Documents/MATLAB/projects/Experiments/ColorMaterial/code';
 addpath(genpath(renderDir));
 
 % use this scene and condition file.
@@ -21,7 +21,7 @@ hints.renderer = 'Mitsuba';
 hints.recipeName = ['ColorSetBlobbyExp2-' date];
 ChangeToWorkingFolder(hints);
 
-isScale = 1;
+isScale = true;
 toneMapFactor = 10;
 nConditions = 1;
 names = {'imageName', 'illuminant', 'reflectance', 'alpha'};
