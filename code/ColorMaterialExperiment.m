@@ -10,7 +10,7 @@ function ColorMaterialExperiment
 exp.baseDir = fileparts(which('ColorMaterialExperiment'));
 exp.dataDir = '/Users/colorlab/Dropbox (Aguirre-Brainard Lab)/CNST_data/ColorMaterial/';
 % Figure out the data directory path.  Instead of the old way of finding the data directory on the same level, better to simply provide it.
-exp.stimulusDir = '/Users/colorlab/Dropbox (Aguirre-Brainard Lab)/CNST_materials/ColorMaterial';
+exp.stimulusDir = '/Users/colorlab/Dropbox (Aguirre-Brainard Lab)/CNST_materials/ColorMaterial/E3';
 
 
 % Dynamically add the code to the path if it isn't already on it.
