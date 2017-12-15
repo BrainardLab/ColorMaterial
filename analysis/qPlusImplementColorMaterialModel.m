@@ -5,13 +5,13 @@ clear; close
 
 % Specify basic experiment parameters
 whichExperiment = 'E3';
-mainDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/';
+mainDir = '/Users/radonjic/Dropbox (Aguirre-Brainard Lab)/';
 dataDir = [mainDir 'CNST_data/ColorMaterial/E3'];
 analysisDir = [mainDir 'CNST_analysis/ColorMaterial/E3']; 
 
 % Exp parameters
 % Specify other experimental parameters
-subjectList = {'ar', 'dhb'};
+subjectList = {'ar1', 'ar2'};
 conditionCode = {'NC'};
 nSubjects = length(subjectList);
 nConditions = length(conditionCode); 
@@ -28,13 +28,14 @@ params = getqPlusPilotModelingParams(params);
 % What sort of position fitting ('full', 'smoothOrder').
 params.whichPositions = 'smoothSpacing';
 if strcmp(params.whichPositions, 'smoothSpacing')
-    params.smoothOrder = 1;
+    params.smoothOrder = 2;
 end
 % Does material/color weight vary in fit? ('weightVary', 'weightFixed').
 params.whichWeight = 'weightVary';
 
 % For each subject and each condition, run the model and basic plots
 for s = 1:nSubjects
+    
     load([analysisDir '/' subjectList{s} 'SummarizedqPlusData.mat']);
     subject{s} = thisSubject; clear thisSubject; 
     
@@ -51,10 +52,10 @@ for s = 1:nSubjects
         [subject{s}.condition{c}.returnedMaterialMatchColorCoords, ...
             subject{s}.condition{c}.returnedColorMatchMaterialCoords, ...
             subject{s}.condition{c}.returnedW,...
-            subject{s}.condition{c}.returnedSigma]  = ColorMaterialModelXToParams(subject{s}.condition{whichCondition}.returnedParams, params);
+            subject{s}.condition{c}.returnedSigma]  = ColorMaterialModelXToParams(subject{s}.condition{c}.returnedParams, params);
     end
     
     thisSubject = subject{s};
     cd (analysisDir)
-    save([subjectList{s} 'SummarizedqPlusData'], 'thisSubject', 'params'); clear thisSubject
+    save([subjectList{s} params.whichPositions,  'Fit'], 'thisSubject', 'params'); clear thisSubject
 end

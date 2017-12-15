@@ -5,7 +5,7 @@ clear; close
 
 % Specify basic experiment parameters
 whichExperiment = 'E3';
-mainDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/';
+mainDir = '/Users/radonjic/Dropbox (Aguirre-Brainard Lab)/';
 dataDir = [mainDir 'CNST_data/ColorMaterial/E3'];
 analysisDir = [mainDir 'CNST_analysis/ColorMaterial/E3']; 
 
@@ -33,7 +33,7 @@ for s = 1:nSubjects
         clear tempSubj
     end
     subject{s}.condition{c}.nTrials = size(subject{s}.condition{c}.trialData,1);
-    
+    subject{s}.condition{c}.rawTrialData = subject{s}.condition{c}.trialData; 
     % Concatenate the trials. 
     % For each trial, check if it repeats (by looping through all the other
     % trials). Save the *target* trial information, and add onto this, as
@@ -90,7 +90,7 @@ for s = 1:nSubjects
     subject{s}.condition{c}.pairColorMatchMaterialCoords = subject{s}.condition{c}.newTrialData(:,2);
     subject{s}.condition{c}.pairMaterialMatchMaterialCoords = subject{s}.condition{c}.newTrialData(:,4);
     subject{s}.condition{c}.firstChosen = subject{s}.condition{c}.newTrialData(:,5);
-    subject{s}.condition{c}.nTrials = subject{s}.condition{c}.newTrialData(:,6);
+    subject{s}.condition{c}.newNTrials = subject{s}.condition{c}.newTrialData(:,6);
     subject{s}.condition{c}.pFirstChosen = subject{s}.condition{c}.firstChosen./...
         subject{s}.condition{c}.nTrials; 
     end
