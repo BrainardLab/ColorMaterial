@@ -5,15 +5,21 @@ clear; close
 
 % Specify basic experiment parameters
 whichExperiment = 'E3';
-mainDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/';
-dataDir = [mainDir 'CNST_data/ColorMaterial/E3'];
-analysisDir = [mainDir 'CNST_analysis/ColorMaterial/E3']; 
+
+
+dataDir = getpref('ColorMaterial', 'dataFolder'); 
+analysisDir = [getpref('ColorMaterial', 'analysisDir') '/E3']; 
+mainDir = fullfile(getpref('ColorMaterial', 'mainExpDir'), 'analysis'); 
 
 % Exp parameters
 % Specify other experimental parameters
 subjectList = {'ar', 'dhb'};
 nBlocks = [2, 1];
 conditionCode = {'NC'};
+% setIndices for concatinating trial data
+indices.stimPairs = 1:4; 
+indices.response1 = 5; 
+indices.nTrials = 6; 
 
 nSubjects = length(subjectList);
 nConditions = length(conditionCode); 
@@ -25,65 +31,20 @@ for s = 1:nSubjects
     % Concatenate across 
     subject{s}.condition{c}.trialData = [];
     for b  = 1:nBlocks(s)
+        warnState = warning('off','MATLAB:dispatcher:UnresolvedFunctionHandle');
         tempSubj = load([dataDir '/' subjectList{s} '/' subjectList{s}  '-'  whichExperiment  '-' num2str(b) '.mat']);
+        warning(warnState);
         for t = 1:length(tempSubj.params.data.trialData)
             subject{s}.condition{c}.trialData = [subject{s}.condition{c}.trialData; ...
                 tempSubj.params.data.trialData(t).stim, tempSubj.params.data.trialData(t).outcome];
         end
         clear tempSubj
     end
+    cd(mainDir)
     subject{s}.condition{c}.nTrials = size(subject{s}.condition{c}.trialData,1);
-    subject{s}.condition{c}.rawTrialData = subject{s}.condition{c}.trialData; 
+    subject{s}.condition{c}.rawTrialData = subject{s}.condition{c}.trialData;
+    subject{s}.condition{c}.newTrialData = qPlusConcatenateRawData(subject{s}.condition{c}.rawTrialData, indices);
     
-    % Concatenate the trials. 
-    % For each trial, check if it repeats (by looping through all the other
-    % trials). Save the *target* trial information, and add onto this, as
-    % more identical trials are found. 
-    for i = 1:subject{s}.condition{c}.nTrials
-        tempIndList = setdiff([1:subject{s}.condition{c}.nTrials],i);
-        matchIndex{i} = subject{s}.condition{c}.trialData(i,:);
-        % For all other trials, check if they match (by checking the first
-        % 4 key stimulus characteristics. 
-        % WHAT IF THEY ARE REVERSED. 
-        for j = 1:length(tempIndList)
-            match = ((subject{s}.condition{c}.trialData(i,1) == subject{s}.condition{c}.trialData(tempIndList(j),1)) && ...
-                (subject{s}.condition{c}.trialData(i,2) == subject{s}.condition{c}.trialData(tempIndList(j),2)) && ...
-                (subject{s}.condition{c}.trialData(i,3) == subject{s}.condition{c}.trialData(tempIndList(j),3)) && ...
-                (subject{s}.condition{c}.trialData(i,4) == subject{s}.condition{c}.trialData(tempIndList(j),4)));
-            matchReversed = ((subject{s}.condition{c}.trialData(i,1) == subject{s}.condition{c}.trialData(tempIndList(j),3)) && ...
-                (subject{s}.condition{c}.trialData(i,2) == subject{s}.condition{c}.trialData(tempIndList(j),4)) && ...
-                (subject{s}.condition{c}.trialData(i,3) == subject{s}.condition{c}.trialData(tempIndList(j),1)) && ...
-                (subject{s}.condition{c}.trialData(i,4) == subject{s}.condition{c}.trialData(tempIndList(j),2)));
-            
-            % eliminate the 
-            if match == true
-                matchIndex{i} = [matchIndex{i}; subject{s}.condition{c}.trialData(tempIndList(j),:)];
-                subject{s}.condition{c}.trialData(tempIndList(j),:) = nan(size((subject{s}.condition{c}.trialData(tempIndList(j),:))));
-            elseif matchReversed == true
-                temp = subject{s}.condition{c}.trialData(tempIndList(j),:);
-                % reverse which one is chosen, without modifyng the
-                % original raw data.
-               
-                if temp(end) == 1
-                    temp(end) = 2;
-                elseif temp(end) == 2
-                    temp(end) = 1;
-                end
-                matchIndex{i} = [matchIndex{i}; [matchIndex{i}(1,1:end-1), temp(end)]];
-                subject{s}.condition{c}.trialData(tempIndList(j),:) = ...
-                    nan(size((subject{s}.condition{c}.trialData(tempIndList(j),:))));
-            end
-        end
-    end
-    
-    counter = 1;
-    for i = 1:subject{s}.condition{c}.nTrials
-        if ~sum(isnan(matchIndex{i}(:)))>0
-            subject{s}.condition{c}.newTrialData(counter,:) = ...
-                [matchIndex{i}(1,1:4), sum(matchIndex{i}(:,5)==1), size(matchIndex{i},1)];
-            counter = counter + 1;
-        end
-    end
     clear matchIndex
     
     % Convert the information about pairs to 'our prefered representation'
@@ -96,8 +57,7 @@ for s = 1:nSubjects
     subject{s}.condition{c}.pFirstChosen = subject{s}.condition{c}.firstChosen./...
         subject{s}.condition{c}.nTrials; 
     end
-    
+    cd(analysisDir)
     thisSubject = subject{s};
-    cd (analysisDir)
     save([subjectList{s} 'SummarizedqPlusData'], 'thisSubject'); clear thisSubject
 end
