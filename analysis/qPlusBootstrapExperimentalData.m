@@ -11,14 +11,13 @@ clear; close all;
 % Set directories and set which experiment to bootstrap
 % Specify basic experiment parameters
 whichExperiment = 'E3';
-mainDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/';
-dataDir = [mainDir 'CNST_data/ColorMaterial/E3'];
-analysisDir = [mainDir 'CNST_analysis/ColorMaterial/E3'];
-codeDir  = '/Users/ana/Documents/MATLAB/projects/Experiments/ColorMaterial/analysis'; 
+
+analysisDir = fullfile(getpref('ColorMaterial', 'analysisDir'), 'E3');
+codeDir  = fullfile(getpref('ColorMaterial', 'mainExpDir'), 'analysis'); 
 
 % Exp parameters
 % Specify other experimental parameters
-subjectList = {'ar', 'dhb', 'ar1', 'ar2'};
+subjectList = {'ar', 'dhb'};
 conditionCode = {'NC'};
 nSubjects = length(subjectList);
 nConditions = length(conditionCode);
@@ -45,7 +44,7 @@ end
 params.whichWeight = 'weightVary';
 
 % Set some parameters for bootstrapping.
-nRepetitions = 200;
+nRepetitions = 300;
 nModelTypes = 2;
 
 params.CIrange = 95; % confidence interval range.
@@ -70,8 +69,7 @@ for s = 1:length(subjectList)
             for whichRep = 1:nRepetitions
                 
                 % resample the data for this iteration of bootstraping
-                clear nTrials id bootstrapData
-                clear matchIndex bootstrapDataAggregated
+                clear nTrials id bootstrapData bootstrapDataAggregated
                 nTrials = size(thisSubject.condition{c}.rawTrialData,1);
                 id = randi(nTrials,[nTrials 1]);
                 bootstrapData = thisSubject.condition{c}.rawTrialData(id,:);
