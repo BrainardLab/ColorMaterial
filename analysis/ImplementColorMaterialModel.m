@@ -53,12 +53,12 @@ nConditions = length(conditionCode);
 % load('ColorMaterialExampleStructure.mat')
 
 % Nominal coordinates
-params.materialMatchColorCoords = params.competitorsRangeNegative(1): 1: params.competitorsRangePositive(end);
-params.colorMatchMaterialCoords = params.competitorsRangeNegative(1): 1: params.competitorsRangePositive(end);
+params.materialMatchColorCoords = -3: 1: -1;
+params.colorMatchMaterialCoords = -3: 1: -1;
 
 % Set up modeling
 % What sort of position fitting ('full', 'smoothOrder').
-params.whichPositions = 'full';
+params.whichPositions = 'smoothSpacing';
 if strcmp(params.whichPositions, 'smoothSpacing')
     params.smoothOrder = 1;
 end
@@ -105,14 +105,13 @@ for ww = 1:nWeigthValues
             nTrials = subject{s}.condition{whichCondition}.totalTrials;
             
             [subject{s}.condition{whichCondition}.returnedParams, subject{s}.condition{whichCondition}.logLikelyFit, ...
-                subject{s}.condition{whichCondition}.predictedProbabilitiesBasedOnSolution, ...
-                subject{s}.condition{whichCondition}.k] = ...
+                subject{s}.condition{whichCondition}.predictedProbabilitiesBasedOnSolution] = ...
                 FitColorMaterialModelMLDS(pairColorMatchColorCoords, pairMaterialMatchColorCoords,...
                 pairColorMatchMaterialCoords, pairMaterialMatchMaterialCoords,...
                 subject{s}.condition{whichCondition}.firstChosen , nTrials,...
-                params, 'whichPositions',params.whichPositions,'whichWeight',params.whichWeight, ...
-                'tryWeightValues',params.tryWeightValues,'trySpacingValues',params.trySpacingValues, ...
-                'maxPositionValue', params.maxPositionValue);
+                params);
+            
+           
             
             [subject{s}.condition{whichCondition}.returnedMaterialMatchColorCoords, ...
                 subject{s}.condition{whichCondition}.returnedColorMatchMaterialCoords, ...
@@ -144,7 +143,7 @@ for ww = 1:nWeigthValues
         if strcmp(params.whichWeight, 'weightFixed')
             save([interpCode subjectList{s} 'SolutionNew-' params.whichWeight num2str(tryWeightValues*10)], 'thisSubject'); clear thisSubject
         else
-            save([interpCode subjectList{s} 'SolutionNew-' params.whichWeight], 'thisSubject'); clear thisSubject
+            save([interpCode subjectList{s} 'SolutionOld-' params.whichWeight], 'thisSubject'); clear thisSubject
         end
     end
 end

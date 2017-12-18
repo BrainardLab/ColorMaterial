@@ -14,7 +14,7 @@ clear ; close all;
 codeDir = fullfile(tbLocateProject('ColorMaterial'),'code'); %'Users/Shared/Matlab/Experiments/ColorMaterial/code/';
 %mainDir = getpref('ColorMaterial',mainDir); %'/Users/ana/Dropbox (Aguirre-Brainard Lab)/'; 
 mainDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/'; 
-whichExperiment = 'E1P2b';
+whichExperiment = 'Pilot';
 
 switch whichExperiment
     case 'E1P2'
@@ -207,22 +207,28 @@ for s = 1:nSubjects
     end
 end
 
+indexMatrix.rowIndex = trackIndices(:,2); 
+indexMatrix.columnIndex = trackIndices(:,3); 
+indexMatrix.overallColorMaterialPairIndices = trackIndices(:,1); 
+indexMatrix.colorMatchFirst = trackIndices(:,4); 
+
+
 % Also save pair indices for each experiment.
 if strcmp(whichExperiment, 'E1P2')
     save('pairIndicesE1P2',  'colorMatchColorCoordIndex', 'materialMatchColorCoordIndex',...
         'colorMatchMaterialCoordIndex', 'materialMatchMaterialCoordIndex', ...
         'pairColorMatchColorCoords', 'pairMaterialMatchColorCoords',...
-        'pairColorMatchMaterialCoords', 'pairMaterialMatchMaterialCoords','trackIndices');
+        'pairColorMatchMaterialCoords', 'pairMaterialMatchMaterialCoords','indexMatrix');
 elseif strcmp(whichExperiment, 'E1P2b')
     save('pairIndicesE1P2b',  'colorMatchColorCoordIndex', 'materialMatchColorCoordIndex',...
         'colorMatchMaterialCoordIndex', 'materialMatchMaterialCoordIndex', ...
         'pairColorMatchColorCoords', 'pairMaterialMatchColorCoords',...
-        'pairColorMatchMaterialCoords', 'pairMaterialMatchMaterialCoords','trackIndices');
+        'pairColorMatchMaterialCoords', 'pairMaterialMatchMaterialCoords','indexMatrix');
 elseif strcmp(whichExperiment, 'Pilot')
     save('pairIndicesPilot', 'colorMatchColorCoordIndex', 'materialMatchColorCoordIndex',...
         'colorMatchMaterialCoordIndex', 'materialMatchMaterialCoordIndex', ...
         'pairColorMatchColorCoords', 'pairMaterialMatchColorCoords',...
-        'pairColorMatchMaterialCoords', 'pairMaterialMatchMaterialCoords','trackIndices');
+        'pairColorMatchMaterialCoords', 'pairMaterialMatchMaterialCoords','indexMatrix');
 else
     error('No such experiment.')
 end

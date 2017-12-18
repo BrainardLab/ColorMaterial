@@ -97,6 +97,6 @@ for s = 1:nSubjects
     if strcmp(params.whichWeight, 'weightFixed')
         save([subjectList{s} 'SolutionBS' num2str(nRepetitions) '-' params.whichWeight '-' num2str(tryWeightValues*10) '-' params.whichPositions], 'thisSubject', 'params'); clear thisSubject
     else
-        save([subjectList{s} 'SolutionBS' num2str(nRepetitions) '-' params.whichWeight '-' params.whichPositions], 'thisSubject', 'params'); clear thisSubject
+        save([subjectList{s} 'SolutionNew' num2str(nRepetitions) '-' params.whichWeight '-' params.whichPositions], 'thisSubject', 'params'); clear thisSubject
     end
 end

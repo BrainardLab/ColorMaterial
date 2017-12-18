@@ -9,19 +9,17 @@ switch whichExperiment
     case 'E1P2'
         % Specify other experimental parameters
         subjectList = { 'mdc', 'nsk'};
-%         subjectList = {'ifj', 'ueh', 'krz', 'mdc', 'nsk', 'zpf'};
-         conditionCode = {'NC', 'CY', 'CB'};
+        %         subjectList = {'ifj', 'ueh', 'krz', 'mdc', 'nsk', 'zpf'};
+        conditionCode = {'NC', 'CY', 'CB'};
         
         figAndDataDir = ['/Users/ana/Dropbox (Aguirre-Brainard Lab)/CNST_analysis/ColorMaterial/Experiment1'];
         load([figAndDataDir '/' 'ParamsE1P2FULL.mat'])
-
-       
     case 'Pilot'
         % Specify other experimental parameters
-        subjectList = {'zhr', 'vtr', 'scd', 'mcv', 'flj'};
+        subjectList = {'mcv'}; % 'vtr', 'scd', 'mcv', 'flj'};
         conditionCode = {'NC'};
         figAndDataDir = ['/Users/ana/Dropbox (Aguirre-Brainard Lab)/CNST_analysis/ColorMaterial/Pilot'];
-        load([figAndDataDir '/' 'ParamsPilot.mat'])
+        load([figAndDataDir '/' 'pairIndicesPilot.mat'])
 end
 
 nSubjects = length(subjectList);
@@ -36,18 +34,22 @@ for s = 1:length(subjectList)
         if strcmp(whichExperiment, 'E1P2')
             load([figAndDataDir '/' interpCode  subjectList{s} 'SolutionNew-weightVary.mat'])
         else
-            load([figAndDataDir '/' interpCode  subjectList{s} 'Solution-weightVary.mat'])
+            load([figAndDataDir '/'   subjectList{s} 'SolutionNew1-weightVary-smoothSpacing.mat'])
         end
-        % get the parameters that are returned.
-        paramsRange{whichCondition}(:,s) = thisSubject.condition{whichCondition}.returnedParams;
-        ColorMaterialModelPlotSolution(thisSubject.condition{whichCondition}.pFirstChosen, thisSubject.condition{whichCondition}.predictedProbabilitiesBasedOnSolution, ...
-            thisSubject.condition{whichCondition}.resizedDataProb, ...
-            thisSubject.condition{whichCondition}.returnedParams, params, subjectList{s}, [conditionCode{whichCondition} '-' interpCode], figAndDataDir, ...
-            saveFig, weibullplots);
+        
+        ColorMaterialModelPlotSolution(thisSubject.condition{whichCondition}.pFirstChosen, ...
+            thisSubject.condition{whichCondition}.bootstrapStructure.predictedProbabilitiesBasedOnSolution, ...
+            thisSubject.condition{whichCondition}.bootstrapStructure.returnedParams,...
+            indexMatrix, params, figAndDataDir, saveFig, weibullplots)
+               
+%         ColorMaterialModelPlotSolution(dataSet{whichSet}.probabilitiesFromSimulatedData, ...
+%             dataSet{whichSet}.predictedProbabilitiesBasedOnSolution, ...
+%             dataSet{whichSet}.returnedParams, ...
+%             indexMatrix, params, pwd,  saveFig, weibullplots);
     end
 end
 
-% 
+%
 thisSlope = paramsRange{1}(end-1,:); 
 [~, sortIndex] = sort(thisSlope);
 nSubjects= (length(subjectList));
