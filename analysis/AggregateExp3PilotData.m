@@ -5,7 +5,7 @@ clear; close
 
 % Specify basic experiment parameters
 whichExperiment = 'E3';
-mainDir = '/Users/radonjic/Dropbox (Aguirre-Brainard Lab)/';
+mainDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/';
 dataDir = [mainDir 'CNST_data/ColorMaterial/E3'];
 analysisDir = [mainDir 'CNST_analysis/ColorMaterial/E3']; 
 
@@ -34,6 +34,7 @@ for s = 1:nSubjects
     end
     subject{s}.condition{c}.nTrials = size(subject{s}.condition{c}.trialData,1);
     subject{s}.condition{c}.rawTrialData = subject{s}.condition{c}.trialData; 
+    
     % Concatenate the trials. 
     % For each trial, check if it repeats (by looping through all the other
     % trials). Save the *target* trial information, and add onto this, as
@@ -62,12 +63,13 @@ for s = 1:nSubjects
                 temp = subject{s}.condition{c}.trialData(tempIndList(j),:);
                 % reverse which one is chosen, without modifyng the
                 % original raw data.
+               
                 if temp(end) == 1
                     temp(end) = 2;
                 elseif temp(end) == 2
                     temp(end) = 1;
                 end
-                matchIndex{i} = [matchIndex{i}; temp];
+                matchIndex{i} = [matchIndex{i}; [matchIndex{i}(1,1:end-1), temp(end)]];
                 subject{s}.condition{c}.trialData(tempIndList(j),:) = ...
                     nan(size((subject{s}.condition{c}.trialData(tempIndList(j),:))));
             end
