@@ -1,5 +1,8 @@
 function params = getQuestParamsExp3
-% Get experimental parameters for this version of the experiment. 
+% Get experimental parameters for this particular experiment. 
+% All parameters are hardcoded (DHB's best guesses)
+
+% 09/12/2017 ar Pulled this from the demo code. 
 
 % Range over which quest+ will look for the best position of the params. 
 params.slope1 = [0.25 0.5 1 2 4];

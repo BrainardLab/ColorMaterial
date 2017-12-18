@@ -1,17 +1,4 @@
 [
-	{
-		"flavor": "",
-		"hook": "",
-		"importance": "",
-		"localHookTemplate": "configuration/ColorMaterialLocalHookTemplate.m",
-		"name": "ColorMaterial",
-		"pathPlacement": "none",
-		"subfolder": "",
-		"toolboxRoot": "",
-		"type": "git",
-		"update": "",
-		"url": ""
-	},
     {
 		"flavor": "",
 		"hook": "",
@@ -22,6 +9,19 @@
 		"subfolder": "",
 		"toolboxRoot": "",
 		"type": "include",
+		"update": "",
+		"url": ""
+	},
+    {
+		"flavor": "",
+		"hook": "",
+		"importance": "",
+		"localHookTemplate": "configuration/ColorMaterialLocalHookTemplate.m",
+		"name": "ColorMaterial",
+		"pathPlacement": "none",
+		"subfolder": "",
+		"toolboxRoot": "",
+		"type": "git",
 		"update": "",
 		"url": ""
 	}

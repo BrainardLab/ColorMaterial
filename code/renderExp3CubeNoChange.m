@@ -61,28 +61,28 @@ for c = 1:nConditions
         values{4} = alphaLevels(mCode);
         tempImageList = [tempImageList, values{1}];
         conditionsFile = [values{1} '.txt'];
-%         conditionsFile = WriteConditionsFile(conditionsFile, names, values);
-%         
-%         nativeSceneFiles = MakeSceneFiles(parentSceneFile, conditionsFile, mappingsFile, hints);
-%         radianceDataFiles = BatchRender(nativeSceneFiles, hints);
+        conditionsFile = WriteConditionsFile(conditionsFile, names, values);
+        
+        nativeSceneFiles = MakeSceneFiles(parentSceneFile, conditionsFile, mappingsFile, hints);
+        radianceDataFiles = BatchRender(nativeSceneFiles, hints);
         
 %         condense multi-spectral renderings into one sRGB montage (only
 %         for the first image)
-%         if t == 1
-%             montageName = [values{1} ];
-%             montageFile = [values{1} '.png'];
-%             
-%             [SRGBMontage, XYZMontage] = ...
-%                 MakeMontage(radianceDataFiles, montageFile, toneMapFactor, isScale, hints);
-%             
-%             % Display the sRGB montage
-%             ShowXYZAndSRGB([], SRGBMontage, montageName);
-%         end
+        if t == 1
+            montageName = [values{1} ];
+            montageFile = [values{1} '.png'];
+            
+            [SRGBMontage, XYZMontage] = ...
+                MakeMontage(radianceDataFiles, montageFile, toneMapFactor, isScale, hints);
+            
+            % Display the sRGB montage
+            ShowXYZAndSRGB([], SRGBMontage, montageName);
+        end
     end
-%     emailToStr = 'radonjic@sas.upenn.edu';
-%     setpref('Internet', 'SMTP_Server', 'smtp-relay.upenn.edu');
-%     setpref('Internet', 'E_Mail', emailToStr);
-%     sendmail(emailToStr, 'RenderDone', 'Finished this condition.');
+    emailToStr = 'radonjic@sas.upenn.edu';
+    setpref('Internet', 'SMTP_Server', 'smtp-relay.upenn.edu');
+    setpref('Internet', 'E_Mail', emailToStr);
+    sendmail(emailToStr, 'RenderDone', 'Finished this condition.');
 end
 cd(currentDir)
 imageList.imageName = tempImageList; 

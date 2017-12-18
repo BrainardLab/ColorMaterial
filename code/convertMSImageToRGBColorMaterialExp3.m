@@ -15,7 +15,7 @@ RGBdataFolder = '/Users1/Shared/Matlab/Experiments/Blobby/ColorSetBlobbyExp2-03-
 % Load color matching functions, prepare calibration file.
 load T_cones_ss2
 S = [400, 10, 31];
-cal = LoadCalFile('EyeTrackerLCD');
+cal = LoadCalFile(getpref('ColorMaterial','calFileName'),[],getpref('BrainardLabToolbox','CalDataFolder'));
 cal = SetGammaMethod(cal, 0);
 calLMS = SetSensorColorSpace(cal, T_cones_ss2,  S_cones_ss2);
 

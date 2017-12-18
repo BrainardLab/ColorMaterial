@@ -1,9 +1,8 @@
-% function params = ColorMatExp3Driver(exp)
 function params = ColorMatExp3Driver(exp)
 % Program that executes the experiment based on the parameters that are
 % passed.
 
-% 12/08/16   ar Adapted it from the ColorMatExp2Driver.
+% 12/08/17   ar Adapted it from the ColorMatExp2Driver.
 
 try
     % Convert all the configfile parameters into simple struct values.
@@ -20,7 +19,7 @@ try
     target = load([params.targetName '-RGB.mat']);
     
     % Load the lookup table.
-    theLookupTable = load('/Users/colorlab/Documents/MATLAB/toolboxes/BrainardLabToolbox/ColorMaterialModel/colorMaterialInterpolateFunCubiceuclidean');
+    theLookupTable = load('/Users/colorlab/Documents/MATLAB/toolboxes/BrainardLabToolbox/ColorMaterialModel/colorMaterialInterpolateFunLineareuclidean');
     
     % Define psychometric function in terms of lookup table
     qpPFFun = @(stimParams,psiParams) qpPFColorMaterialModel(stimParams,psiParams,theLookupTable.colorMaterialInterpolatorFunction);
@@ -80,6 +79,7 @@ try
                 stim = questDataAllTrials.stimParamsDomain(randi(nStimuli),:);
             end
             
+            % Stimulus display
             % Clear out the mgl character queue.
             mglGetKeyEvent;
             
@@ -89,6 +89,12 @@ try
             stimulusTwoIndex = intersect(find((imageList.stimulusListColor == stim(3))) , find((imageList.stimulusListMaterial == stim(4))));
             sTwo = load([imageList.imageName{stimulusTwoIndex} '-RGB.mat']);
             positionOne = randi(2);
+            
+            % sanity check from qpModelCode
+            % colorMatchColorCoords = colorCoordinateSlope*stimParams(:,1);
+            % materialMatchColorCoords = colorCoordinateSlope*stimParams(:,2);
+            % colorMatchMaterialCoords = materialCoordinateSlope*stimParams(:,3);
+            % materialMatchMaterialCoords = materialCoordinateSlope*stimParams(:,4);
             
             win.addImage(params.targetImagePosition, params.imageSize, flip(target.sensorImageRGB,1), 'Name', 'Target', 'Enabled', true);
             if positionOne == 1

@@ -44,13 +44,14 @@ switch (sysInfo.localHostName)
         end
 end
 
-
 %% Set preferences for project output
 %
 % This will need to be locally configured.
 setpref('ColorMaterial','simulatedDataDir',fullfile(projectBaseDir,'SimulatedData'));
 setpref('ColorMaterial','mainExpDir',projectBaseDir);
 setpref('ColorMaterial','analysisDir',fullfile(baseDir,'CNST_analysis','ColorMaterial'));
+setpref('ColorMaterial','stimulusFolder',fullfile(baseDir,'CNST_materials','ColorMaterial','E3'));
+setpref('ColorMaterial','dataFolder',fullfile(baseDir,'CNST_data','ColorMaterial','E3'));
+setpref('ColorMaterial','calFileName','ColorMaterialCalibration');
 
-
-
+setpref('BrainardLabToolbox','CalDataFolder',fullfile(baseDir,'CNST_materials','ColorMaterial','CalibrationData'));
