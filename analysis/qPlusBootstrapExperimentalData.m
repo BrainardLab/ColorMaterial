@@ -23,6 +23,10 @@ conditionCode = {'NC'};
 nSubjects = length(subjectList);
 nConditions = length(conditionCode);
 
+indices.stimPairs = 1:4; 
+indices.response1 = 5; 
+indices.nTrials = 6; 
+
 % Set up some params
 % Here we use the example structure that matches the experimental design of
 % our initial experiments.
@@ -71,52 +75,8 @@ for s = 1:length(subjectList)
                 nTrials = size(thisSubject.condition{c}.rawTrialData,1);
                 id = randi(nTrials,[nTrials 1]);
                 bootstrapData = thisSubject.condition{c}.rawTrialData(id,:);
-                
-                % now integrate over this draw of the bootstraped data.
-                for i = 1:nTrials
-                    tempIndList = setdiff([1:nTrials],i);
-                    matchIndex{i} = bootstrapData(i,:);
-                    
-                    % For all other trials, check if they match (by checking the first
-                    % 4 key stimulus characteristics.
-                    for j = 1:length(tempIndList)
-                        match = ((bootstrapData(i,1) == bootstrapData(tempIndList(j),1)) && ...
-                            (bootstrapData(i,2) == bootstrapData(tempIndList(j),2)) && ...
-                            (bootstrapData(i,3) == bootstrapData(tempIndList(j),3)) && ...
-                            (bootstrapData(i,4) == bootstrapData(tempIndList(j),4)));
-                        matchReversed = ((bootstrapData(i,1) == bootstrapData(tempIndList(j),3)) && ...
-                            (bootstrapData(i,2) == bootstrapData(tempIndList(j),4)) && ...
-                            (bootstrapData(i,3) == bootstrapData(tempIndList(j),1)) && ...
-                            (bootstrapData(i,4) == bootstrapData(tempIndList(j),2)));
-                        
-                        % eliminate doubles
-                        if match == true
-                            matchIndex{i} = [matchIndex{i}; bootstrapData(tempIndList(j),:)];
-                            bootstrapData(tempIndList(j),:) = nan(size((bootstrapData(tempIndList(j),:))));
-                        elseif matchReversed == true
-                            temp = bootstrapData(tempIndList(j),:);
-                            % reverse which one is chosen, without modifyng the
-                            % original raw data.
-                            if temp(end) == 1
-                                temp(end) = 2;
-                            elseif temp(end) == 2
-                                temp(end) = 1;
-                            end
-                            matchIndex{i} = [matchIndex{i}; temp];
-                            bootstrapData(tempIndList(j),:) = ...
-                                nan(size((bootstrapData(tempIndList(j),:))));
-                        end
-                    end
-                end
-                counter = 1;
-                for i = 1:nTrials
-                    if ~sum(isnan(matchIndex{i}(:)))>0
-                        bootstrapDataAggregated(counter,:) = ...
-                            [matchIndex{i}(1,1:4), sum(matchIndex{i}(:,5)==1), size(matchIndex{i},1)];
-                        counter = counter + 1;
-                    end
-                end
-                
+                bootstrapDataAggregated = qPlusConcatenateRawData(bootstrapData, indices);
+   
                 thisSubject.condition{c}.bs(whichRep).bootstrapDataAggregated = bootstrapDataAggregated;
                 % Convert the information about pairs to 'our prefered representation'
                 clear pairColorMatchColorCoords pairMaterialMatchColorCoords pairColorMatchMaterialCoords pairMaterialMatchMaterialCoords
