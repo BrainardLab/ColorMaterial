@@ -98,7 +98,7 @@ for s = 1:length(subjectList)
                     params);
             end
         end
-    end
+    
     % Save in the right folder.
     cd(analysisDir)
     if strcmp(params.whichPositions, 'smoothSpacing')
@@ -106,5 +106,7 @@ for s = 1:length(subjectList)
     else
         save([subjectList{s} '-BootstrapFull'],  'thisSubject');
     end
+    
     cd(codeDir)
+    end
 end

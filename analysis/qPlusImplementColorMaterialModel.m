@@ -5,9 +5,8 @@ clear; close
 
 % Specify basic experiment parameters
 whichExperiment = 'E3';
-mainDir = '/Users/radonjic/Dropbox (Aguirre-Brainard Lab)/';
-dataDir = [mainDir 'CNST_data/ColorMaterial/E3'];
-analysisDir = [mainDir 'CNST_analysis/ColorMaterial/E3']; 
+analysisDir = fullfile(getpref('ColorMaterial', 'analysisDir'), 'E3');
+codeDir  = fullfile(getpref('ColorMaterial', 'mainExpDir'), 'analysis'); 
 
 % Exp parameters
 % Specify other experimental parameters
