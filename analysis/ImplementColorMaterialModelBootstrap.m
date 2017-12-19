@@ -5,8 +5,7 @@ clear; close
 
 % Specify basic experiment parameters
 whichExperiment = 'Pilot';
-mainDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/';
-codeDir = '/Users/ana/Documents/MATLAB/toolboxes/BrainardLabToolbox/ColorMaterialModel'; 
+mainDir = '/Users/radonjic/Dropbox (Aguirre-Brainard Lab)/';
 switch whichExperiment
     case 'Pilot'
         % Specify other experimental parameters
@@ -30,52 +29,26 @@ switch whichExperiment
 end
 nSubjects = length(subjectList);
 nConditions = length(conditionCode);
-nRepetitions = 1;
+nRepetitions = 150;
 
-%% Set up main params
-params.targetIndex = 4;
-params.competitorsRangePositive = [1 3];
-params.competitorsRangeNegative = [-3 -1];
-params.targetMaterialCoord = 0;
-params.targetColorCoord = 0;
-params.sigma = 1;
-params.sigmaFactor = 4;
+% Set up some params
+% Here we use the example structure that matches the experimental design of
+% our initial experiments.
+params = getqPlusPilotExpParams;
 
-params.targetPosition = 0;
-params.targetIndexColor =  11; % target position on the color dimension in the set of all paramters.
-params.targetIndexMaterial = 4; % target position on the material dimension in the set of all paramters.
+% Set up initial modeling paramters (add on)
+params = getqPlusPilotModelingParams(params);
+params.bootstrapMethod = 'perTrialPerBlock';
 
-params.materialMatchColorCoords  =  params.competitorsRangeNegative(1):1:params.competitorsRangePositive(end);
-params.colorMatchMaterialCoords  =  params.competitorsRangeNegative(1):1:params.competitorsRangePositive(end);
-params.numberOfMaterialCompetitors = length(params.colorMatchMaterialCoords);
-params.numberOfColorCompetitors = length(params.materialMatchColorCoords);
-params.numberOfCompetitorsPositive = length(params.competitorsRangePositive(1):params.competitorsRangePositive(end));
-params.numberOfCompetitorsNegative = length(params.competitorsRangeNegative(1):params.competitorsRangeNegative(end));
-
-%%
-% Set up modeling
+% Set up more modeling parameters
 % What sort of position fitting ('full', 'smoothOrder').
-params.whichPositions = 'smoothSpacing'; %'full';
+params.whichPositions = 'smoothSpacing';
 if strcmp(params.whichPositions, 'smoothSpacing')
     params.smoothOrder = 1;
+    params.smoothOrderCode = 'Lin'; 
 end
-params.bootstrapMethod = 'perTrialPerBlock';
-% Initial position spacing values and weight values to try.
-params.tryMaterialSpacingValues = [0.5 1 2 3 4];
-params.tryColorSpacingValues = params.tryMaterialSpacingValues;
-params.tryWeightValues = [0.5 0.2 0.8];
-
 % Does material/color weight vary in fit? ('weightVary', 'weightFixed').
 params.whichWeight = 'weightVary';
-
-% what did we do here? do we need these
-params.whichMethod = 'lookup'; % could be also 'simulate' or 'analytic'
-params.nSimulate = 1000; % for method 'simulate'
-
-% Load lookup table
-load colorMaterialInterpolateFunCubiceuclidean.mat
-params.F = colorMaterialInterpolatorFunction;
-params.maxPositionValue = max(params.F.GridVectors{1});
 
 % For each subject and each condition, run the model and basic plots
 for s = 1:nSubjects
@@ -94,9 +67,5 @@ for s = 1:nSubjects
     end
     thisSubject = subject{s};
     cd (figAndDataDir)
-    if strcmp(params.whichWeight, 'weightFixed')
-        save([subjectList{s} 'SolutionBS' num2str(nRepetitions) '-' params.whichWeight '-' num2str(tryWeightValues*10) '-' params.whichPositions], 'thisSubject', 'params'); clear thisSubject
-    else
-        save([subjectList{s} 'SolutionNew' num2str(nRepetitions) '-' params.whichWeight '-' params.whichPositions], 'thisSubject', 'params'); clear thisSubject
-    end
+    save([subjectList{s} 'Bootstrap' num2str(nRepetitions) '-' params.whichPositions params.smoothOrderCode], 'thisSubject', 'params'); clear thisSubject
 end
