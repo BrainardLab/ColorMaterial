@@ -43,12 +43,19 @@ params.bootstrapMethod = 'perTrialPerBlock';
 % Set up more modeling parameters
 % What sort of position fitting ('full', 'smoothOrder').
 params.whichPositions = 'smoothSpacing';
-if strcmp(params.whichPositions, 'smoothSpacing')
-    params.smoothOrder = 1;
-    params.smoothOrderCode = 'Lin'; 
-end
 % Does material/color weight vary in fit? ('weightVary', 'weightFixed').
 params.whichWeight = 'weightVary';
+
+for kkk = 1:2
+if strcmp(params.whichPositions, 'smoothSpacing')
+    if kkk == 1
+        params.smoothOrder = 1;
+        params.smoothOrderCode = 'Lin';
+    elseif kkk == 2
+        params.smoothOrder = 2;
+        params.smoothOrderCode = 'Quad';
+    end
+end
 
 % For each subject and each condition, run the model and basic plots
 for s = 1:nSubjects
@@ -68,4 +75,5 @@ for s = 1:nSubjects
     thisSubject = subject{s};
     cd (figAndDataDir)
     save([subjectList{s} 'Bootstrap' num2str(nRepetitions) '-' params.whichPositions params.smoothOrderCode], 'thisSubject', 'params'); clear thisSubject
+end
 end
