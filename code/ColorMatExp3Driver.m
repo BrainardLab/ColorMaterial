@@ -22,7 +22,7 @@ try
     theLookupTable = load('/Users/colorlab/Documents/MATLAB/toolboxes/BrainardLabToolbox/ColorMaterialModel/colorMaterialInterpolateFunLineareuclidean');
     
     % Define psychometric function in terms of lookup table
-    qpPFFun = @(stimParams,psiParams) qpPFColorMaterialModel(stimParams,psiParams,theLookupTable.colorMaterialInterpolatorFunction);
+    qpPFFun = @(stimParams,psiParams) qpPFColorMaterialQuadModel(stimParams,psiParams,theLookupTable.colorMaterialInterpolatorFunction);
     
     % Create, open and draw window object and keep it on the screen for a
     % defined isi
@@ -44,16 +44,18 @@ try
     % include stimuli that could come from any of them.
     qPParams = getQuestParamsExp3;
     nQuests = length(qPParams.stimUpperEnds);
+    tic
     for qq = 1:nQuests
         fprintf('Initializing quest structure %d\n',qq)
         qTemp = qpParams( ...
             'qpPF',qpPFFun, ...
             'stimParamsDomainList',{-qPParams.stimUpperEnds(qq):qPParams.stimUpperEnds(qq), -qPParams.stimUpperEnds(qq):qPParams.stimUpperEnds(qq),...
             -qPParams.stimUpperEnds(qq):qPParams.stimUpperEnds(qq), -qPParams.stimUpperEnds(qq):qPParams.stimUpperEnds(qq)}, ...
-            'psiParamsDomainList',{qPParams.slope1,  qPParams.slope2, qPParams.weights} ...
+            'psiParamsDomainList',{qPParams.slope1 qPParams.quad1 qPParams.slope2 qPParams.quad2 qPParams.weights} ...
             );
         questData{qq} = qpInitialize(qTemp);
     end
+    toc
     
     % Define a questStructure that has all the stimuli
     % We use this as a simple way to account for every
@@ -65,12 +67,13 @@ try
     % Define how many of each type of trial selection we'll do each time through.
     % 0 -> choose at random from all trials.
     for tt = 1:qPParams.nTrialsPerQuest
+   
         
-        % Set the order for the specified quests and random
+      % Set the order for the specified quests and random
         questOrder = randperm(length(qPParams.questOrderIn));
-        for qq = 1:length(qPParams.questOrderIn)
-            theQuest = qPParams.questOrderIn(qq);
-            
+        for qq = 1:length(questOrder)
+            theQuest = qPParams.questOrderIn(questOrder(qq));
+              
             % Get stimulus for this trial, either from one of the quests or at random.
             if (theQuest > 0)
                 stim = qpQuery(questData{theQuest});

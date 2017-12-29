@@ -5,8 +5,10 @@ function params = getQuestParamsExp3
 % 09/12/2017 ar Pulled this from the demo code. 
 
 % Range over which quest+ will look for the best position of the params. 
-params.slope1 = [0.25 0.5 1 2 4];
-params.slope2 = [0.25 0.5 1 2 4];
+params.slope1 = [1/6 0.5 1 2 6]; %[0.25 0.5 1 2 4];
+params.slope2 = [1/6 0.5 1 2 6];%[0.25 0.5 1 2 4];
+params.quad1 = [-1 0 1]; 
+params.quad2 = [-1 0 1]; 
 params.weights = [0.05:0.15:0.95];
 
 % Details of the experimental design

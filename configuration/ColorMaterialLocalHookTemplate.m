@@ -51,7 +51,7 @@ setpref('ColorMaterial','simulatedDataDir',fullfile(projectBaseDir,'SimulatedDat
 setpref('ColorMaterial','mainExpDir',projectBaseDir);
 setpref('ColorMaterial','analysisDir',fullfile(baseDir,'CNST_analysis','ColorMaterial'));
 setpref('ColorMaterial','stimulusFolder',fullfile(baseDir,'CNST_materials','ColorMaterial','E3'));
-setpref('ColorMaterial','dataFolder',fullfile(baseDir,'CNST_data','ColorMaterial','E3'));
+setpref('ColorMaterial','dataFolder',fullfile(baseDir,'CNST_data','ColorMaterial'));
 setpref('ColorMaterial','calFileName','ColorMaterialCalibration');
 
 setpref('BrainardLabToolbox','CalDataFolder',fullfile(baseDir,'CNST_materials','ColorMaterial','CalibrationData'));
