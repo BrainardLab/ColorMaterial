@@ -15,13 +15,13 @@ try
     [cal, ~] = setCheckCalibration('EyeTrackerLCD', exp.subject);
     
     % Get the stimulus color matrix for all trials
-    list.stimulusList = {'E1P1-NCC1M4-NCC4M4','E1P1-NCC2M4-NCC5M4','E1P1-NCC1M4-NCC4M4','E1P1-NCC2M4-NCC5M4'};
-    %     list.stimulusList = {'Exp2NCC4M1-Exp2NCC4M7', ...
-%         'Exp2NCC4M2-Exp2NCC4M6', ...
-%         'Exp2NCC4M3-Exp2NCC4M5', ...
-%         'Exp2NCC1M4-Exp2NCC7M4', ...
-%         'Exp2NCC2M4-Exp2NCC6M4', ...
-%         'Exp2NCC3M4-Exp2NCC5M4'};
+%     list.stimulusList = {'E1P1-NCC1M4-NCC4M4','E1P1-NCC2M4-NCC5M4','E1P1-NCC1M4-NCC4M4','E1P1-NCC2M4-NCC5M4'};
+        list.stimulusList = {'Exp2NCC4M1-Exp2NCC4M7', ...
+        'Exp2NCC4M2-Exp2NCC4M6', ...
+        'Exp2NCC4M3-Exp2NCC4M5', ...
+        'Exp2NCC1M4-Exp2NCC7M4', ...
+        'Exp2NCC2M4-Exp2NCC6M4', ...
+        'Exp2NCC3M4-Exp2NCC5M4'};
 
     params.nTrials = length(list.stimulusList);
     
@@ -51,9 +51,9 @@ try
     for i = 1: length(params.trialIndices);
         orderIndex = params.trialIndices(i);
         % Add stimulus images for this trial
-        stimulusOneName{1} = [list.stimulusList{orderIndex}(6:11)];
-        sOne = load([stimulusOneName{1} '-RGB.mat']);
-        stimulusTwoName{1} = [list.stimulusList{orderIndex}(13:end)];
+        stimulusOneName{1} = [list.stimulusList{orderIndex}(1:11)];
+        sOne = load([stimulusOneName{1} 'RGB.mat']);
+        stimulusTwoName{1} = [list.stimulusList{orderIndex}(12:end)];
         sTwo = load([stimulusTwoName{1} '-RGB.mat']);
         positionOne = randi(2);
     
