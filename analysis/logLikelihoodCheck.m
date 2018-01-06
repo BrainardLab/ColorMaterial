@@ -1,7 +1,7 @@
 clear; 
 % Specify basic experiment parameters
 whichExperiment = 'E3';
-mainDir = '/Users/colorlab/Dropbox (Aguirre-Brainard Lab)/';
+mainDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/';
 dataDir = [mainDir 'CNST_data/ColorMaterial/E3'];
 analysisDir = [mainDir 'CNST_analysis/ColorMaterial/E3']; 
 
@@ -35,45 +35,47 @@ nTrialsCnt = sub.newNTrials;
 %         end
 %     end
 % end
-
-% compute log likelihood for the full set. 
-[logLikely1, predictedProbabilities1] = ColorMaterialModelComputeLogLikelihood(sub.rawTrialData(:,1), sub.rawTrialData(:,3),...
-    sub.rawTrialData(:,2), sub.rawTrialData(:,4),...
-     theResponsesRaw, nTrialsRaw, params.targetColorCoord,params.targetMaterialCoord,params.tryWeightValues(1), params.sigma, 'Fobj', params.F, 'whichMethod', params.whichMethod); 
- 
-% compute log likelihood for the concatenated set. 
-[logLikely2, predictedProbabilities] = ColorMaterialModelComputeLogLikelihood(sub.pairColorMatchColorCoords, sub.pairMaterialMatchColorCoords,...
-    sub.pairColorMatchMaterialCoords, sub.pairMaterialMatchMaterialCoords,...
-     theResponsesCnt, nTrialsCnt,params.targetColorCoord,params.targetMaterialCoord,params.tryWeightValues(1), params.sigma, 'Fobj', params.F, 'whichMethod', params.whichMethod); 
-%  [logLikely2, predictedProbabilities] = ColorMaterialModelComputeLogLikelihood(concatData(:,1), concatData(:,3),...
-%     concatData(:,2), concatData(:,4),...
-%      concatData(:,5), concatData(:,6),params.targetColorCoord,params.targetMaterialCoord,params.tryWeightValues(1), params.sigma, 'Fobj', params.F, 'whichMethod', params.whichMethod); 
-
- 
-%  nTrials = 1;
-%  % do better check
-%  a = repmat([-2 3 1 2],nTrials,1);
-%  b = repmat([-2 1 0 -3],nTrials,1);
-%  a = [a, round(rand(size(a))) ones(size(a))];
-%  b = [b, round(rand(size(b))) ones(size(b))];
-%  
-%  k = []
-%  fullM = [a; b];
-%  summM(1,:) = [a(:,1:4), sum(a(:,5)==1), size(a,1)];
-%  summM(2,:) = [b(:,1:4), sum(b(:,5)==1), size(b,1)];
-% 
 % 
 % % compute log likelihood for the full set. 
-% [logLikely11, ~] = ColorMaterialModelComputeLogLikelihood(fullM(:,1), fullM(:,3),...
-%     fullM(:,2), fullM(:,4),...
-%      (fullM(:,5)==1), fullM(:,end), ...
-%      params.targetColorCoord,params.targetMaterialCoord,params.tryWeightValues(1), params.sigma, 'Fobj', params.F, 'whichMethod', params.whichMethod); 
+% [logLikely1, predictedProbabilities1] = ColorMaterialModelComputeLogLikelihood(sub.rawTrialData(:,1), sub.rawTrialData(:,3),...
+%     sub.rawTrialData(:,2), sub.rawTrialData(:,4),...
+%      theResponsesRaw, nTrialsRaw, params.targetColorCoord,params.targetMaterialCoord,params.tryWeightValues(1), params.sigma, 'Fobj', params.F, 'whichMethod', params.whichMethod); 
 %  
-% % compute log likelihood for the concatenated set. 
-% [logLikely12, ~] = ColorMaterialModelComputeLogLikelihood(summM(:,1), summM(:,3),...
-%     summM(:,2), summM(:,4),...
-%      summM(:,5), summM(:,6), ...
-%      params.targetColorCoord,params.targetMaterialCoord,params.tryWeightValues(1), params.sigma, 'Fobj', params.F, 'whichMethod', params.whichMethod); 
+% [logLikely2, predictedProbabilities1] = ColorMaterialModelComputeLogLikelihood(...
+%     sub.rawTrialData(:,2), sub.rawTrialData(:,4),...
+%         sub.rawTrialData(:,1), sub.rawTrialData(:,3),...
+%      [ones(size(theResponsesRaw))-theResponsesRaw], nTrialsRaw, params.targetColorCoord,params.targetMaterialCoord,params.tryWeightValues(1), params.sigma, 'Fobj', params.F, 'whichMethod', params.whichMethod); 
 %  
 % 
-% 
+%  % compute log likelihood for the concatenated set. 
+% [logLikely2, predictedProbabilities] = ColorMaterialModelComputeLogLikelihood(sub.pairColorMatchColorCoords, sub.pairMaterialMatchColorCoords,...
+%     sub.pairColorMatchMaterialCoords, sub.pairMaterialMatchMaterialCoords,...
+%      theResponsesCnt, nTrialsCnt,params.targetColorCoord,params.targetMaterialCoord,params.tryWeightValues(1), params.sigma, 'Fobj', params.F, 'whichMethod', params.whichMethod); 
+% %  [logLikely2, predictedProbabilities] = ColorMaterialModelComputeLogLikelihood(concatData(:,1), concatData(:,3),...
+% %     concatData(:,2), concatData(:,4),...
+% %      concatData(:,5), concatData(:,6),params.targetColorCoord,params.targetMaterialCoord,params.tryWeightValues(1), params.sigma, 'Fobj', params.F, 'whichMethod', params.whichMethod); 
+%
+%
+nTrials = 1;
+% do better check
+load('/Users/ana/Documents/MATLAB/projects/Experiments/ColorMaterial/analysis/tempPairs.mat')
+
+a.theLookupTable = load('colorMaterialInterpolateFunLinearcityblock.mat');
+params.F1 = a.theLookupTable.colorMaterialInterpolatorFunction; 
+
+b.theLookupTable = load('colorMaterialInterpolateFunCubiccityblock.mat');
+params.F2 = b.theLookupTable.colorMaterialInterpolatorFunction; 
+
+% compute log likelihood for the full set.
+[logLikely11, probs] = ColorMaterialModelComputeLogLikelihood(kk(:,1), kk(:,3),...
+    kk(:,2), kk(:,4),...
+    kk(:,5), kk(:,6), ...
+    params.targetColorCoord,params.targetMaterialCoord,params.tryWeightValues(1), params.sigma, 'Fobj', params.F1, 'whichMethod', params.whichMethod);
+%
+[logLikely11, probs2] = ColorMaterialModelComputeLogLikelihood(kk(:,1), kk(:,3),...
+    kk(:,2), kk(:,4),...
+    kk(:,5), kk(:,6), ...
+    params.targetColorCoord,params.targetMaterialCoord,params.tryWeightValues(1), params.sigma, 'Fobj', params.F2, 'whichMethod', params.whichMethod);
+
+figure; plot(probs, probs2, 'o')
+axis([0 1 0 1])
