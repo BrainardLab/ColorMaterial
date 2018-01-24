@@ -17,8 +17,8 @@ codeDir  = '/Users/ana/Documents/MATLAB/projects/Experiments/ColorMaterial/analy
 
 % Exp parameters
 % Specify other experimental parameters
-subjectList = { 'dhb-1', 'dhb-2', 'ar-1', 'ar-2', 'ar1-1', 'ar2-1',  'ar1-2', 'ar2-2'};
-subjectListID = {'dhb', 'dhb', 'ar', 'ar', 'ar', 'ar', 'ar', 'ar'};
+subjectList = { 'as', 'as1', 'as2', 'as3', 'as4'};
+subjectListID = { 'as', 'as1', 'as2', 'as3', 'as4'};
 
 conditionCode = {'NC'};
 nSubjects = length(subjectList);
