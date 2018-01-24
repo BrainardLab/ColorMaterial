@@ -14,7 +14,9 @@ clear ; close all;
 codeDir = fullfile(tbLocateProject('ColorMaterial'),'code'); %'Users/Shared/Matlab/Experiments/ColorMaterial/code/';
 %mainDir = getpref('ColorMaterial',mainDir); %'/Users/ana/Dropbox (Aguirre-Brainard Lab)/'; 
 mainDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/'; 
-whichExperiment = 'Pilot';
+whichExperiment = 'E1P2';
+textDir = fullfile(getpref('ColorMaterial', 'analysisDir'), whichExperiment, '/textFiles');
+saveTextFiles = 0; 
 
 switch whichExperiment
     case 'E1P2'
@@ -50,6 +52,9 @@ switch whichExperiment
         figAndDataDir = [mainDir 'CNST_analysis/ColorMaterial/Experiment1/'];
         competitorImageName1 = [11, 14];
         competitorImageName2 = [21, 24];
+        % overwrite the name of the textfile for this exp. 
+        textDir = fullfile(getpref('ColorMaterial', 'analysisDir'), 'Experiment1', '/textFiles');
+
 end
 
 nSubjects = length(subjectList);
@@ -180,8 +185,9 @@ for s = 1:nSubjects
                                 subject{s}.condition{whichCondition}.pFirstChosen(i);
                             subject{s}.condition{whichCondition}.colorMatchChosen(whichColorOfTheMaterialMatch,whichMaterialOfTheColorMatch) = ...
                                 subject{s}.condition{whichCondition}.firstChosen(i);
-                            
+                          
                         elseif strcmp(tempString((end-length(colorMatchString)+1):end), colorMatchString)
+                            disp('a')
                             trackIndices = [trackIndices; i, whichColorOfTheMaterialMatch, whichMaterialOfTheColorMatch, 2];
                             % if color match string is second
                             subject{s}.condition{whichCondition}.pColorMatchChosen(whichColorOfTheMaterialMatch,whichMaterialOfTheColorMatch) = ...
@@ -231,4 +237,35 @@ elseif strcmp(whichExperiment, 'Pilot')
         'pairColorMatchMaterialCoords', 'pairMaterialMatchMaterialCoords','indexMatrix');
 else
     error('No such experiment.')
+end
+
+if saveTextFiles
+% Make text files with raw data for each subject and save in the text dir
+cd(textDir)
+% remap from 1 to 7 to -3 to +3
+remapStim = {'-3', '-2', '-1', '0', '+1', '+2', '+3'};
+for s = 1:nSubjects
+    filename = ['ColorMatrialExp1-' subjectList{s} '.txt'];
+    fid = fopen(filename, 'wt');
+    fprintf(fid, 'Block\tTrial \tfirstTest \tsecondTest \ttestChosen \n');
+    for b = 1:nBlocks
+        for t = 1:length(subject{s}.block(b).trial)
+            tempStim1 = [{subject{s}.block(b).trial(t).stimulusOneName(1)}, ...
+                remapStim(str2num(subject{s}.block(b).trial(t).stimulusOneName(2))), ...
+                {subject{s}.block(b).trial(t).stimulusOneName(3)},...
+                remapStim(str2num(subject{s}.block(b).trial(t).stimulusOneName(4)))];
+            
+            tempStim2 = [subject{s}.block(b).trial(t).stimulusTwoName(1),...
+                remapStim(str2num(subject{s}.block(b).trial(t).stimulusTwoName(2))), ...
+                subject{s}.block(b).trial(t).stimulusTwoName(3), ...
+                remapStim(str2num(subject{s}.block(b).trial(t).stimulusTwoName(4)))];
+            
+            fprintf(fid, '%d \t%d \t%s \t%s\t%d \n', ...
+                b, t, [tempStim1{1}, tempStim1{2}, tempStim1{3}, tempStim1{4}],...
+                [tempStim2{1}, tempStim2{2}, tempStim2{3}, tempStim2{4}], ...
+                subject{s}.block(b).trial(t).imageChosen);
+        end
+    end
+    fclose(fid);
+end
 end

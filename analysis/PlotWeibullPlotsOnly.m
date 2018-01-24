@@ -43,7 +43,7 @@ nRepetitions = 400;
 thisFontSize = 20; 
 thisMarkerSize = 20; 
 thisLineWidth = 3; 
-for s = 1%:length(subjectList)
+for s = 1:length(subjectList)
     switch whichExperiment
         case 'Pilot'
             clear thisSubject
@@ -70,8 +70,8 @@ for s = 1%:length(subjectList)
         thisFig1 = ColorMaterialModelPlotFit(theSmoothVals, theSmoothPreds, params.colorMatchMaterialCoords, colorMaterialDataProb,...
             'whichMatch', 'colorMatch', 'whichFit', 'weibull', 'fontSize', thisFontSize, ...
             'markerSize', thisMarkerSize, 'lineWidth', thisLineWidth);
-%         if saveFigs
-             FigureSave([subjectList{s}, 'WeibullFitColorXAxis3'], thisFig1, 'pdf');
-%         end
+         if saveFigs
+             FigureSave([subjectList{s}, 'WeibullFitColorXAxis'], thisFig1, 'pdf');
+         end
     end
 end

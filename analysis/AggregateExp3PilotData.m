@@ -7,14 +7,14 @@ clear; close
 whichExperiment = 'E3';
 
 
-dataDir = getpref('ColorMaterial', 'dataFolder'); 
+dataDir = [getpref('ColorMaterial', 'dataFolder'),'/E3']; 
 analysisDir = [getpref('ColorMaterial', 'analysisDir') '/E3']; 
 mainDir = fullfile(getpref('ColorMaterial', 'mainExpDir'), 'analysis'); 
 
 % Exp parameters
 % Specify other experimental parameters
-subjectList = {'ar', 'dhb'};
-nBlocks = [2, 1];
+subjectList = {'as'};
+nBlocks = 1;
 conditionCode = {'NC'};
 % setIndices for concatinating trial data
 indices.stimPairs = 1:4; 
@@ -55,7 +55,7 @@ for s = 1:nSubjects
     subject{s}.condition{c}.firstChosen = subject{s}.condition{c}.newTrialData(:,5);
     subject{s}.condition{c}.newNTrials = subject{s}.condition{c}.newTrialData(:,6);
     subject{s}.condition{c}.pFirstChosen = subject{s}.condition{c}.firstChosen./...
-        subject{s}.condition{c}.nTrials; 
+        subject{s}.condition{c}.newNTrials; 
     end
     cd(analysisDir)
     thisSubject = subject{s};

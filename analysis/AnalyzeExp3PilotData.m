@@ -9,8 +9,8 @@ mainDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/';
 
 % Exp parameters
 % Specify other experimental parameters
-subjectList = {'ar', 'dhb'};
-nBlocks = [1, 2];
+subjectList = {'as', 'as1', 'as2', 'as3', 'as4'};
+nBlocks = [4, 1, 1, 1, 1];
 conditionCode = {'NC'};
 figAndDataDir = [mainDir 'CNST_data/ColorMaterial/E3'];
 dataDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/CNST_data/E3';
@@ -133,23 +133,13 @@ for ww = 1:nWeigthValues
             pairColorMatchMaterialCoords, pairMaterialMatchMaterialCoords,...
             subject{s}.firstChosen , subject{s}.nTrials,...
             params);
+       
         
-           
-            
             [subject{s}.returnedMaterialMatchColorCoords, ...
                 subject{s}.returnedColorMatchMaterialCoords, ...
                 subject{s}.returnedW,...
                 subject{s}.returnedSigma]  = ColorMaterialModelXToParams(subject{s}.condition{whichCondition}.returnedParams, params);
             
-         
-        
-        
-        
-        
-        
-        
-        
-        
         thisSubject = subject{s};
         cd (figAndDataDir)
         if strcmp(params.whichWeight, 'weightFixed')

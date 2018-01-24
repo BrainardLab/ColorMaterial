@@ -1,5 +1,10 @@
 % combineDataAcrossExperiments. 
 % In Experiment 1 we ran some additional trials. 
+% Here we combine this data, for analysis
+
+% Note that a check which compares the reliability of the two data sets by
+% looking at probabilities for the trials that have been repeated 
+% is NOT yet implemented. 
 
 % Initialize
 clear; close all;  

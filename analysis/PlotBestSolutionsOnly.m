@@ -16,7 +16,7 @@ whichExperiment = 'Pilot';
 % Set paramters for a given expeirment.
 switch whichExperiment
     case 'Pilot'
-        figAndDataDir = [analysisDir '/' whichExperiment  '/' ];
+        figAndDataDir = [analysisDir '/' whichExperiment   ];
         subjectList = {'flj', 'mcv', 'zhr', 'scd', 'vtr'};
         conditionCode = {'NC'};
         nBlocks = 25;
@@ -37,7 +37,7 @@ nSubjects = length(subjectList);
 % We should not set it again here. Commenting it out. 
 % params.addNoise = true; 
 %params.maxPositionValue = max(params.F.GridVectors{1});
-nRepetitions = 400; 
+nRepetitions = 150; 
 %% Run the bootstrapping for each subject and condition 
 % Leaving an option to enable different models (although for now we just have one model). 
 % To introduce other models, we can redefine some of the parameters here.
@@ -45,13 +45,15 @@ thisFontSize = 20;
 thisMarkerSize = 16; 
 thisLineWidth = 3; 
 whichCondition = 1; 
-load('/Users/ana/Desktop/ParamsPilot.mat')
+%load('/Users/ana/Desktop/ParamsPilot.mat')
 for s = 1:length(subjectList)
     switch whichExperiment
         case 'Pilot'
             clear thisSubject
             %   load([figAndDataDir '/' subjectList{s} 'BestSolution' num2str(nRepetitions) '-weightVary-smoothSpacing.mat'])
-            load([figAndDataDir '/' subjectList{s} 'BestSolution' num2str(nRepetitions) '-weightVary-full.mat'])
+        %    load([figAndDataDir '/' subjectList{s} 'BestSolution' num2str(nRepetitions) '-weightVary-full.mat'])
+            load([figAndDataDir '/' subjectList{s} 'Bootstrap' num2str(nRepetitions) '-smoothSpacingLin.mat'])
+            
             %   load([figAndDataDir '/' 'C' subjectList{s} 'SolutionNew-weightVary.mat'])
         case 'E1P2FULL'
             clear thisSubject
