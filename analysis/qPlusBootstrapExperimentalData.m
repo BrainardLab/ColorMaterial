@@ -17,7 +17,7 @@ codeDir  = fullfile(getpref('ColorMaterial', 'mainExpDir'), 'analysis');
 
 % Exp parameters
 % Specify other experimental parameters
-subjectList = {'ar', 'dhb'};
+subjectList = {'as'};
 conditionCode = {'NC'};
 nSubjects = length(subjectList);
 nConditions = length(conditionCode);
@@ -36,15 +36,15 @@ params = getqPlusPilotModelingParams(params);
 
 % Set up more modeling parameters
 % What sort of position fitting ('full', 'smoothOrder').
-params.whichPositions = 'smoothSpacing';
+params.whichPositions = 'full';
 if strcmp(params.whichPositions, 'smoothSpacing')
-    params.smoothOrder = 1;
+    params.smoothOrder = 2;
 end
 % Does material/color weight vary in fit? ('weightVary', 'weightFixed').
 params.whichWeight = 'weightVary';
 
 % Set some parameters for bootstrapping.
-nRepetitions = 300;
+nRepetitions = 150;
 nModelTypes = 2;
 
 params.CIrange = 95; % confidence interval range.
