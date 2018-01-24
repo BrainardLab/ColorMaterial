@@ -10,8 +10,9 @@
 clc; clear ; %close all;
 
 % Specify directories
-codeDir = 'Users/Shared/Matlab/Experiments/ColorMaterial/code/';
-mainDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/';
+
+codeDir = fullfile([getpref('ColorMaterial', 'mainExpDir'), '/code']);
+analysisDir = getpref('ColorMaterial', 'analysisDir');
 whichExperiment = 'E1P2b';
 materialCoords  = [-3:1:3];
 colorCoords  =  [-3:1:3];
@@ -22,7 +23,7 @@ nLevels = 7; % number of levels across which color/material vary
 nBlocks = 24;
 conditionCode = {'NC', 'CY', 'CB'};
 
-figAndDataDir = [mainDir 'CNST_analysis/ColorMaterial/Experiment1/'];
+figAndDataDir = fullfile([analysisDir '/Experiment1/']);
 competitorImageName1 = [11, 14]-5;
 competitorImageName2 = [21, 24]-5;
 
