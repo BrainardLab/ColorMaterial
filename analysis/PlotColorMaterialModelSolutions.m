@@ -29,7 +29,7 @@ weibullplots = 0;
 params = getqPlusPilotExpParams;
 params = getqPlusPilotModelingParams(params);
 % What sort of position fitting ('full', 'smoothSpacing').
-params.whichPositions = 'smoothSpacing';
+params.whichPositions = 'full';
 if strcmp(params.whichPositions, 'smoothSpacing')
     params.smoothOrder = 1;
 end
@@ -41,7 +41,7 @@ for s = 1:length(subjectList)
     params.subjectName = subjectList{s};
     close all;
     for whichCondition = 1:nConditions
-        load([figAndDataDir '/'   subjectList{s} 'Solution-smoothSpacing' num2str(params.smoothOrder) '.mat'])
+        load([figAndDataDir '/'   subjectList{s} 'Solution-' num2str(params.whichPositions) '.mat'])
         
         ColorMaterialModelPlotSolution(thisSubject.condition{whichCondition}.pFirstChosen, ...
             thisSubject.condition{whichCondition}.predictedProbabilitiesBasedOnSolution, ...
@@ -49,7 +49,7 @@ for s = 1:length(subjectList)
             indexMatrix, params, figAndDataDir, saveFig, weibullplots)
         
     end
-    FigureSave([subjectList{s} num2str(params.smoothOrder) ],gcf,'pdf');
+    FigureSave([subjectList{s} num2str(params.whichPositions) 'Fit'],gcf,'pdf');
 end
 
 % %
