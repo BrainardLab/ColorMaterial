@@ -73,15 +73,15 @@ try
         load(fullfile(qPParams.initDir,'initalizedQuestsExp3'));
     end
     
-    % Force questDataAllTrials not to update entropy.  If you want to see
-    % the plot of entropies versus trials at the end, set this to false.
-    % But it will slow down the simulation by about 0.5 secs/trial.
-    questDataAllTrials.noentropy = true;
-    
     % Define a questStructure that has all the stimuli
     % We use this as a simple way to account for every
     % stimulus in the analysis at the end.
     questDataAllTrials = questData{end};
+    
+    % Force questDataAllTrials not to update entropy.  If you want to see
+    % the plot of entropies versus trials at the end, set this to false.
+    % But it will slow down the simulation by about 0.5 secs/trial.
+    questDataAllTrials.noentropy = true;
     
     % Run simulated trials, using QUEST+ to tell us what contrast to
     %

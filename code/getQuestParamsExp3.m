@@ -33,5 +33,5 @@ params.nTrialsPerQuest = 30;
 params.questOrderIn = [0 1 2 3 3 3 3 3 3];
 
 % initialize or not
-params.DO_INITIALIZE = true; 
+params.DO_INITIALIZE = false; 
 params.initDir = fullfile([getpref('ColorMaterial', 'dataFolder'), '/E3']);
