@@ -44,18 +44,39 @@ try
     % include stimuli that could come from any of them.
     qPParams = getQuestParamsExp3;
     nQuests = length(qPParams.stimUpperEnds);
-    tic
-    for qq = 1:nQuests
-        fprintf('Initializing quest structure %d\n',qq)
-        qTemp = qpParams( ...
-            'qpPF',qpPFFun, ...
-            'stimParamsDomainList',{-qPParams.stimUpperEnds(qq):qPParams.stimUpperEnds(qq), -qPParams.stimUpperEnds(qq):qPParams.stimUpperEnds(qq),...
-            -qPParams.stimUpperEnds(qq):qPParams.stimUpperEnds(qq), -qPParams.stimUpperEnds(qq):qPParams.stimUpperEnds(qq)}, ...
-            'psiParamsDomainList',{qPParams.slope1 qPParams.quad1 qPParams.slope2 qPParams.quad2 qPParams.weights} ...
-            );
-        questData{qq} = qpInitialize(qTemp);
+    if (qPParams.DO_INITIALIZE)
+        nQuests = length(qPParams.stimUpperEnds);
+        for qq = 1:nQuests
+            fprintf('Initializing quest structure %d\n',qq)
+            qTemp = qpParams( ...
+                'qpPF',qpPFFun, ...
+                'stimParamsDomainList',{-qPParams.stimUpperEnds(qq):qPParams.stimUpperEnds(qq), -qPParams.stimUpperEnds(qq):qPParams.stimUpperEnds(qq), ...
+                -qPParams.stimUpperEnds(qq):qPParams.stimUpperEnds(qq), -qPParams.stimUpperEnds(qq):qPParams.stimUpperEnds(qq)}, ...
+                'psiParamsDomainList',{[1/qPParams.upperLin 1/(qPParams.upperLin/2) 1 qPParams.upperLin/2 qPParams.upperLin] [-qPParams.upperQuad 0 qPParams.upperQuad] [-qPParams.upperCubic 0 qPParams.upperCubic] ...
+                [1/qPParams.upperLin 1 qPParams.upperLin] [-qPParams.upperQuad 0 qPParams.upperQuad] [-qPParams.upperCubic 0 qPParams.upperCubic] ...
+                qPParams.weights} ...
+                );
+            questData{qq} = qpInitialize(qTemp);
+        end
+        
+        %% Define a questStructure that has all the stimuli
+        %
+        % We use this as a simple way to account for every
+        % stimulus in the analysis at the end.  Set noentropy
+        % flag so that update is fast, because we don't use this
+        % one to select trials.
+        questDataAllTrials = questData{end};
+        
+        %% Save out initialized quests
+        save(fullfile(qPParams.initDir,'initalizedQuestsExp3'),'questData','questDataAllTrials');
+    else
+        load(fullfile(qPParams.initDir,'initalizedQuestsExp3'));
     end
-    toc
+    
+    % Force questDataAllTrials not to update entropy.  If you want to see
+    % the plot of entropies versus trials at the end, set this to false.
+    % But it will slow down the simulation by about 0.5 secs/trial.
+    questDataAllTrials.noentropy = true;
     
     % Define a questStructure that has all the stimuli
     % We use this as a simple way to account for every
@@ -66,14 +87,18 @@ try
     %
     % Define how many of each type of trial selection we'll do each time through.
     % 0 -> choose at random from all trials.
+    indexTrial = 0; 
     for tt = 1:qPParams.nTrialsPerQuest
-   
         
-      % Set the order for the specified quests and random
+        
+        % Set the order for the specified quests and random
         questOrder = randperm(length(qPParams.questOrderIn));
         for qq = 1:length(questOrder)
+      
+            % index the trial
+            indexTrial = indexTrial+1; 
             theQuest = qPParams.questOrderIn(questOrder(qq));
-              
+            
             % Get stimulus for this trial, either from one of the quests or at random.
             if (theQuest > 0)
                 stim = qpQuery(questData{theQuest});
@@ -81,9 +106,9 @@ try
                 nStimuli = size(questDataAllTrials.stimParamsDomain,1);
                 stim = questDataAllTrials.stimParamsDomain(randi(nStimuli),:);
             end
-            
             % Stimulus display
             % Clear out the mgl character queue.
+        
             mglGetKeyEvent;
             
             % Add stimulus images for this trial
@@ -108,7 +133,7 @@ try
                 win.addImage(params.secondTestPosition,   params.imageSize, flip(sOne.sensorImageRGB,1), 'Name', 'STwo','Enabled', true);
             end
             % Start timing once the stimulus is drawn.
-            win.draw;
+            trialStart(indexTrial) = win.draw;
             mglWaitSecs(params.waitTime);
             
             % Flush any key presses from the previous trial.
@@ -155,21 +180,28 @@ try
             end
             % disp(params.trial(orderIndex).n);
             win.disableAllObjects;
-            win.draw;
+            trialEnd(indexTrial) = win.draw;
             %  Speak('Wait for the next trial');
             mglWaitSecs(params.isi);
             
             % Update quest data structure, if not a randomly inserted trial
+            %tic
             if (theQuest > 0)
                 questData{theQuest} = qpUpdate(questData{theQuest},stim,outcome);
             end
+            
+            % This data structure tracks all of the trials run in the
+            % experiment.  We never query it to decide what to do, but we
+            % will use it to fit the data at the end.
             questDataAllTrials = qpUpdate(questDataAllTrials,stim,outcome);
         end
     end
     win.close;
     ListenChar(0);
     params.data = questDataAllTrials;
-    params.quest = questData; 
+    params.quest = questData;
+    params.trialStart = trialStart;
+    params.trialEnd = trialEnd;
     % Toss the error back to Matlab's default error handler.
 catch e
     if exist('win', 'var') && ~isempty(win)
