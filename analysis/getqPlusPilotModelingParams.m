@@ -11,7 +11,7 @@ params.maxPositionValue = 20;
 params.tryWeightValues = [0.5 0.2 0.8];
 params.whichMethod = 'lookup'; % could be also 'simulate' or 'analytic'
 params.nSimulate = 1000; % for method 'simulate'
-load colorMaterialInterpolateFunLineareuclidean.mat
-params.interpCode = 'Lin';
+load colorMaterialInterpolateFunCubiceuclidean.mat
+params.interpCode = 'cubic';
 params.F = colorMaterialInterpolatorFunction; % for lookup.
 
