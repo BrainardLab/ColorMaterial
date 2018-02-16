@@ -6,7 +6,7 @@
 clear; close
 
 % Specify basic experiment parameters
-whichExperiment = 'E3';
+whichExperiment = 'Pilot';
 codeDir =  pwd; 
 analysisDir = getpref('ColorMaterial', 'analysisDir'); 
 switch whichExperiment
@@ -56,16 +56,17 @@ for s = 1:length(subjectList)
     close all;
     for whichCondition = 1:nConditions
         load([figAndDataDir '/'   subjectList{s} 'SolutionNew-' num2str(params.whichPositions) '.mat'])
-        
-        load([figAndDataDir '/'   subjectList{s} 'SolutionNew-' num2str(params.whichPositions) '.mat'])
-        
+       
+        load colorMaterialInterpolateFunCubiceuclidean.mat
+params.F = colorMaterialInterpolatorFunction; % for lookup.
+
         ColorMaterialModelPlotSolution(thisSubject.condition{whichCondition}.pFirstChosen, ...
             thisSubject.condition{whichCondition}.predictedProbabilitiesBasedOnSolution, ...
-            thisSubject.condition{whichCondition}.returnedParams,...
-            params, figAndDataDir, saveFig)
-        
+            thisSubject.condition{whichCondition}.returnedParams,indexMatrix, ...
+            params, figAndDataDir, saveFig, weibullplots)
+    
     end
     if saveFig
-    FigureSave([subjectList{s} num2str(params.whichPositions) 'FitNew'],gcf,'pdf');
+    FigureSave([subjectList{s} num2str(params.whichPositions) 'FitNewCorr'],gcf,'pdf');
     end
 end
