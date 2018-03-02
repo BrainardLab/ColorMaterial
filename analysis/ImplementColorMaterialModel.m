@@ -104,7 +104,9 @@ for s = 1:nSubjects
     end
     thisSubject = subject{s};
     cd (figAndDataDir)
-    save([ subjectList{s} 'Solution-' params.whichPositions  num2str(params.smoothOrder)], 'thisSubject'); clear thisSubject
+    if strcmp(params.whichPositions, 'full')
+        save([ subjectList{s} 'Solution-' params.interpCode params.whichPositions], 'thisSubject', 'params'); clear thisSubject
+    else
+        save([ subjectList{s} 'Solution-' params.interpCode params.whichPositions  num2str(params.smoothOrder)], 'thisSubject', 'params'); clear thisSubject
+    end
 end
-
-% save(['Params' whichExperiment], 'params');

@@ -17,20 +17,22 @@ codeDir  = '/Users/ana/Documents/MATLAB/projects/Experiments/ColorMaterial/analy
 
 % Exp parameters
 % Specify other experimental parameters
-subjectList = { 'as', 'as1', 'as2', 'as3', 'as4'};
-subjectListID = { 'as', 'as1', 'as2', 'as3', 'as4'};
+subjectList = { 'as'};
+subjectListID = { 'as'};
 
 conditionCode = {'NC'};
 nSubjects = length(subjectList);
 nConditions = length(conditionCode);
 
-CIrange = 95.45; % confidence interval range. %68.27%, 95.45% and 99.73% 
+CIrange = 68.27; % confidence interval range. %68.27%, 95.45% and 99.73% 
 CIlo = (1-CIrange/100)/2;
 CIhi = 1-CIlo;
 
 for s = 1:nSubjects
     % load subject data
-    load([analysisDir '/' subjectListID{s}, '-BootstrapSmoothSpacing' num2str(subjectList{s}(end)) '.mat'])
+    load([analysisDir '/' subjectListID{s}, '-BootstrapFull.mat'])
+    k = load([analysisDir, '/asfullFit.mat']); 
+    
     subject{s} = thisSubject; clear thisSubject
     
     for c = 1:nConditions
@@ -64,17 +66,19 @@ for i = 1:length(subjectList)
     labelList{i+1} = subjectList{i};
 end
 for s = 1:nSubjects
-    %  plot(s, subject{s}.condition{whichCondition}.bootstrapMeans(3), 'o' , 'MarkerFaceColor', color , 'MarkerEdgeColor', color, 'MarkerSize', thisMarkerSize)
+     errorbar(s,subject{s}.condition{c}.bootstrapMean(end-1),...
+        subject{s}.condition{c}.bootstrapStd(end-1), ...
+        subject{s}.condition{c}.bootstrapStd(end-1), ...
+        'x' , 'MarkerFaceColor', [0 0 0] , 'MarkerEdgeColor', [0 0 0], 'MarkerSize', thisMarkerSize, ...
+        'color', [0 0 0], 'LineWidth', 2)
+  
     errorbar(s,subject{s}.condition{c}.bootstrapMean(end-1),...
         [subject{s}.condition{c}.bootstrapMean(end-1)-subject{s}.condition{c}.bootstrapCI(1, end-1)], ...
         [subject{s}.condition{c}.bootstrapCI(2, end-1)-subject{s}.condition{c}.bootstrapMean(end-1)], ...
         'o' , 'MarkerFaceColor', color , 'MarkerEdgeColor', color, 'MarkerSize', thisMarkerSize, ...
-        'color', color, 'LineWidth', 1.2)
-    errorbar(s,subject{s}.condition{c}.bootstrapMean(end-1),...
-        subject{s}.condition{c}.bootstrapStd(end-1), ...
-        subject{s}.condition{c}.bootstrapStd(end-1), ...
-        'x' , 'MarkerFaceColor', [0 0 0] , 'MarkerEdgeColor', [0 0 0], 'MarkerSize', thisMarkerSize, ...
-        'color', [0 0 0], 'LineWidth', 1.2)
+        'color', color, 'LineWidth', 2)
+    
+    plot(s, k.thisSubject.condition{1}.returnedParams(end-1), 'ro', 'MarkerSize', thisMarkerSize)
 end
 axis([0 nSubjects+1 0 1])
 xlabel('Observers','FontName','Helvetica','FontSize',20);
@@ -84,7 +88,4 @@ set(gca,'YTickLabel',num2str(get(gca,'YTick')','%.2f'))
 set(gca, 'Xtick', xTick,'FontName','Helvetica','FontSize',20);
 set(gca, 'XTickLabel', labelList, 'FontName','Helvetica','FontSize',20);
 cd ..
-FigureSave(['qPlus' modelType],gcf,'pdf');
-
-
-
+FigureSave(['qPlus' subjectList{s} 'Full'],gcf,'pdf');

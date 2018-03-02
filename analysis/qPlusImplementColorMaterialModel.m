@@ -10,7 +10,7 @@ codeDir  = fullfile(getpref('ColorMaterial', 'mainExpDir'), 'analysis');
 
 % Exp parameters
 % Specify other experimental parameters
-subjectList = {'ar1', 'ar2'};
+subjectList = {'as'};
 conditionCode = {'NC'};
 nSubjects = length(subjectList);
 nConditions = length(conditionCode); 
@@ -25,9 +25,10 @@ params = getqPlusPilotModelingParams(params);
 
 % Set up more modeling parameters
 % What sort of position fitting ('full', 'smoothOrder').
-params.whichPositions = 'smoothSpacing';
+params.whichPositions = 'full';
 if strcmp(params.whichPositions, 'smoothSpacing')
-    params.smoothOrder = 2;
+    params.smoothOrder = 3;
+    params.code = {'Linear', 'Quad', 'Cubic'};
 end
 % Does material/color weight vary in fit? ('weightVary', 'weightFixed').
 params.whichWeight = 'weightVary';
@@ -56,5 +57,9 @@ for s = 1:nSubjects
     
     thisSubject = subject{s};
     cd (analysisDir)
-    save([subjectList{s} params.whichPositions,  'Fit'], 'thisSubject', 'params'); clear thisSubject
+    if strcmp(params.whichPositions, 'full')
+        save([subjectList{s} params.whichPositions,  'Fit'], 'thisSubject', 'params'); clear thisSubject
+    elseif strcmp(params.whichPositions, 'smoothSpacing')
+        save([subjectList{s} params.whichPositions,  params.code{params.smoothOrder} 'Fit'], 'thisSubject', 'params'); clear thisSubject
+    end
 end

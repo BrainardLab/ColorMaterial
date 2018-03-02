@@ -14,7 +14,7 @@ mainDir = fullfile(getpref('ColorMaterial', 'mainExpDir'), 'analysis');
 % Exp parameters
 % Specify other experimental parameters
 subjectList = {'as'};
-nBlocks = 1;
+nBlocks = 4;
 conditionCode = {'NC'};
 % setIndices for concatinating trial data
 indices.stimPairs = 1:4; 
