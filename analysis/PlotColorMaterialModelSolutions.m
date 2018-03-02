@@ -47,7 +47,7 @@ if strcmp(params.whichPositions, 'smoothSpacing')
     params.smoothOrder = 1;
 end
 
-% Does material/color weight vary in fit? ('weightVary', 'weightFixed'). 
+% Does material/color weight vary in fit? ('weightVary', 'weightFixed').
 params.whichWeight = 'weightVary';
 
 % For each subject
@@ -55,18 +55,19 @@ for s = 1:length(subjectList)
     params.subjectName = subjectList{s};
     close all;
     for whichCondition = 1:nConditions
-        load([figAndDataDir '/'   subjectList{s} 'SolutionNew-' num2str(params.whichPositions) '.mat'])
-       
+        temp = load([figAndDataDir '/'   subjectList{s} 'Solution-Cubic' num2str(params.whichPositions) '.mat']);  %fljSolution-Cubicfull
+        thisSubject = temp.thisSubject; 
         load colorMaterialInterpolateFunCubiceuclidean.mat
-params.F = colorMaterialInterpolatorFunction; % for lookup.
-
+        params.F = colorMaterialInterpolatorFunction; % for lookup.
+        
         ColorMaterialModelPlotSolution(thisSubject.condition{whichCondition}.pFirstChosen, ...
             thisSubject.condition{whichCondition}.predictedProbabilitiesBasedOnSolution, ...
             thisSubject.condition{whichCondition}.returnedParams,indexMatrix, ...
-            params, figAndDataDir, saveFig, weibullplots)
-    
+            params, figAndDataDir, saveFig, weibullplots) 
+        
+      thisSubject.condition{whichCondition}.returnedParams(end-1)
     end
     if saveFig
-    FigureSave([subjectList{s} num2str(params.whichPositions) 'FitNewCorr'],gcf,'pdf');
+        FigureSave([subjectList{s} num2str(params.whichPositions) 'FitNewCorr'],gcf,'pdf');
     end
 end
