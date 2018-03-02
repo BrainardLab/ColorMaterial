@@ -12,6 +12,6 @@ params.tryWeightValues = [0.5 0.2 0.8];
 params.whichMethod = 'lookup'; % could be also 'simulate' or 'analytic'
 params.nSimulate = 1000; % for method 'simulate'
 load colorMaterialInterpolateFunCubiceuclidean.mat
-params.interpCode = 'cubic';
+params.interpCode = 'Cubic';
 params.F = colorMaterialInterpolatorFunction; % for lookup.
 
