@@ -1,8 +1,9 @@
 % ImplementColorMaterialModel
 
 % Initialize
-clear; close
-
+clear; close all;
+global iterationX
+iterationX = 0; 
 % Specify basic experiment parameters
 whichExperiment = 'Pilot';
 mainDir = '/Users/radonjic/Dropbox (Aguirre-Brainard Lab)/';
@@ -21,12 +22,13 @@ switch whichExperiment
         
     case 'Pilot'
         % Specify other experimental parameters
-        subjectList = {'zhr', 'vtr', 'scd', 'mcv', 'flj'};
+%         subjectList = {'zhr', 'vtr', 'scd', 'mcv', 'flj'};
+          subjectList = {'zhr'};
         nLevels = 7; % number of levels across which color/material vary
         nBlocks = 25;
         conditionCode = {'NC'};
         figAndDataDir = [mainDir 'CNST_analysis/ColorMaterial/Pilot'];
-        dataDir = '/Users/Shared/Matlab/Experiments/ColorMaterial/data/';
+        %dataDir = '/Users/Shared/Matlab/Experiments/ColorMaterial/data/';
         % Load the pair indices.
         load([mainDir 'CNST_analysis/ColorMaterial/Pilot/pairIndicesPilot.mat'])
  
