@@ -1,4 +1,4 @@
-a = [  -0.199000000000000
+a = 100*[  -0.199000000000000
   -0.148603903938609
   -0.003345586295623
   -0.000000000000000
@@ -18,7 +18,7 @@ a = [  -0.199000000000000
 
  %  ll = 4.583919567731283
  b = ...
-  [-0.199000000000000
+ 100.*[-0.199000000000000
   -0.148603903938609
   -0.003345586295623
   -0.000000000000000
@@ -35,3 +35,8 @@ a = [  -0.199000000000000
    0.005000000000000
    0.010000000000000];
 %ll2 =    4.583919567731281
+
+FitColorMaterialModelMLDSFun(b,...
+    pairColorMatchColorCoords,pairMaterialMatchColorCoords,...
+    pairColorMatchMaterialCoords,pairMaterialMatchMaterialCoords,...
+    subject{1}.firstChosenAcrossTrials,nTrials,params)
