@@ -2,8 +2,8 @@
 
 % Initialize
 clear; close all;
-global iterationX
-iterationX = 0; 
+% global iterationX
+% iterationX = 0; 
 % Specify basic experiment parameters
 whichExperiment = 'Pilot';
 mainDir = '/Users/radonjic/Dropbox (Aguirre-Brainard Lab)/';
