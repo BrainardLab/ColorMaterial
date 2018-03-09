@@ -153,7 +153,7 @@ for ss = 1:nSessions
 end
 
 %% Save
-cd(getpref('ColorMaterial'), 'demoDataDir');
+cd(getpref('ColorMaterial', 'demoDataDir'));
 save(['qpSimulation' whichInterp whichDistance, filename]); clear;
 toc
 
