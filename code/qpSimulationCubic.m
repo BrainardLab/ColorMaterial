@@ -14,8 +14,7 @@ function qpSimulationCubic(whichDistance, filename, DO_INITIALIZE)
 % 01/05/18  dhb      Futz with bounds on parameters so it doesn't bomb.
 % 01/24/18  dhb      Cubic version.
 
-%% Close out stray figures
-clear; close all;
+
 
 %% Change to our pwd
 cd(fileparts(mfilename('fullpath')));

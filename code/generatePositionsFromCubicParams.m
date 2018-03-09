@@ -35,9 +35,10 @@ for i  = 1:nSets
         randomQuadM = tempQuad(round(rand(1)*nSamples));
         randomCubicM = tempCubic(round(rand(1)*nSamples));
         
-        cd(getpref('ColorMaterial', 'mainExpDir'));
-        cd('analysis/')
+        cd([getpref('ColorMaterial', 'mainCodeDir'), '/analysis/']);
         modelParams = getqPlusPilotExpParams;
+        cd([getpref('ColorMaterial', 'mainCodeDir'), '/code/']);
+        
         modelParams.whichPositions = 'smoothSpacing';
         modelParams.smoothOrder = whichSmoothSpacing;
         
@@ -62,10 +63,10 @@ for i  = 1:nSets
         end
     end
     
-    % plot figure
-    figure; clf; hold on;
-    plot(1:7, materialMatchColorCoords(i,:), 'bo-')
-    plot(1:7, colorMatchMaterialCoords(i,:), 'ro-')
-    axis([0 8 -20 20])
+%     % plot figure
+%     figure; clf; hold on;
+%     plot(1:7, materialMatchColorCoords(i,:), 'bo-')
+%     plot(1:7, colorMatchMaterialCoords(i,:), 'ro-')
+%     axis([0 8 -20 20])
 end
 end
