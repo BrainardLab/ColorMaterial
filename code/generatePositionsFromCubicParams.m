@@ -27,13 +27,13 @@ for i  = 1:nSets
         tempCubic = linspace(params.Cubic(1), params.Cubic(end), nSamples);
         
         % randomly draw parameters for a cubic model for each dimension.
-        randomLinC = tempLin(round(rand(1)*nSamples));
-        randomQuadC = tempQuad(round(rand(1)*nSamples));
-        randomCubicC = tempCubic(round(rand(1)*nSamples));
+        randomLinC = tempLin(ceil(rand(1)*nSamples));
+        randomQuadC = tempQuad(ceil(rand(1)*nSamples));
+        randomCubicC = tempCubic(ceil(rand(1)*nSamples));
         
-        randomLinM = tempLin(round(rand(1)*nSamples));
-        randomQuadM = tempQuad(round(rand(1)*nSamples));
-        randomCubicM = tempCubic(round(rand(1)*nSamples));
+        randomLinM = tempLin(ceil(rand(1)*nSamples));
+        randomQuadM = tempQuad(ceil(rand(1)*nSamples));
+        randomCubicM = tempCubic(ceil(rand(1)*nSamples));
         
         cd([getpref('ColorMaterial', 'mainCodeDir'), '/analysis/']);
         modelParams = getqPlusPilotExpParams;
@@ -56,8 +56,13 @@ for i  = 1:nSets
             error('this smooth order is not implemented');
         end
         [materialMatchColorCoords(i,:),colorMatchMaterialCoords(i,:),~,~] = ColorMaterialModelXToParams(x,modelParams);
-        if (any(diff(materialMatchColorCoords(i,:))<0) || any(diff(colorMatchMaterialCoords(i,:))<0))
-            % do nothing if it's monotonic
+        monotonicityCheck = (any(diff(materialMatchColorCoords(i,:))<0) || any(diff(colorMatchMaterialCoords(i,:))<0)); 
+        positionsOutOfBoundCheck = (any(abs(materialMatchColorCoords(i,:))>20) || any(abs(colorMatchMaterialCoords(i,:))>20));  
+        
+        if monotonicityCheck && positionsOutOfBoundCheck
+            % do nothing if it's monotonic and/or positions are out of
+            % bound
+            disp([materialMatchColorCoords(i,:), colorMatchMaterialCoords(i,:)])
         else
             notMonotonic = false;
         end
