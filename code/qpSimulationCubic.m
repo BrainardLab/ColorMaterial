@@ -54,7 +54,7 @@ clear questDataAllTrials
 load(fullfile(tempdir,initFilename),'questDataAllTrials');
 
 %% Set up simulated observer function
-simulatedPsiParams = generatePositionsFromCubicParams(1,whichSmoothSpacing); 
+simulatedPsiParams = qPlusGeneratePositionsFromCubicParams(1,whichSmoothSpacing); 
 simulatedObserverFun = @(x) qpSimulatedObserver(x,qpPFFun,simulatedPsiParams);
 
 %% Run multiple simulations
