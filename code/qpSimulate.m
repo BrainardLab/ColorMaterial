@@ -18,7 +18,8 @@ for k = 1:2
             else
                 DO_INITIALIZE = false;
             end
-            qpSimulationCubic(whichDistance, whichSmoothSpacing, filename, DO_INITIALIZE)
+            qpSimulationCubic(whichDistance, whichSmoothSpacing, i, DO_INITIALIZE)
+            cd ([(getpref('ColorMaterial', 'mainCodeDir')), '/code'])
         end
     end
 end

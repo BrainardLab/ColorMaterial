@@ -21,9 +21,9 @@ stimUpperEnds = [1 2 3];
 maxStimValue = 3;
 maxPosition = 20;
 minSpacing = 0.25;
-save('qPSimulationParams')
 
 % Experimental params
 nSessions = 8;
 nTrialsPerQuest = 30;
 questOrderIn = [0 1 2 3 3 3 3 3 3];
+save('qPSimulationParams')
