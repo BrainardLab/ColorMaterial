@@ -35,11 +35,11 @@ indices.stimPairs = 1:4;
 indices.response1 = 5; 
 indices.nTrials = 6; 
 
-for ss = 1%:length(positionSmoothSpacing)
-    for d = 1%:length(distances)
-        for i = 1%:nSets
+for ss = 1:length(positionSmoothSpacing)
+    for d = 1:length(distances)
+        for i = 1:nSets
             % load the data set
-            fileName = ['qpSimulation' distances{d} 'Positions-' positionCode{ss} '-' num2str(i) '.mat']; %qpSimulationcityblockPositions-Linear-10
+            fileName = ['qpSimulation' distances{d} 'Positions-' positionCode{ss} '-' num2str(i)]; %qpSimulationcityblockPositions-Linear-10
             warnState = warning('off','MATLAB:dispatcher:UnresolvedFunctionHandle');
             thisTempSet = load([fullfile(demoDir, fileName)]);
             %thisSet = thisTempSet.questDataAllTrials; 
@@ -64,7 +64,7 @@ for ss = 1%:length(positionSmoothSpacing)
             thisSet.newNTrials = thisSet.newTrialData(:,6);
             thisSet.pFirstChosen = thisSet.firstChosen./thisSet.newNTrials;
             
-            % model
+            %model
             [thisSet.returnedParams, thisSet.logLikelyFit, thisSet.predictedProbabilitiesBasedOnSolution] = ...
                 FitColorMaterialModelMLDS(thisSet.pairColorMatchColorCoords, ...
                 thisSet.pairMaterialMatchColorCoords,...
@@ -77,7 +77,9 @@ for ss = 1%:length(positionSmoothSpacing)
                 thisSet.returnedW, thisSet.returnedSigma]  = ColorMaterialModelXToParams(thisSet.returnedParams, params);
             
             % save
+             cd (demoDir)
              save([fileName 'Fit'], 'thisSet'); clear thisSet
+             cd (codeDir)
         end
     end
 end
