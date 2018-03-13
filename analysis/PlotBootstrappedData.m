@@ -29,7 +29,7 @@ switch whichExperiment
 end
 nConditions = length(conditionCode); 
 nSubjects = length(subjectList); 
-whichModelType = 'full'
+whichModelType = 'full'; 
 % Set some parameters for plotting bootstrapped results. 
 CIrange = 95; % confidence interval range. 
 CIlo = (1-CIrange/100)/2;
@@ -41,7 +41,7 @@ for s = 1:length(subjectList)
     switch whichExperiment
         case 'Pilot'
             clear thisSubject
-            load([figAndDataDir '/' subjectList{s} 'Bootstrap' num2str(nRepetitions) '-' whichModelType '.mat'])
+            load([figAndDataDir '/' subjectList{s} 'BootstrapCubic' num2str(nRepetitions) '-' whichModelType '.mat'])
         case 'E1P2FULL'
             clear thisSubject
           %  Currently this is obsolete, we need to get new bootstrap data with the current code.   
@@ -50,7 +50,7 @@ for s = 1:length(subjectList)
     end
     
     subject{s} = thisSubject; clear thisSubject;
-    kk = load([figAndDataDir '/' subjectList{s} 'SolutionNew-' whichModelType '.mat']);
+    kk = load([figAndDataDir '/' subjectList{s} 'Solution-' whichModelType '.mat']);
     for whichCondition = 1:nConditions
         % Extract the bootstrapped parameters and the variability
         CI1(s,whichCondition) = ...
@@ -102,5 +102,5 @@ set(gca, 'XTickLabel', labelList, 'FontName','Helvetica','FontSize',20);
 
 % Save figure
 cd(figAndDataDir)
-FigureSave(['PilotResultsAll222-' whichModelType],gcf,'pdf');
+FigureSave(['Fig5Proceedings-PilotResultsFinal-' whichModelType],gcf,'pdf');
 cd(codeDir)

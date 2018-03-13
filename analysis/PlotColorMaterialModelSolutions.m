@@ -55,7 +55,7 @@ for s = 1:length(subjectList)
     params.subjectName = subjectList{s};
     close all;
     for whichCondition = 1:nConditions
-        temp = load([figAndDataDir '/'   subjectList{s} 'Solution-Cubic' num2str(params.whichPositions) '.mat']);  %fljSolution-Cubicfull
+        temp = load([figAndDataDir '/'   subjectList{s} 'Solution-' num2str(params.whichPositions) '.mat']);  %fljSolution-Cubicfull
         thisSubject = temp.thisSubject; 
         load colorMaterialInterpolateFunCubiceuclidean.mat
         params.F = colorMaterialInterpolatorFunction; % for lookup.
