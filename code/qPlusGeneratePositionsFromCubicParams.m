@@ -56,10 +56,12 @@ for i  = 1:nSets
             error('this smooth order is not implemented');
         end
         [materialMatchColorCoords(i,:),colorMatchMaterialCoords(i,:),~,~] = ColorMaterialModelXToParams(x,modelParams);
-        monotonicityCheck = (any(diff(materialMatchColorCoords(i,:))<0) || any(diff(colorMatchMaterialCoords(i,:))<0)); 
+       % this is 
+        monotonicityCheck = (any(diff(materialMatchColorCoords(i,:))<0.25) || any(diff(colorMatchMaterialCoords(i,:))<0.25)); 
+        
         positionsOutOfBoundCheck = (any(abs(materialMatchColorCoords(i,:))>20) || any(abs(colorMatchMaterialCoords(i,:))>20));  
         
-        if monotonicityCheck && positionsOutOfBoundCheck
+        if monotonicityCheck || positionsOutOfBoundCheck
             % do nothing if it's monotonic and/or positions are out of
             % bound
             disp([materialMatchColorCoords(i,:), colorMatchMaterialCoords(i,:)])
