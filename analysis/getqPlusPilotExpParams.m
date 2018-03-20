@@ -10,8 +10,8 @@ params.sigma = 1;
 params.sigmaFactor = 4;
 
 params.targetPosition = 0;
-params.targetIndexColor =  11; % target position on the color dimension in the set of all paramters.
-params.targetIndexMaterial = 4; % target position on the material dimension in the set of all paramters.
+params.targetIndexColor =  4; % target position on the color dimension in the set of all paramters.
+params.targetIndexMaterial = 11; % target position on the material dimension in the set of all paramters.
 
 params.materialMatchColorCoords  =  params.competitorsRangeNegative(1):1:params.competitorsRangePositive(end);
 params.colorMatchMaterialCoords  =  params.competitorsRangeNegative(1):1:params.competitorsRangePositive(end);
