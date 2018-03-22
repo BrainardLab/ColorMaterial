@@ -18,6 +18,8 @@ figDir = pwd;
 
 % Set experimental parameters. 
 params = getqPlusPilotExpParams;
+params.whichDistance = 'euclidean'; 
+params.interpCode = 'Cubic';
 
 % Set modeling parameters. 
 params = getqPlusPilotModelingParams(params); 
@@ -67,7 +69,7 @@ end
 cd(figDir)
 switch params.whichPositions
     case 'full'
-        save([params.subjectName 'Fit-' params.whichPositions  ' .mat'])
+        save([params.subjectName 'FitFinal-' params.whichPositions  ' .mat'])
     case 'smoothSpacing'
         save([params.subjectName 'Fit-' params.whichPositions num2str(params.smoothOrder)  ' .mat'])
 end
