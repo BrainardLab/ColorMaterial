@@ -36,7 +36,7 @@ indices.stimPairs = 1:4;
 indices.response1 = 5; 
 indices.nTrials = 6; 
 
-for ss = 1%:length(positionSmoothSpacing)
+for ss = 1
     for d = 1:length(distances)
         for i = 1:nSets
             % load the data set

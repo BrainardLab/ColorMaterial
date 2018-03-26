@@ -85,7 +85,11 @@ for ss = 1
                     thisSet.trialData = [thisSet.trialData; ...
                         thisTempSet.questDataAllTrials.trialData(t).stim, thisTempSet.questDataAllTrials.trialData(t).outcome];
                 end
+                 % Save simulated params and their likelihood
+                simulatedParams  = [thisTempSet.simulatedPsiParams 1]; 
+                logLikelyqPlus   = qpLogLikelihood(thisTempSet.stimCounts,thisTempSet.questDataAllTrials.qpPF, thisTempSet.psiParamsFit)/log(10);
                 clear thisTempSet;
+                
                 if (size(thisSet.trialData,1) ~= nTrialsRun)
                     error('Specified and actual number of trials do not match.');
                 end
@@ -127,35 +131,34 @@ for ss = 1
                         trainingSet.firstChosen, trainingSet.newNTrials, params);
                     
                     % Now use these parameters to predict the responses for the test data.
-                    [negLogLikely,predictedResponses] = FitColorMaterialModelMLDSFun(trainingSet.returnedParams,...
+                    [negLogLikely,] = FitColorMaterialModelMLDSFun(trainingSet.returnedParams,...
                         testSet.pairColorMatchColorCoords,testSet.pairMaterialMatchColorCoords,...
                         testSet.pairColorMatchMaterialCoords,testSet.pairMaterialMatchMaterialCoords,...
                         testSet.firstChosen, testSet.newNTrials, params);
                     
                     logLikelyhood(kk) = -negLogLikely; clear negLogLikely
-                    predictedProbabilities(kk,:) = predictedResponses; clear predictedResponses
-                    RMSError(kk) = ComputeRealRMSE(predictedResponses, probabilitiesTestData);
+                    RMSError(kk) = ComputeRealRMSE(predictedProbabilities(kk,:), probabilitiesTestData);
                     
                     dataSet{kk}.trainingSet = trainingSet; clear trainingSet
                     dataSet{kk}.testSet = testSet; clear testSet
                 end
+                meanLogLiklihood = mean(logLikelyhood); 
+                meanRMSE = mean(RMSError); 
                 
                 % Save in the right folder.
-                cd(figAndDataDir);
-                save([subjectList{s} conditionCode{whichCondition} params.whichWeight '-' num2str(nFolds) 'Folds'   modelCode], ...
-                    'dataSet', 'LogLikelyhood', 'predictedProbabilities', 'RMSError');
+                cd(demoDir);
+                save([fileName '-' num2str(nFolds) 'FoldsCV'   modelCode], ...
+                    'dataSet', 'LogLikelyhood', 'predictedProbabilities', 'RMSError', ...
+                    'meanLogLiklihood', 'meanRMSE', 'simulatedParams', 'logLikelyqPlus');
                 clear dataSet LogLikelyhood predictedProbabilities RMSError
             end
         % Could add print outcome here.     
         end
     end
 end
-
 %         %% Print outputs
 %         if printOutcome
-%             for i = 1:nModelTypes
-%                 tmpMeanError(i) = mean(thisSubject.condition{whichCondition}.crossVal(whichModelType).meanLogLikelihood);
-%             end
+%             
 %             fprintf('meanLogLikely: %s  %.4f, %s %.4f, %s %.4f.\n', modelCode(1), tmpMeanError(1), modelCode(2), tmpMeanError(2), modelCode(3), tmpMeanError(3));
 %             
 %             for i = 1:nModelTypes
