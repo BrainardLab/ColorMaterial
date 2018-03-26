@@ -20,12 +20,14 @@ distances = {'euclidean', 'cityblock'};
 positionSmoothSpacing = 3;
 positionCode = {'Linear', 'Quad', 'Cubic'};
 
-% Set up experimen parameters, which are common for all the data
+% Set up experiment parameters, which are common for all the data
 params = getqPlusPilotExpParams;
 params.whichDistance = 'euclidean';
 params.interpCode = 'Cubic';
+
 % Set up initial modeling paramters (add on)
 params = getqPlusPilotModelingParams(params);
+
 % Does material/color weight vary in fit? ('weightVary', 'weightFixed').
 params.whichWeight = 'weightVary';
 
@@ -34,22 +36,33 @@ indices.stimPairs = 1:4;
 indices.response1 = 5;
 indices.nTrials = 6;
 
-% Set cross-validation params. 
+% Set cross-validation params.
+% The model types are defined in the whichModelType
+% loop below, with various integers corresponding to
+% varous models.  Current types:
+%  1: Full model
+%  2: Cubic model
 nModelTypes = 2;
 nFolds = 8;
+
+% Hard coded number of trials per run.
+% Danger danger danger.  But we check
+% after the load that things are OK.
 nTrialsRun = 2160;
 
-
 %% Define different models.
+%
 % To enable the same partition across condition
 % Set cross validation parameters
 for ss = 1
     for d = 1%:length(distances)
         for i = 1%:nSets
-            for whichModelType = 1:nModelTypes
-                % Partition and get indices.
-                c = cvpartition(nTrialsRun,'Kfold',nFolds);
+            
+            % Partition and get indices.
+            % Use the same partition for each model
+            c = cvpartition(nTrialsRun,'Kfold',nFolds);
                 
+            for whichModelType = 1:nModelTypes
                 % Set model types
                 if whichModelType == 1
                     params.whichPositions = 'full';
@@ -66,7 +79,6 @@ for ss = 1
                 fileName = ['test' distances{d} 'Positions-' positionCode{positionSmoothSpacing(ss)} '-' num2str(i)]; %qpSimulationcityblockPositions-Linear-10
                 warnState = warning('off','MATLAB:dispatcher:UnresolvedFunctionHandle');
                 thisTempSet = load([fullfile(demoDir, fileName)]);
-                %thisSet = thisTempSet.questDataAllTrials;
                 warning(warnState);
                 thisSet.trialData = [];
                 for t = 1:length(thisTempSet.questDataAllTrials.trialData)
@@ -74,10 +86,14 @@ for ss = 1
                         thisTempSet.questDataAllTrials.trialData(t).stim, thisTempSet.questDataAllTrials.trialData(t).outcome];
                 end
                 clear thisTempSet;
+                if (size(thisSet.trialData,1) ~= nTrialsRun)
+                    error('Specified and actual number of trials do not match.');
+                end
                 
                 for kk = 1:nFolds
                     
                     % Separate test and training
+                    clear trainingSet testSet
                     trainingIndex = c.training(kk);
                     testIndex = c.test(kk);
                     
@@ -116,7 +132,7 @@ for ss = 1
                         testSet.pairColorMatchMaterialCoords,testSet.pairMaterialMatchMaterialCoords,...
                         testSet.firstChosen, testSet.newNTrials, params);
                     
-                    LogLikelyhood(kk) = -negLogLikely; clear negLogLikely
+                    logLikelyhood(kk) = -negLogLikely; clear negLogLikely
                     predictedProbabilities(kk,:) = predictedResponses; clear predictedResponses
                     RMSError(kk) = ComputeRealRMSE(predictedResponses, probabilitiesTestData);
                     
