@@ -10,7 +10,7 @@ try
     params = convertToStruct(cfgFile);
     
     % Load the calibration file and check the calibration age
-    [cal, ~] = setCheckCalibration('EyeTrackerLCD', exp.subject);
+    [cal, ~] = setCheckCalibration('ColorMaterialCalibration', exp.subject);
     
     % Get the stimulus color matrix for all trials
     load('Exp3ImageList.mat');
@@ -19,11 +19,11 @@ try
     target = load([params.targetName '-RGB.mat']);
     
     % Load the lookup table.
-    theLookupTable = load('/Users/colorlab/Documents/MATLAB/toolboxes/BrainardLabToolbox/ColorMaterialModel/colorMaterialInterpolateFunLineareuclidean');
+    theLookupTable = load(['/Users/colorlab/Documents/MATLAB/toolboxes/BrainardLabToolbox/ColorMaterialModel/colorMaterialInterpolateFun' params.interpCode params.distance]);
     
-    % Define psychometric function in terms of lookup table
-    qpPFFun = @(stimParams,psiParams) qpPFColorMaterialQuadModel(stimParams,psiParams,theLookupTable.colorMaterialInterpolatorFunction);
-    
+  %% Define psychometric function in terms of lookup table
+    qpPFFun = @(stimParams,psiParams) qpPFColorMaterialCubicModel(stimParams,psiParams,theLookupTable.colorMaterialInterpolatorFunction);
+
     % Create, open and draw window object and keep it on the screen for a
     % defined isi
     win = GLWindow('FullScreen', true, 'BackgroundColor', [0 0 0], 'SceneDimensions', params.screenDimensions);
@@ -42,21 +42,20 @@ try
     % Each one has a different upper end of stimulus regime
     % The last of these should be the most inclusive, and
     % include stimuli that could come from any of them.
-    qPParams = getQuestParamsExp3;
-    nQuests = length(qPParams.stimUpperEnds);
-    if (qPParams.DO_INITIALIZE)
-        nQuests = length(qPParams.stimUpperEnds);
+    qPExpParams = getQuestParamsExp3;
+    nQuests = length(qPExpParams.stimUpperEnds);
+    if (qPExpParams.DO_INITIALIZE)
+        nQuests = length(qPExpParams.stimUpperEnds);
         for qq = 1:nQuests
             fprintf('Initializing quest structure %d\n',qq)
-            qTemp = qpParams( ...
+            questData{qq} = qpInitialize( ...
                 'qpPF',qpPFFun, ...
-                'stimParamsDomainList',{-qPParams.stimUpperEnds(qq):qPParams.stimUpperEnds(qq), -qPParams.stimUpperEnds(qq):qPParams.stimUpperEnds(qq), ...
-                -qPParams.stimUpperEnds(qq):qPParams.stimUpperEnds(qq), -qPParams.stimUpperEnds(qq):qPParams.stimUpperEnds(qq)}, ...
-                'psiParamsDomainList',{qPParams.Lin qPParams.Quad qPParams.Cubic ...
-                qPParams.Lin qPParams.Quad qPParams.Cubic ...
-                qPParams.weights} ...
-                );
-            questData{qq} = qpInitialize(qTemp);
+                'stimParamsDomainList',{-qPExpParams.stimUpperEnds(qq):qPExpParams.stimUpperEnds(qq), -qPExpParams.stimUpperEnds(qq):qPExpParams.stimUpperEnds(qq), ...
+                -qPExpParams.stimUpperEnds(qq):qPExpParams.stimUpperEnds(qq), -qPExpParams.stimUpperEnds(qq):qPExpParams.stimUpperEnds(qq)}, ...
+                'psiParamsDomainList',{qPExpParams.Lin qPExpParams.Quad qPExpParams.Cubic ...
+                qPExpParams.Lin qPExpParams.Quad qPExpParams.Cubic ...
+                qPExpParams.weights} ,...
+                'filterPsiParamsDomainFun',@(psiParams) qpQuestPlusColorMaterialCubicModelParamsCheck(psiParams,qPExpParams.maxStimValue,qPExpParams.maxPosition,qPExpParams.minSpacing));
         end
         
         %% Define a questStructure that has all the stimuli
@@ -65,12 +64,13 @@ try
         % stimulus in the analysis at the end.  Set noentropy
         % flag so that update is fast, because we don't use this
         % one to select trials.
+        %% Why do we have this double
         questDataAllTrials = questData{end};
         
         %% Save out initialized quests
-        save(fullfile(qPParams.initDir,'initalizedQuestsExp3'),'questData','questDataAllTrials');
+        save(fullfile(qPExpParams.initDir,['initalizedQuestsExp3', date]),'questData','questDataAllTrials');
     else
-        load(fullfile(qPParams.initDir,'initalizedQuestsExp3'));
+        load(fullfile(qPExpParams.initDir,params.initFilename));
     end
     
     % Define a questStructure that has all the stimuli
@@ -88,16 +88,16 @@ try
     % Define how many of each type of trial selection we'll do each time through.
     % 0 -> choose at random from all trials.
     indexTrial = 0; 
-    for tt = 1:qPParams.nTrialsPerQuest
+    for tt = 1:qPExpParams.nTrialsPerQuest
         
         
         % Set the order for the specified quests and random
-        questOrder = randperm(length(qPParams.questOrderIn));
+        questOrder = randperm(length(qPExpParams.questOrderIn));
         for qq = 1:length(questOrder)
-      
+            
             % index the trial
             indexTrial = indexTrial+1; 
-            theQuest = qPParams.questOrderIn(questOrder(qq));
+            theQuest = qPExpParams.questOrderIn(questOrder(qq));
             
             % Get stimulus for this trial, either from one of the quests or at random.
             if (theQuest > 0)
@@ -114,8 +114,16 @@ try
             % Add stimulus images for this trial
             stimulusOneIndex = intersect(find((imageList.stimulusListColor == stim(1))) , find((imageList.stimulusListMaterial == stim(2))));
             sOne = load([imageList.imageName{stimulusOneIndex} '-RGB.mat']);
+            if ~(strcmp(cal.describe.date, sOne.calData.date) && strcmp(sOne.calData.calFileName, getpref('ColorMaterial','calFileName')))
+                error('Image file. Calibration files do not match.');
+            end
+            
             stimulusTwoIndex = intersect(find((imageList.stimulusListColor == stim(3))) , find((imageList.stimulusListMaterial == stim(4))));
             sTwo = load([imageList.imageName{stimulusTwoIndex} '-RGB.mat']);
+            if ~(strcmp(cal.describe.date, sTwo.calData.date) && strcmp(sTwo.calData.calFileName, getpref('ColorMaterial','calFileName')))
+                 error('Image file. Calibration files do not match.');
+            end
+            
             positionOne = randi(2);
             
             % sanity check from qpModelCode
@@ -153,8 +161,10 @@ try
                         case 'a' % left
                             if (positionOne == 1)
                                 outcome = 1;
+                                responseReceived(indexTrial) = mglGetSecs; 
                             elseif (positionOne == 2)
                                 outcome = 2;
+                                responseReceived(indexTrial) = mglGetSecs; 
                             end
                             beep;
                             win.addOval([params.positionLeft(1) params.positionLeft(2)], [params.checkSize(1), params.checkSize(2)], [0 0 0], 'Name', 'Check','Enabled', true);
@@ -194,6 +204,36 @@ try
             % experiment.  We never query it to decide what to do, but we
             % will use it to fit the data at the end.
             questDataAllTrials = qpUpdate(questDataAllTrials,stim,outcome);
+            if rem(tt*qq,qPExpParams.nTrialsPerQuest)==0
+                done = (tt*qq)/qPExpParams.nTrialsPerQuest;
+                left = length(questOrder)-done;
+                if left > 0
+                    % Flush any key presses from the previous trial.
+                    key = -1;
+                    while (~isempty(key))
+                        key = mglGetKeyEvent(0);
+                    end
+                    % Report the progress
+                    Speak(['Set ' num2str(done) 'done']);
+                    if left == 1
+                        Speak([num2str(left) 'more set to go']);
+                    else
+                        Speak([num2str(left) 'more sets to go']);
+                    end
+                    Speak('Take a break or press a button to continue.');
+                    
+                    % Pause until button press
+                    pauseExp = true;
+                    while pauseExp
+                        key = mglGetKeyEvent(Inf);
+                        if ~isempty(key)
+                            if key.charCode == 'k'
+                                pauseExp = false;
+                            end
+                        end
+                    end
+                end
+            end
         end
     end
     win.close;
@@ -202,6 +242,7 @@ try
     params.quest = questData;
     params.trialStart = trialStart;
     params.trialEnd = trialEnd;
+    params.responseReceived = responseReceived;
     % Toss the error back to Matlab's default error handler.
 catch e
     if exist('win', 'var') && ~isempty(win)

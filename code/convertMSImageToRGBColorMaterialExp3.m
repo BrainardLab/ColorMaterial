@@ -2,10 +2,10 @@
 % Converts out hyperspectral stimulus images to RGB for display
 
 % 02/11/15 ar Wrote it.
-% 12/08/17 ar Adapted it for Experiment 2. 
+% 12/08/17 ar Adapted it for Experiment 2/3. 
 
 % Initialize
-clear all; close;
+clear; close all;
 
 % Define directories
 multispectralDataFolder = '/Users1/Shared/Matlab/Experiments/Blobby/ColorSetBlobbyExp2-03-Aug-2017/renderings/Mitsuba';
@@ -20,17 +20,21 @@ cal = SetGammaMethod(cal, 0);
 calLMS = SetSensorColorSpace(cal, T_cones_ss2,  S_cones_ss2);
 
 % Define parameters
-load('Exp2ImageList.mat')
+load('Exp3ImageList.mat')
 scaleTo = 1;%
 
-maxPrimary = 1.67*scaleTo; % this is the one for the new set of stimuli. 
+maxPrimary = 1.9*scaleTo; % this is the one for the new set of stimuli. 
 % Create image lists with respect to parameters defined above .
+calData.maxPrimary = maxPrimary; 
+calData.date = cal.describe.date; 
+calData.calFileName = getpref('ColorMaterial','calFileName');   
 
 % Convert the images from MS to LMS to rgb.
 % Because these are not rendered relative to the monitor calibration, we
 % have to scale them to fit the gamut.
 tic
 for i = 1:length(imageList.imageName)
+    fprintf('Image %s\n', imageList.imageName{i}); 
     % Pick and image and its new name
     cd(multispectralDataFolder);
     thisImageName = imageList.imageName{i};
@@ -54,13 +58,14 @@ for i = 1:length(imageList.imageName)
     end
     if (sum(uncorrectedRGB(uncorrectedRGB<0)))
         disp(sum(uncorrectedRGB(uncorrectedRGB<0)))
+        error('Settings out of range.');
     end
     % Convert the scaled primaries to RGB and save. 
     [gamut,~] = PrimaryToGamut(calLMS,uncorrectedRGB);
     settings = GamutToSettings(calLMS,gamut);
     sensorImageRGB = CalFormatToImage(settings, m, n);
     cd(RGBdataFolder);
-    save([thisImageName, '-RGB.mat'], 'sensorImageRGB')
+    save([thisImageName, '-RGB.mat'], 'sensorImageRGB', 'calData')
     clear sensorImageLMS imageName image temp tempRGB uncorrectedRGB sensorImageRGB settings gamut
 end
 toc

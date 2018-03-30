@@ -3,20 +3,21 @@ function params = getQuestParamsExp3
 % All parameters are hardcoded (DHB's best guesses)
 
 % 09/12/2017 ar Pulled this from the demo code. 
+% 03/28/2018 ar Adapted it for the experiment. 
 
 % Range over which quest+ will look for the best position of the params. 
 
 lowerLin = 1;
 upperLin = 6;
-nLin = 4;
+nLin = 5;
 
 lowerQuad = -0.3;
 upperQuad = -lowerQuad;
-nQuad = 3;
+nQuad = 4;
 
 lowerCubic = -0.3;
 upperCubic = -lowerCubic;
-nCubic = 3;
+nCubic = 4;
 
 lowerWeight = 0.05;
 upperWeight = 0.95;
@@ -31,6 +32,10 @@ params.Cubic = linspace(lowerCubic,upperCubic,nCubic);
 params.stimUpperEnds = [1 2 3];
 params.nTrialsPerQuest = 30;
 params.questOrderIn = [0 1 2 3 3 3 3 3 3];
+
+params.maxStimValue = 3;
+params.maxPosition = 20;
+params.minSpacing = 0.25;
 
 % initialize or not
 params.DO_INITIALIZE = false; 
