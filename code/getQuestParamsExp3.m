@@ -7,7 +7,7 @@ function params = getQuestParamsExp3
 
 % Range over which quest+ will look for the best position of the params. 
 
-lowerLin = 1;
+lowerLin = 0.5;
 upperLin = 6;
 nLin = 5;
 
