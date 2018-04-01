@@ -10,7 +10,7 @@ codeDir  = fullfile(getpref('ColorMaterial', 'mainExpDir'), 'analysis');
 
 % Exp parameters
 % Specify other experimental parameters
-subjectList = {'as'};
+subjectList = {'test'};
 conditionCode = {'NC'};
 nSubjects = length(subjectList);
 nConditions = length(conditionCode); 
@@ -19,6 +19,8 @@ nConditions = length(conditionCode);
 % Here we use the example structure that matches the experimental design of
 % our initial experiments.
 params = getqPlusPilotExpParams;
+params.whichDistance = 'euclidean';
+params.interpCode = 'Cubic'; 
 
 % Set up initial modeling paramters (add on)
 params = getqPlusPilotModelingParams(params);
