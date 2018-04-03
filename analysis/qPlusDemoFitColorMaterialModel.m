@@ -19,10 +19,15 @@ positionCode = {'Linear', 'Quad', 'Cubic'};
 % Here we use the example structure that matches the experimental design of
 % our initial experiments.
 params = getqPlusPilotExpParams;
+
 params.whichDistance = 'euclidean';
 params.interpCode = 'Cubic';
 % Set up initial modeling paramters (add on)
 params = getqPlusPilotModelingParams(params);
+
+tempParams = params; 
+tempParams.whichPositions = 'smoothSpacing'; 
+tempParams.smoothOrder = 3; 
 
 % Set up more modeling parameters
 % What sort of position fitting ('full', 'smoothOrder').
@@ -50,6 +55,7 @@ for ss = 1 % we can modigy this is we have sets with different position spacings
                     thisTempSet.questDataAllTrials.trialData(t).stim, thisTempSet.questDataAllTrials.trialData(t).outcome];
             end
             % Print some diagnostics
+            clear psiParamsIndex psiParamsQuest
             psiParamsIndex = qpListMaxArg(thisTempSet.questDataAllTrials.posterior);
             psiParamsQuest = thisTempSet.questDataAllTrials.psiParamsDomain(psiParamsIndex,:);
             fprintf('Simulated parameters: %0.2f, %0.2f, %0.2f, %0.2f, %0.2f, %0.2f, %0.2f\n', ...
@@ -62,9 +68,21 @@ for ss = 1 % we can modigy this is we have sets with different position spacings
                 psiParamsQuest(5),psiParamsQuest(6),psiParamsQuest(7));
             fprintf('Log 10 likelihood of data quest''s max posterior params: %0.2f\n', ...
                 qpLogLikelihood(thisTempSet.stimCounts,thisTempSet.questDataAllTrials.qpPF, psiParamsQuest)/log(10));
-            
+            % Maximum likelihood fit.  Use psiParams from QUEST+ as the starting
+            % parameter for the search, and impose as parameter bounds the range
+            % provided to QUEST+.
+            clear psiParamsFit
+            psiParamsFit = qpFit(thisTempSet.questDataAllTrials.trialData,thisTempSet.questDataAllTrials.qpPF,psiParamsQuest(:),thisTempSet.questDataAllTrials.nOutcomes,...
+                'lowerBounds', [1/thisTempSet.upperLin -thisTempSet.upperQuad -thisTempSet.upperCubic ...
+                1/thisTempSet.upperLin -thisTempSet.upperQuad -thisTempSet.upperCubic 0], ...
+                'upperBounds',[thisTempSet.upperLin thisTempSet.upperQuad thisTempSet.upperCubic thisTempSet.upperLin thisTempSet.upperQuad thisTempSet.upperCubic 1]);
+            fprintf('Maximum likelihood fit parameters: %0.2f, %0.2f, %0.2f, %0.2f, %0.2f, %0.2f, %0.2f\n', ...
+                psiParamsFit(1),psiParamsFit(2),psiParamsFit(3),psiParamsFit(4), ...
+                psiParamsFit(5),psiParamsFit(6),psiParamsFit(7));
+            fprintf('Log 10 likelihood of data fit max likelihood params: %0.2f\n', ...
+                qpLogLikelihood(thisTempSet.stimCounts,thisTempSet.questDataAllTrials.qpPF, psiParamsFit)/log(10));
             clear thisTempSet;
-            
+            [thisSet.initialParams(1:7), thisSet.initialParams(8:14), thisSet.initialParams(15), thisSet.initialParams(16) ]= ColorMaterialModelXToParams([psiParamsFit;1],tempParams);
             % Concatenate across blocks
             thisSet.rawTrialData = thisSet.trialData;
             thisSet.newTrialData = qPlusConcatenateRawData(thisSet.rawTrialData, indices);
@@ -79,6 +97,8 @@ for ss = 1 % we can modigy this is we have sets with different position spacings
             thisSet.pFirstChosen = thisSet.firstChosen./thisSet.newNTrials;
             
             % Implement the model
+            params.qpParamsStart = true; 
+            params.qpInitialParams = thisSet.initialParams;
             [thisSet.returnedParams, thisSet.logLikelyFit, thisSet.predictedProbabilitiesBasedOnSolution] =  FitColorMaterialModelMLDS(thisSet.pairColorMatchColorCoords, ...
                 thisSet.pairMaterialMatchColorCoords,...
                 thisSet.pairColorMatchMaterialCoords, ...
