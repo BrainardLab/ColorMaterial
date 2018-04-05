@@ -10,7 +10,7 @@ codeDir  = fullfile(getpref('ColorMaterial', 'mainExpDir'), 'analysis');
 
 % Exp parameters
 % Specify other experimental parameters
-nSets = 4;
+nSets = 5;
 distances = {'euclidean', 'cityblock'};
 positionSmoothSpacing = 3;
 positionCode = {'Linear', 'Quad', 'Cubic'};
@@ -47,7 +47,7 @@ for ss = 1 % we can modigy this is we have sets with different position spacings
     for d = 1%:length(distances)
         for i = 1:nSets
             % Load the data set
-            fileName = ['testQuest' num2str(i)]; 
+            fileName = ['testQuest32Params' num2str(i)]; 
             warnState = warning('off','MATLAB:dispatcher:UnresolvedFunctionHandle');
             thisTempSet = load([fullfile(demoDir, fileName)]);
             warning(warnState);
@@ -56,7 +56,8 @@ for ss = 1 % we can modigy this is we have sets with different position spacings
                 thisSet.trialData = [thisSet.trialData; ...
                     thisTempSet.questDataAllTrials.trialData(t).stim, thisTempSet.questDataAllTrials.trialData(t).outcome];
             end
-            % Print some diagnostics
+            
+            % Get the diagnostics
             clear psiParamsIndex psiParamsQuest
             psiParamsIndex = qpListMaxArg(thisTempSet.questDataAllTrials.posterior);
             psiParamsQuest = thisTempSet.questDataAllTrials.psiParamsDomain(psiParamsIndex,:);
@@ -101,6 +102,7 @@ for ss = 1 % we can modigy this is we have sets with different position spacings
                     thisSet.bs(whichRep).bootstrapDataAggregatedFirstChosen, ...
                     thisSet.bs(whichRep).bootstrapDataAggregatednTrials,...
                     params);
+            %    disp(thisSet.bs(whichRep).returnedParams(end-1))
             end   
             % Save
             cd (demoDir)
