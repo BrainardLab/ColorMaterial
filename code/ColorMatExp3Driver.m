@@ -138,8 +138,8 @@ try
                 targetC = normrnd(0,1);
                 targetM = normrnd(0,1);
                 weight = 0.2;
-                d1 = sqrt( weight*(stim(1) + normrnd(0,1) - targetC)^2 + (1-weight)*(stim(3) + normrnd(0,1) - targetM)^2 );
-                d2 = sqrt( weight*(stim(2) + normrnd(0,1) - targetC)^2 + (1-weight)*(stim(4) + normrnd(0,1) - targetM)^2 );
+                d1 = sqrt( weight*(3*stim(1) + normrnd(0,1) - targetC)^2 + (1-weight)*(2*stim(3) + normrnd(0,1) - targetM)^2 );
+                d2 = sqrt( weight*(3*stim(2) + normrnd(0,1) - targetC)^2 + (1-weight)*(2*stim(4) + normrnd(0,1) - targetM)^2 );
                 if (d1 < d2)
                     if (positionOne == 1)
                         outcome = 1;
@@ -214,36 +214,36 @@ try
             % will use it to fit the data at the end.
             questDataAllTrials = qpUpdate(questDataAllTrials,stim,outcome);
             
-            if rem(indexTrial,qPExpParams.nTrialsPerQuest)==0
-                done = (indexTrial)/qPExpParams.nTrialsPerQuest;
-                left = length(questOrder)-done;
-                if left > 0
-                    % Flush any key presses from the previous trial.
-                    key = -1;
-                    while (~isempty(key))
-                        key = mglGetKeyEvent(0);
-                    end
-                    % Report the progress
-                    Speak(['Set ' num2str(done) 'done']);
-                    if left == 1
-                        Speak([num2str(left) 'more set to go']);
-                    else
-                        Speak([num2str(left) 'more sets to go']);
-                    end
-                    Speak('Take a break or press a button to continue.');
-                    
-                    % Pause until button press
-                    pauseExp = true;
-                    while pauseExp
-                        key = mglGetKeyEvent(Inf);
-                        if ~isempty(key)
-                            if key.charCode == 'k'
-                                pauseExp = false;
-                            end
-                        end
-                    end
-                end
-            end
+%             if rem(indexTrial,qPExpParams.nTrialsPerQuest)==0
+%                 done = (indexTrial)/qPExpParams.nTrialsPerQuest;
+%                 left = length(questOrder)-done;
+%                 if left > 0
+%                     % Flush any key presses from the previous trial.
+%                     key = -1;
+%                     while (~isempty(key))
+%                         key = mglGetKeyEvent(0);
+%                     end
+%                     % Report the progress
+%                     Speak(['Set ' num2str(done) 'done']);
+%                     if left == 1
+%                         Speak([num2str(left) 'more set to go']);
+%                     else
+%                         Speak([num2str(left) 'more sets to go']);
+%                     end
+%                     Speak('Take a break or press a button to continue.');
+%                     
+%                     % Pause until button press
+%                     pauseExp = true;
+%                     while pauseExp
+%                         key = mglGetKeyEvent(Inf);
+%                         if ~isempty(key)
+%                             if key.charCode == 'k'
+%                                 pauseExp = false;
+%                             end
+%                         end
+%                     end
+%                 end
+%             end
         end
     end
     win.close;
