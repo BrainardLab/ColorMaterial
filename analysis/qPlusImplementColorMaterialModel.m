@@ -76,7 +76,7 @@ for s = 1:nSubjects
         
     % Implement the model, for each condition. 
     params.qpParamsStart = false; 
-            params.qpInitialParams = thisSet.initialParams;
+            params.qpInitialParams = NaN;
            
         [subject{s}.condition{c}.returnedParams, subject{s}.condition{c}.logLikelyFit, ...
             subject{s}.condition{c}.predictedProbabilitiesBasedOnSolution] = ...
