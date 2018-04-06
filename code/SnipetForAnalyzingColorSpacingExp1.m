@@ -12,6 +12,9 @@ whitePoint = T_sensor*illum;
 
 colorSamples = [0.50,0.53,0.57,0.60,0.63,0.67,0.70];
 for c = 1:length(colorSamples)
+    
+    
+    
     % input here ; 
     tempC = load(['/Users/radonjic/Desktop/BlobbiesForAna/3.RT3scripts/3.Resources/NewStuff/R1_NeutralDay_BlueGreen_' num2str(colorSamples(c)) '.spd']); 
     cRef(:,c) = tempC(:,2); 
