@@ -61,39 +61,41 @@ nWeight = 5;
 warnState = warning('off','MATLAB:dispatcher:UnresolvedFunctionHandle');
 qpInit = load('/Users/ana/Dropbox (Aguirre-Brainard Lab)/CNST_data/ColorMaterial/E3/initalizedQuestsExp3-09-Apr-2018.mat');
 warning(warnState);
-                         
 for ss = 1 % we can modigy this is we have sets with different position spacings.
     for d = 1%:length(distances)
-        n = 0;
-        questDataAllTrials = qpInit.questData{end};
         
+        % Set up the quest data structure that updates. 
+        questDataAllTrials = qpInit.questData{end};
+        questDataAllTrials.noentropy = true; 
+        
+        % Set counter. 
+        n = 0;
+       
         for i = 1:nSets
             % Load the data set
             fileName = ['/Users/ana/Dropbox (Aguirre-Brainard Lab)/CNST_data/ColorMaterial/E3/test/test-E3-' num2str(i) '.mat'];
+            warning(warnState);
+            clear thisTempSet
             thisTempSet = load([fullfile(fileName)]);
-            % get stuff we need for likelihood estimates:
+            % Get stuff we need for likelihood estimates.
+            % These do not change across trials/blocks. 
             qpPF = thisTempSet.params.data.qpPF;
             nOutcomes = thisTempSet.params.data.nOutcomes;
-            %posterior = thisTempSet.params.data.posterior; 
-            warning(warnState);
-            
-            % load the init file
             
             for t = 1:length(thisTempSet.params.data.trialData)
                 n = n+1;
                 thisSet.trialData(n,1).stim = thisTempSet.params.data.trialData(t).stim;
                 thisSet.trialData(n,1).outcome = thisTempSet.params.data.trialData(t).outcome;
-                % update the posterior
+                % update the posterior across all trials in the experiment.
+                tic
                 questDataAllTrials = qpUpdate(questDataAllTrials, thisTempSet.params.data.trialData(t).stim, ...
                     thisTempSet.params.data.trialData(t).outcome); 
+                toc
             end
         end
         % Print some diagnostics
         clear psiParamsIndex psiParamsQuest psiParamsFit
         stimCounts = qpCounts(qpData(thisSet.trialData),nOutcomes);
-        
-        
-        
         psiParamsIndex = qpListMaxArg(questDataAllTrials.posterior);
         psiParamsQuest = thisTempSet.params.data.psiParamsDomain(psiParamsIndex,:);
         
@@ -106,8 +108,10 @@ for ss = 1 % we can modigy this is we have sets with different position spacings
             psiParamsFit(5),psiParamsFit(6),psiParamsFit(7));
         fprintf('Log 10 likelihood of data fit max likelihood params: %0.2f\n', ...
             qpLogLikelihood(stimCounts, qpPF, psiParamsFit)/log(10));
-        clear thisTempSet;
-        [thisSet.initialParams(1:7), thisSet.initialParams(8:14), thisSet.initialParams(15), thisSet.initialParams(16) ]= ColorMaterialModelXToParams([psiParamsFit;1],tempParams);
+        
+        [thisSet.initialParams(1:7), thisSet.initialParams(8:14), thisSet.initialParams(15), thisSet.initialParams(16)] =...
+            ColorMaterialModelXToParams([psiParamsFit;1],tempParams);
+        
         % Concatenate across blocks
         thisSet.rawTrialData = thisSet.trialData;
         thisSet.newTrialData = qPlusConcatenateRawData(thisSet.rawTrialData, indices);
