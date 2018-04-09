@@ -54,5 +54,6 @@ setpref('ColorMaterial','stimulusFolder',fullfile(baseDir,'CNST_materials','Colo
 setpref('ColorMaterial','dataFolder',fullfile(baseDir,'CNST_data','ColorMaterial'));
 setpref('ColorMaterial','demoDataDir',fullfile(baseDir,'CNST_analysis','ColorMaterial','DemoData'));
 setpref('ColorMaterial','mainCodeDir',fullfile('/Users/', sysInfo.userShortName, 'Documents/MATLAB/projects/Experiments/ColorMaterial/'));
+setpref('ColorMaterial','calFileName','ColorMaterialCalibration');
 
 setpref('BrainardLabToolbox','CalDataFolder',fullfile(baseDir,'CNST_materials','ColorMaterial','CalibrationData'));
