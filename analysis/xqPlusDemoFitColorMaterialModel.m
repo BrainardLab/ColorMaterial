@@ -59,17 +59,18 @@ nWeight = 5;
 
 % Load the initialization file. 
 warnState = warning('off','MATLAB:dispatcher:UnresolvedFunctionHandle');
-qpInit = load('/Users/ana/Dropbox (Aguirre-Brainard Lab)/CNST_data/ColorMaterial/E3/initalizedQuestsExp3-09-Apr-2018.mat');
+qpInit = load('/Users/radonjic/Dropbox (Aguirre-Brainard Lab)/CNST_data/ColorMaterial/E3/initalizedQuestsExp3-09-Apr-2018.mat');
 warning(warnState);
                          
 for ss = 1 % we can modigy this is we have sets with different position spacings.
     for d = 1%:length(distances)
         n = 0;
         questDataAllTrials = qpInit.questData{end};
+        questDataAllTrials.noentropy = true;
         
         for i = 1:nSets
             % Load the data set
-            fileName = ['/Users/ana/Dropbox (Aguirre-Brainard Lab)/CNST_data/ColorMaterial/E3/test/test-E3-' num2str(i) '.mat'];
+            fileName = ['/Users/radonjic/Dropbox (Aguirre-Brainard Lab)/CNST_data/ColorMaterial/E3/test/test-E3-' num2str(i) '.mat'];
             thisTempSet = load([fullfile(fileName)]);
             % get stuff we need for likelihood estimates:
             qpPF = thisTempSet.params.data.qpPF;
@@ -88,11 +89,10 @@ for ss = 1 % we can modigy this is we have sets with different position spacings
                     thisTempSet.params.data.trialData(t).outcome); 
             end
         end
+        
         % Print some diagnostics
         clear psiParamsIndex psiParamsQuest psiParamsFit
         stimCounts = qpCounts(qpData(thisSet.trialData),nOutcomes);
-        
-        
         
         psiParamsIndex = qpListMaxArg(questDataAllTrials.posterior);
         psiParamsQuest = thisTempSet.params.data.psiParamsDomain(psiParamsIndex,:);
