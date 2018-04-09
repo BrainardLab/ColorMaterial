@@ -43,7 +43,7 @@ params.whichWeight = 'weightVary';
 indices.stimPairs = 1:4;
 indices.response1 = 5;
 indices.nTrials = 6;
-whichExperiment = 'E3'
+whichExperiment = 'E3'; 
 
 % For each subject and each condition, run the model and basic plots
 for s = 1:nSubjects
