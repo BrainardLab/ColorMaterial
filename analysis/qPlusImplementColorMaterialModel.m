@@ -1,46 +1,52 @@
-% xqPlusDemoFitColorMaterialModel
+% qPlusImplementColorMaterialModel
+% Main script for data analysis of qPlus implementation
+
+% 04/10/2018 ar Wrote it. 
 
 % Initialize
 clear; close
 
-% Specify basic experiment parameters
-whichExperiment = 'Demo';
+% Specify directories
 dataDir = fullfile(getpref('ColorMaterial', 'dataFolder'),'/E3/'); 
 codeDir  = fullfile(getpref('ColorMaterial', 'mainExpDir'), 'analysis');
 
-% Exp parameters
 % Specify other experimental parameters
 nSets = 8;
 distances = {'euclidean'};
 
-% Here we use the example structure that matches the experimental design of
+% Load structure that matches the experimental design of
 % our initial experiments.
 params = getqPlusPilotExpParams;
 
 params.whichDistance = 'euclidean';
 params.interpCode = 'Cubic';
 
-% Set up initial modeling paramters (add on)
+% Set up initial modeling paramters
 params = getqPlusPilotModelingParams(params);
 
-% Get the qpParams quickly. 
+% Use this adapted structure to get qpParams for likelihood estimation. 
 tempParams = params; 
 tempParams.whichPositions = 'smoothSpacing'; 
 tempParams.smoothOrder = 3; 
 
 % Set up more modeling parameters
+% 1) Which position type are we fitting? ('full', 'smoothSpacing'). 
 params.whichPositions = 'full';
 
-% Does material/color weight vary in fit? ('weightVary', 'weightFixed').
+% 2) Does material/color weight vary in fit? ('weightVary', 'weightFixed').
 params.whichWeight = 'weightVary';
 
-% setIndices for concatinating trial data
+% 3) Do we start the parameter search from estimated qpParams? (true/false) 
+%  If false, we use our rich set of 75 diffent points (takes much longer)  
+params.qpParamsStart = false; 
+
+% Set Indices for concatinating trial data
 indices.stimPairs = 1:4;
 indices.response1 = 5;
 indices.nTrials = 6;
-simulatedPsiParams = [3 0 0 2 0 0 0.2];
 
-% parameters, the same as in the experiment. 
+% load the same qPlus params as in the experiment. 
+% tempqPParams = run([getpref('ColorMaterial', 'mainCodeDir') '/getQuestParamsExp3']);
 lowerLin = 0.5;
 upperLin = 6;
 nLin = 5;
@@ -56,49 +62,58 @@ nCubic = 4;
 lowerWeight = 0.05;
 upperWeight = 0.95;
 nWeight = 5;
+
 subjectList = {'test'}; 
+
 % Load the initialization file. 
 warnState = warning('off','MATLAB:dispatcher:UnresolvedFunctionHandle');
 qpInit = load([dataDir, 'initalizedQuestsExp3-09-Apr-2018.mat']);
 warning(warnState);
 for ss = 1:length(subjectList) % we can modigy this is we have sets with different position spacings.
-    for d = 1%:length(distances)
-        
+    for d = 1:length(distances)
+            
         % Set up the quest data structure that updates. 
         questDataAllTrials = qpInit.questData{end};
         questDataAllTrials.noentropy = true; 
         
-        % Set counter. 
+        % Start the counter for concatenating trials. 
         n = 0;
-       
+        
+        % Load and reformat all trials. 
         for i = 1:nSets
             % Load the data set
             fileName = [subjectList{ss}, '/' subjectList{ss}, '-E3-' num2str(i) '.mat'];
             warning(warnState);
             clear thisTempSet
             thisTempSet = load([dataDir, fileName]);
-            % Get stuff we need for likelihood estimates.
-            % These do not change across trials/blocks. 
+            
+            % Get few params that do not change across trials/blocks and that we
+            % need to compute qPlus likelihoods. 
             qpPF = thisTempSet.params.data.qpPF;
             nOutcomes = thisTempSet.params.data.nOutcomes;
             
             for t = 1:length(thisTempSet.params.data.trialData)
                 n = n+1;
-                thisSet.trialData(n,1).stim = thisTempSet.params.data.trialData(t).stim;
-                thisSet.trialData(n,1).outcome = thisTempSet.params.data.trialData(t).outcome;
-                % update the posterior across all trials in the experiment.
+                % Reformat the data for stimCounts below. 
+                thisSubject.trialData(n,1).stim = thisTempSet.params.data.trialData(t).stim;
+                thisSubject.trialData(n,1).outcome = thisTempSet.params.data.trialData(t).outcome;
+                
+                % Update the posterior across all trials in the experiment.
                 questDataAllTrials = qpUpdate(questDataAllTrials, thisTempSet.params.data.trialData(t).stim, ...
                     thisTempSet.params.data.trialData(t).outcome); 
-                thisSet.rawTrialData(n,:) = [thisSet.trialData(n,1).stim, thisSet.trialData(n,1).outcome]; 
+                
+                % Make a duplicate matrix that works with our experimental
+                % code that does concatination. 
+                thisSubject.rawTrialData(n,:) = [thisSubject.trialData(n,1).stim, thisSubject.trialData(n,1).outcome]; 
             end
         end
-        % Print some diagnostics
+        
+        % Compute qPlus outcomes and some diagnostics
         clear psiParamsIndex psiParamsQuest psiParamsFit
-        stimCounts = qpCounts(qpData(thisSet.trialData),nOutcomes);
+        stimCounts = qpCounts(qpData(thisSubject.trialData),nOutcomes);
         psiParamsIndex = qpListMaxArg(questDataAllTrials.posterior);
         psiParamsQuest = thisTempSet.params.data.psiParamsDomain(psiParamsIndex,:);
-        
-        psiParamsFit = qpFit(thisSet.trialData,qpPF,psiParamsQuest(:),nOutcomes,...
+        psiParamsFit = qpFit(thisSubject.trialData,qpPF,psiParamsQuest(:),nOutcomes,...
             'lowerBounds', [1/upperLin -upperQuad -upperCubic ...
             1/upperLin -upperQuad -upperCubic 0], ...
             'upperBounds',[upperLin upperQuad upperCubic upperLin upperQuad upperCubic 1]);
@@ -108,38 +123,39 @@ for ss = 1:length(subjectList) % we can modigy this is we have sets with differe
         fprintf('Log 10 likelihood of data fit max likelihood params: %0.2f\n', ...
             qpLogLikelihood(stimCounts, qpPF, psiParamsFit)/log(10));
         
-        [thisSet.initialParams(1:7), thisSet.initialParams(8:14), thisSet.initialParams(15), thisSet.initialParams(16)] =...
+        % Save maximum likelihood params according to qplus
+        [thisSubject.initialParams(1:7), thisSubject.initialParams(8:14), thisSubject.initialParams(15), thisSubject.initialParams(16)] =...
             ColorMaterialModelXToParams([psiParamsFit;1],tempParams);
+        params.qpInitialParams = thisSubject.initialParams;
         
         % Concatenate across blocks
-        thisSet.newTrialData = qPlusConcatenateRawData(thisSet.rawTrialData, indices);
+        thisSubject.newTrialData = qPlusConcatenateRawData(thisSubject.rawTrialData, indices);
         
         % Convert the information about pairs to 'our prefered representation'
-        thisSet.pairColorMatchColorCoords = thisSet.newTrialData(:,1);
-        thisSet.pairMaterialMatchColorCoords = thisSet.newTrialData(:,2);
-        thisSet.pairColorMatchMaterialCoords = thisSet.newTrialData(:,3);
-        thisSet.pairMaterialMatchMaterialCoords = thisSet.newTrialData(:,4);
-        thisSet.firstChosen = thisSet.newTrialData(:,5);
-        thisSet.newNTrials = thisSet.newTrialData(:,6);
-        thisSet.pFirstChosen = thisSet.firstChosen./thisSet.newNTrials;
+        thisSubject.pairColorMatchColorCoords = thisSubject.newTrialData(:,1);
+        thisSubject.pairMaterialMatchColorCoords = thisSubject.newTrialData(:,2);
+        thisSubject.pairColorMatchMaterialCoords = thisSubject.newTrialData(:,3);
+        thisSubject.pairMaterialMatchMaterialCoords = thisSubject.newTrialData(:,4);
+        thisSubject.firstChosen = thisSubject.newTrialData(:,5);
+        thisSubject.newNTrials = thisSubject.newTrialData(:,6);
+        thisSubject.pFirstChosen = thisSubject.firstChosen./thisSubject.newNTrials;
         
         % Implement the model
-        params.qpParamsStart = false;
-        params.qpInitialParams = thisSet.initialParams;
-        [thisSet.returnedParams, thisSet.logLikelyFit, thisSet.predictedProbabilitiesBasedOnSolution] =  FitColorMaterialModelMLDS(thisSet.pairColorMatchColorCoords, ...
-            thisSet.pairMaterialMatchColorCoords,...
-            thisSet.pairColorMatchMaterialCoords, ...
-            thisSet.pairMaterialMatchMaterialCoords,...
-            thisSet.firstChosen, thisSet.newNTrials, params);
+        [thisSubject.returnedParams, thisSubject.logLikelyFit, thisSubject.predictedProbabilitiesBasedOnSolution] =  FitColorMaterialModelMLDS(thisSubject.pairColorMatchColorCoords, ...
+            thisSubject.pairMaterialMatchColorCoords,...
+            thisSubject.pairColorMatchMaterialCoords, ...
+            thisSubject.pairMaterialMatchMaterialCoords,...
+            thisSubject.firstChosen, thisSubject.newNTrials, params);
         
         % Extract parameters
-        [thisSet.returnedMaterialMatchColorCoords, thisSet.returnedColorMatchMaterialCoords, ...
-            thisSet.returnedW, thisSet.returnedSigma]  = ColorMaterialModelXToParams(thisSet.returnedParams, params);
-        fprintf('Log likelihood of data given our model parameters: %0.2f\n', thisSet.logLikelyFit);
+        [thisSubject.returnedMaterialMatchColorCoords, thisSubject.returnedColorMatchMaterialCoords, ...
+            thisSubject.returnedW, thisSubject.returnedSigma]  = ColorMaterialModelXToParams(thisSubject.returnedParams, params);
+        fprintf('Log likelihood of data given our model parameters: %0.2f\n', thisSubject.logLikelyFit);
         
-        % Save
+        % Save the outcome
         cd (getpref('ColorMaterial', 'demoDataDir'))
-        save(['TestSetFit' date], 'thisSet'); clear thisSet
+        subject{ss,d} = thisSubject; 
+        save([subjectList{ss} distances{d} 'Fit'], 'thisSubject'); clear thisSubject
         cd (codeDir)
     end
 end
