@@ -3,7 +3,7 @@ function params = ColorMatExp3Driver(exp)
 % passed.
 
 % 12/08/17   ar Adapted it from the ColorMatExp2Driver.
-
+% 04/10/18   ar Read through and corrections before the experiment start
 try
     % Convert all the configfile parameters into simple struct values.
     cfgFile = ConfigFile(exp.configFileName);
@@ -38,10 +38,6 @@ try
     end
     
     % Initialize three QUEST+ structures
-    %
-    % Each one has a different upper end of stimulus regime
-    % The last of these should be the most inclusive, and
-    % include stimuli that could come from any of them.
     qPExpParams = getQuestParamsExp3;
     nQuests = length(qPExpParams.stimUpperEnds);
     if (qPExpParams.DO_INITIALIZE)
@@ -93,7 +89,6 @@ try
                 stim = questDataAllTrials.stimParamsDomain(randi(nStimuli),:);
             end
             
-            % Stimulus display
             % Clear out the mgl character queue.
             mglGetKeyEvent;
             
@@ -128,76 +123,71 @@ try
             trialStart(indexTrial) = win.draw;
             mglWaitSecs(params.waitTime);
             
-            % Flush any key presses from the previous trial and get gey
-            %
             % Simulated observer models an observer where perception
             % positions match nominal positions and color-material weight i
             % as given;
-            SIMULATE = true;
+            SIMULATE = false;
             if (SIMULATE)
                 targetC = normrnd(0,1);
                 targetM = normrnd(0,1);
-                weight = 0.2;
-                d1 = sqrt( weight*(3*stim(1) + normrnd(0,1) - targetC)^2 + (1-weight)*(2*stim(3) + normrnd(0,1) - targetM)^2 );
-                d2 = sqrt( weight*(3*stim(2) + normrnd(0,1) - targetC)^2 + (1-weight)*(2*stim(4) + normrnd(0,1) - targetM)^2 );
-                if (d1 < d2)
-                    if (positionOne == 1)
-                        outcome = 1;
-                    else
-                        outcome = 2;
-                    end
+                weight = 0.2; 
+                if positionOne
+                    d1 = sqrt( weight*(3*stim(1) + normrnd(0,1) - targetC)^2 + (1-weight)*(2*stim(3) + normrnd(0,1) - targetM)^2 );
+                    d2 = sqrt( weight*(3*stim(2) + normrnd(0,1) - targetC)^2 + (1-weight)*(2*stim(4) + normrnd(0,1) - targetM)^2 );
                 else
-                    if (positionOne == 1)
-                        outcome = 2;
-                    else
-                        outcome = 1;
-                    end
+                    d2 = sqrt( weight*(3*stim(1) + normrnd(0,1) - targetC)^2 + (1-weight)*(2*stim(3) + normrnd(0,1) - targetM)^2 );
+                    d1 = sqrt( weight*(3*stim(2) + normrnd(0,1) - targetC)^2 + (1-weight)*(2*stim(4) + normrnd(0,1) - targetM)^2 );
                 end
-                % This gets the real observer key press
+                if (d1 < d2)
+                    outcome = 1;
+                else
+                    outcome = 2;
+                end
             else
-%                 key = -1;
-%                 while (~isempty(key))
-%                     key = mglGetKeyEvent(0);
-%                 end
-%                 
-%                 % Initialize elements for the loop.
-%                 keepDrawing = true;
+                % Flush any key presses from the previous trial and get gey
+                key = -1;
+                while (~isempty(key))
+                    key = mglGetKeyEvent(0);
+                end
                 
-%                 while keepDrawing
-%                     % Look to see if a quit key was pressed.
-%                     key = mglGetKeyEvent(Inf);
-%                     if ~isempty(key)
-%                         switch key.charCode
-%                             case 'a' % left
-%                                 if (positionOne == 1)
-%                                     outcome = 1;
-%                                     responseReceived(indexTrial) = mglGetSecs;
-%                                 elseif (positionOne == 2)
-%                                     outcome = 2;
-%                                     responseReceived(indexTrial) = mglGetSecs;
-%                                 end
-%                                 beep;
-%                                 win.addOval([params.positionLeft(1) params.positionLeft(2)], [params.checkSize(1), params.checkSize(2)], [0 0 0], 'Name', 'Check','Enabled', true);
-%                                 win.draw
-%                                 pause(params.isi)
-%                                 keepDrawing = false;
-%                             case 'd'  % right
-%                                 if (positionOne == 1)
-%                                     outcome = 2;
-%                                 elseif (positionOne == 2)
-%                                     outcome = 1;
-%                                 end
-%                                 beep;
-%                                 win.addOval([params.positionRight(1) params.positionRight(2)], [params.checkSize(1), params.checkSize(2)], [0 0 0], 'Name', 'Check','Enabled', true);
-%                                 win.draw
-%                                 pause(params.isi)
-%                                 keepDrawing = false;
-%                             case 'q'
-%                                 error('Abort program');
-%                         end
-%                     end
-%                     win.draw;
-%                 end
+                % Initialize elements for the loop.
+                keepDrawing = true;
+                
+                while keepDrawing
+                    % Look to see if a quit key was pressed.
+                    key = mglGetKeyEvent(Inf);
+                    if ~isempty(key)
+                        switch key.charCode
+                            case 'a' % left
+                                if (positionOne == 1)
+                                    outcome = 1;
+                                    responseReceived(indexTrial) = mglGetSecs;
+                                elseif (positionOne == 2)
+                                    outcome = 2;
+                                    responseReceived(indexTrial) = mglGetSecs;
+                                end
+                                beep;
+                                win.addOval([params.positionLeft(1) params.positionLeft(2)], [params.checkSize(1), params.checkSize(2)], [0 0 0], 'Name', 'Check','Enabled', true);
+                                win.draw
+                                pause(params.isi)
+                                keepDrawing = false;
+                            case 'd'  % right
+                                if (positionOne == 1)
+                                    outcome = 2;
+                                elseif (positionOne == 2)
+                                    outcome = 1;
+                                end
+                                beep;
+                                win.addOval([params.positionRight(1) params.positionRight(2)], [params.checkSize(1), params.checkSize(2)], [0 0 0], 'Name', 'Check','Enabled', true);
+                                win.draw
+                                pause(params.isi)
+                                keepDrawing = false;
+                            case 'q'
+                                error('Abort program');
+                        end
+                    end
+                    win.draw;
+                end
             end
             win.disableAllObjects;
             trialEnd(indexTrial) = win.draw;
@@ -214,36 +204,36 @@ try
             % will use it to fit the data at the end.
             questDataAllTrials = qpUpdate(questDataAllTrials,stim,outcome);
             
-%             if rem(indexTrial,qPExpParams.nTrialsPerQuest)==0
-%                 done = (indexTrial)/qPExpParams.nTrialsPerQuest;
-%                 left = length(questOrder)-done;
-%                 if left > 0
-%                     % Flush any key presses from the previous trial.
-%                     key = -1;
-%                     while (~isempty(key))
-%                         key = mglGetKeyEvent(0);
-%                     end
-%                     % Report the progress
-%                     Speak(['Set ' num2str(done) 'done']);
-%                     if left == 1
-%                         Speak([num2str(left) 'more set to go']);
-%                     else
-%                         Speak([num2str(left) 'more sets to go']);
-%                     end
-%                     Speak('Take a break or press a button to continue.');
-%                     
-%                     % Pause until button press
-%                     pauseExp = true;
-%                     while pauseExp
-%                         key = mglGetKeyEvent(Inf);
-%                         if ~isempty(key)
-%                             if key.charCode == 'k'
-%                                 pauseExp = false;
-%                             end
-%                         end
-%                     end
-%                 end
-%             end
+            if rem(indexTrial,qPExpParams.nTrialsPerQuest)==0
+                done = (indexTrial)/qPExpParams.nTrialsPerQuest;
+                left = length(questOrder)-done;
+                if left > 0
+                    % Flush any key presses from the previous trial.
+                    key = -1;
+                    while (~isempty(key))
+                        key = mglGetKeyEvent(0);
+                    end
+                    % Report the progress
+                    Speak(['Set ' num2str(done) 'done']);
+                    if left == 1
+                        Speak([num2str(left) 'more set to go']);
+                    else
+                        Speak([num2str(left) 'more sets to go']);
+                    end
+                    Speak('Take a break or press a button to continue.');
+                    
+                    % Pause until button press
+                    pauseExp = true;
+                    while pauseExp
+                        key = mglGetKeyEvent(Inf);
+                        if ~isempty(key)
+                            if key.charCode == 'k'
+                                pauseExp = false;
+                            end
+                        end
+                    end
+                end
+            end
         end
     end
     win.close;
