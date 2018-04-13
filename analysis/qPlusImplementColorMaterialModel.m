@@ -9,10 +9,14 @@ clear; close
 % Specify directories
 dataDir = fullfile(getpref('ColorMaterial', 'dataFolder'),'/E3/'); 
 codeDir  = fullfile(getpref('ColorMaterial', 'mainExpDir'), 'analysis');
+analysisDir  = fullfile(getpref('ColorMaterial', 'analysisDir'));
 
 % Specify other experimental parameters
-nBlocks = 8;
+nBlocks = 4;
 distances = {'euclidean'};
+
+% Subjects to analyze
+subjectList = {'nkh'}; 
 
 % Load structure that matches the experimental design of
 % our initial experiments.
@@ -56,7 +60,7 @@ indices.response1 = 5;
 indices.nTrials = 6;
 
 % Load the same qPlus params as in the experiment. 
-% eval(['tempqPParams = fullfile(getpref(''ColorMaterial'',''mainCodeDir''),''getQuestParamsExp3'');']);
+eval(['tempqPParams = fullfile(getpref(''ColorMaterial'',''mainCodeDir''),''getQuestParamsExp3'');']);
 lowerLin = 0.5;
 upperLin = 6;
 nLin = 5;
@@ -73,8 +77,6 @@ lowerWeight = 0.05;
 upperWeight = 0.95;
 nWeight = 5;
 
-% Subjects to analyze
-subjectList = {'test'}; 
 
 % Load the initialization file. 
 warnState = warning('off','MATLAB:dispatcher:UnresolvedFunctionHandle');
@@ -179,6 +181,13 @@ for ss = 1:length(subjectList)
             thisSubject.returnedW, thisSubject.returnedSigma]  = ColorMaterialModelXToParams(thisSubject.returnedParams, params);
         fprintf('Log 10 likelihood of data given our model parameters: %0.2f\n', thisSubject.logLikelyFit);
         
+        params.qpParamsStart = true; 
+        [thisSubject.returnedParamsQP, thisSubject.logLikelyFitQP, thisSubject.predictedProbabilitiesBasedOnSolutionQP] =  FitColorMaterialModelMLDS(thisSubject.pairColorMatchColorCoords, ...
+            thisSubject.pairMaterialMatchColorCoords,...
+            thisSubject.pairColorMatchMaterialCoords, ...
+            thisSubject.pairMaterialMatchMaterialCoords,...
+            thisSubject.firstChosen, thisSubject.newNTrials, params);
+        
         % Could (and probably should) do our code starting at qp params
         % here, and take whichever has the best overall likelihood. Ana
         % wins an ice cream if she implements this and for no cases in our next
@@ -186,9 +195,9 @@ for ss = 1:length(subjectList)
         % wins the ice cream.
         
         % Save the outcome
-        cd (getpref('ColorMaterial', 'anaysisDir'))
         subject{ss,d} = thisSubject; 
+        cd (analysisDir)
         save([subjectList{ss} distances{d} 'Fit'], 'thisSubject'); clear thisSubject
-        cd (codeDir)
+        
     end
 end
