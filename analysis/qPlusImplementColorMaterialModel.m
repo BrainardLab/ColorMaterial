@@ -6,17 +6,14 @@
 % Initialize
 clear; close
 
+% Experiment and Subjects to analyze
+subjectList = {'as', 'lma'};
+whichExperiment = 'E3';
+
 % Specify directories
-dataDir = fullfile(getpref('ColorMaterial', 'dataFolder'),'/E3/'); 
+dataDir = fullfile(getpref('ColorMaterial', 'dataFolder'),['/' whichExperiment '/']);
 codeDir  = fullfile(getpref('ColorMaterial', 'mainExpDir'), 'analysis');
-analysisDir  = fullfile(getpref('ColorMaterial', 'analysisDir'));
-
-% Specify other experimental parameters
-nBlocks = 4;
-distances = {'euclidean'};
-
-% Subjects to analyze
-subjectList = {'nkh'}; 
+analysisDir  = fullfile(getpref('ColorMaterial', 'analysisDir'),['/' whichExperiment '/']);
 
 % Load structure that matches the experimental design of
 % our initial experiments.
