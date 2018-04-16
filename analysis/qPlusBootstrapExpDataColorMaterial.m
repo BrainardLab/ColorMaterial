@@ -1,19 +1,26 @@
-% qPlusDemoFitColorMaterialModel
+% qPlusBootstrapExpDataColorMaterial
+% Main script for bootstrapping the model parameters with Quest+
+% model implementation
+
+% 04/13/2018 ar Adapted it from previous modeling and bootstrapping
+%               scripts. 
 
 % Initialize
 clear; close
 
+% Experiment and Subjects to analyze
+subjectList = {'as', 'lma'};
+whichExperiment = 'E3';
+
 % Specify directories
-dataDir = fullfile(getpref('ColorMaterial', 'dataFolder'),'/E3/');
+dataDir = fullfile(getpref('ColorMaterial', 'dataFolder'),['/' whichExperiment '/']);
 codeDir  = fullfile(getpref('ColorMaterial', 'mainExpDir'), 'analysis');
-analysisDir  = fullfile(getpref('ColorMaterial', 'analysisDir'));
+analysisDir  = fullfile(getpref('ColorMaterial', 'analysisDir'),['/' whichExperiment '/']);
 
 % Specify other experimental parameters
-nBlocks = 4;
+nBlocks = 8;
 distances = {'euclidean'};
-
-% Subjects to analyze
-subjectList = {'nkh'};
+nRepetitions = 300;
 
 % Load structure that matches the experimental design of
 % our initial experiments.
@@ -49,7 +56,7 @@ params.whichWeight = 'weightVary';
 
 % 3) Do we start the parameter search from estimated qpParams? (true/false)
 %  If false, we use our rich set of 75 diffent points (takes much longer)
-params.qpParamsStart = false;
+params.qpParamsStart = true;
 
 % Set indices for concatinating trial data
 indices.stimPairs = 1:4;
@@ -181,8 +188,8 @@ for ss = 1:length(subjectList)
             %    disp(thisSet.bs(whichRep).returnedParams(end-1))
         end
         % Save
-        cd (demoDir)
-        save([fileName 'BootstrapFit'], 'thisSubject'); clear thisSubject
+        cd (analysisDir)
+        save([subjectList{ss} 'BootstrapFit'], 'thisSubject'); clear thisSubject
         cd (codeDir)
     end
 end
