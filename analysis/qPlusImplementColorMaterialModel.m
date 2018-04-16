@@ -15,6 +15,10 @@ dataDir = fullfile(getpref('ColorMaterial', 'dataFolder'),['/' whichExperiment '
 codeDir  = fullfile(getpref('ColorMaterial', 'mainExpDir'), 'analysis');
 analysisDir  = fullfile(getpref('ColorMaterial', 'analysisDir'),['/' whichExperiment '/']);
 
+% Specify other experimental parameters
+nBlocks = 8;
+distances = {'euclidean'};
+
 % Load structure that matches the experimental design of
 % our initial experiments.
 %

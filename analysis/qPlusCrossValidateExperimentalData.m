@@ -147,13 +147,13 @@ for ss = 1:length(subjectList)
                     trainingSet.firstChosen, trainingSet.newNTrials, params);
                 
                 % Now use these parameters to predict the responses for the test data.
-                [negLogLikely,] = FitColorMaterialModelMLDSFun(trainingSet.returnedParams,...
+                [negLogLikely,predictedProbabilities(kk,:)] = FitColorMaterialModelMLDSFun(trainingSet.returnedParams,...
                     testSet.pairColorMatchColorCoords,testSet.pairMaterialMatchColorCoords,...
                     testSet.pairColorMatchMaterialCoords,testSet.pairMaterialMatchMaterialCoords,...
                     testSet.firstChosen, testSet.newNTrials, params);
                 
                 logLikelyhood(kk) = -negLogLikely; clear negLogLikely
-                RMSError(kk) = ComputeRealRMSE(predictedProbabilities(kk,:), probabilitiesTestData);
+                RMSError(kk) = ComputeRealRMSE(predictedProbabilities(kk,:), testSet.pFirstChosen);
                 
                 dataSet{kk}.trainingSet = trainingSet; clear trainingSet
                 dataSet{kk}.testSet = testSet; clear testSet
@@ -163,7 +163,7 @@ for ss = 1:length(subjectList)
             meanRMSE = mean(RMSError);
             
             % Save in the right folder.
-            cd(demoDir);
+            cd(analysisDir);
             save([fileName '-' num2str(nFolds) 'FoldsCV' '-'  modelCode  '-' distances{d}], ...
                 'dataSet', 'LogLikelyhood', 'predictedProbabilities', 'RMSError', ...
                 'meanLogLiklihood', 'meanRMSE', 'simulatedParams', 'logLikelyqPlus');
