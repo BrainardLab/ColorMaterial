@@ -18,10 +18,10 @@ analysisDir  = fullfile(getpref('ColorMaterial', 'analysisDir'));
 
 % Specify other experimental parameters
 nBlocks = 8;
-distances = {'euclidean'};
+distances = {'euclidean', 'cityblock'};
 
 % Subjects to analyze
-subjectList = {'as'};
+subjectList = {'as','lma'};
 
 % Load structure that matches the experimental design of
 % our initial experiments.
@@ -147,13 +147,13 @@ for ss = 1:length(subjectList)
                     trainingSet.firstChosen, trainingSet.newNTrials, params);
                 
                 % Now use these parameters to predict the responses for the test data.
-                [negLogLikely,predictedProbabilities(kk,:)] = FitColorMaterialModelMLDSFun(trainingSet.returnedParams,...
+                [negLogLikely,predictedProbabilities{kk}] = FitColorMaterialModelMLDSFun(trainingSet.returnedParams,...
                     testSet.pairColorMatchColorCoords,testSet.pairMaterialMatchColorCoords,...
                     testSet.pairColorMatchMaterialCoords,testSet.pairMaterialMatchMaterialCoords,...
                     testSet.firstChosen, testSet.newNTrials, params);
                 
                 logLikelyhood(kk) = -negLogLikely; clear negLogLikely
-                RMSError(kk) = ComputeRealRMSE(predictedProbabilities(kk,:), testSet.pFirstChosen);
+                RMSError(kk) = ComputeRealRMSE(predictedProbabilities{kk}, testSet.pFirstChosen);
                 
                 dataSet{kk}.trainingSet = trainingSet; clear trainingSet
                 dataSet{kk}.testSet = testSet; clear testSet
@@ -165,8 +165,8 @@ for ss = 1:length(subjectList)
             % Save in the right folder.
             cd(analysisDir);
             save([fileName '-' num2str(nFolds) 'FoldsCV' '-'  modelCode  '-' distances{d}], ...
-                'dataSet', 'LogLikelyhood', 'predictedProbabilities', 'RMSError', ...
-                'meanLogLiklihood', 'meanRMSE', 'simulatedParams', 'logLikelyqPlus');
+                'dataSet', 'logLikelyhood', 'predictedProbabilities', 'RMSError', ...
+                'meanLogLiklihood', 'meanRMSE');
             clear dataSet LogLikelyhood predictedProbabilities RMSError
         end
     end
