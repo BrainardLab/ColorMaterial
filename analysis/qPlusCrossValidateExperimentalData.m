@@ -18,10 +18,10 @@ analysisDir  = fullfile(getpref('ColorMaterial', 'analysisDir'));
 
 % Specify other experimental parameters
 nBlocks = 8;
-distances = {'euclidean', 'cityblock'};
+distances = {'cityblock'};
 
 % Subjects to analyze
-subjectList = {'as','lma'};
+subjectList = {'lma', 'gfn', 'nkh', 'as'};
 
 % Load structure that matches the experimental design of
 % our initial experiments.
@@ -31,7 +31,7 @@ subjectList = {'as','lma'};
 % a particular experimental subproject.
 params = getqPlusPilotExpParams;
 
-params.whichDistance = 'euclidean';
+params.whichDistance = 'cityblock';
 params.interpCode = 'Cubic';
 
 % Add to the parameters structure parameters that
@@ -52,7 +52,7 @@ indices.nTrials = 6;
 % varous models.  Current types:
 %  1: Full model
 %  2: Cubic model
-nModelTypes = 2;
+nModelTypes = 1;
 nFolds = 8;
 
 % The two parameters bellow are fixed for both models.
@@ -168,6 +168,7 @@ for ss = 1:length(subjectList)
                 'dataSet', 'logLikelyhood', 'predictedProbabilities', 'RMSError', ...
                 'meanLogLiklihood', 'meanRMSE');
             clear dataSet LogLikelyhood predictedProbabilities RMSError
+            cd(codeDir)
         end
     end
 end
