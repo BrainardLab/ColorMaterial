@@ -93,6 +93,7 @@ for ss = 1:length(subjectList)
     
     % Load the partition for this subject and get indices.
     thisPartition{ss} = load([analysisDir '/' subjectList{ss} 'partition.mat']);
+    nFolds = thisPartition{ss}.c.NumTestSets; 
     if (size(thisSubject.trialData,1) ~= thisPartition{ss}.c.NumObservations)
         error('Actual number of trials do not match the number of trials used in cvpartition.');
     end
