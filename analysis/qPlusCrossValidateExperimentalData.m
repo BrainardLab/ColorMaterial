@@ -14,11 +14,11 @@ clear; close
 % Specify directories
 dataDir = fullfile(getpref('ColorMaterial', 'dataFolder'),'/E3/');
 codeDir  = fullfile(getpref('ColorMaterial', 'mainExpDir'), 'analysis');
-analysisDir  = fullfile(getpref('ColorMaterial', 'analysisDir'));
+analysisDir  = fullfile(getpref('ColorMaterial', 'analysisDir'),'/E3/');
 
 % Specify other experimental parameters
 nBlocks = 8;
-distances = {'cityblock'};
+
 
 % Subjects to analyze
 subjectList = {'lma', 'gfn', 'nkh', 'as'};
@@ -32,6 +32,7 @@ subjectList = {'lma', 'gfn', 'nkh', 'as'};
 params = getqPlusPilotExpParams;
 
 params.whichDistance = 'cityblock';
+
 params.interpCode = 'Cubic';
 
 % Add to the parameters structure parameters that
@@ -52,8 +53,7 @@ indices.nTrials = 6;
 % varous models.  Current types:
 %  1: Full model
 %  2: Cubic model
-nModelTypes = 1;
-nFolds = 8;
+nModelTypes = 4;
 
 % The two parameters bellow are fixed for both models.
 % Does material/color weight vary in fit? ('weightVary', 'weightFixed').
@@ -91,84 +91,92 @@ for ss = 1:length(subjectList)
         error('Specified and actual number of trials do not match.');
     end
     
-    % Partition and get indices.
-    % Use the same partition for each model
-    c = cvpartition(nTrialsRun,'Kfold',nFolds);
+    % Load the partition for this subject and get indices.
+    thisPartition{ss} = load([analysisDir '/' subjectList{ss} 'partition.mat']);
+    if (size(thisSubject.trialData,1) ~= thisPartition{ss}.c.NumObservations)
+        error('Actual number of trials do not match the number of trials used in cvpartition.');
+    end
     
-    for d = 1:length(distances) % for two differen distance metrics.
+    for whichModelType = 1:nModelTypes
         
-        for whichModelType = 1:nModelTypes
-            % Set model types
-            if whichModelType == 1
-                params.whichPositions = 'full';
-                modelCode = 'Full';
-            elseif whichModelType == 2
-                params.whichPositions = 'smoothSpacing';
-                params.smoothOrder = 3;
-                modelCode = 'Cubic';
-            else
-                error('This model type is not yet implemented.');
-            end
-            
-            for kk = 1:nFolds
-                
-                % Separate test and training
-                clear trainingSet testSet
-                trainingIndex = c.training(kk);
-                testIndex = c.test(kk);
-                
-                trainingSet.newTrialData = qPlusConcatenateRawData(thisSubject.trialData(trainingIndex,:), indices);
-                testSet.newTrialData = qPlusConcatenateRawData(thisSubject.trialData(testIndex,:), indices);
-                
-                % Concatenated training data
-                trainingSet.pairColorMatchColorCoords = trainingSet.newTrialData(:,1);
-                trainingSet.pairMaterialMatchColorCoords = trainingSet.newTrialData(:,2);
-                trainingSet.pairColorMatchMaterialCoords = trainingSet.newTrialData(:,3);
-                trainingSet.pairMaterialMatchMaterialCoords = trainingSet.newTrialData(:,4);
-                trainingSet.firstChosen = trainingSet.newTrialData(:,5);
-                trainingSet.newNTrials = trainingSet.newTrialData(:,6);
-                trainingSet.pFirstChosen = trainingSet.firstChosen./trainingSet.newNTrials;
-                
-                % Concatenated test data
-                testSet.pairColorMatchColorCoords = testSet.newTrialData(:,1);
-                testSet.pairMaterialMatchColorCoords = testSet.newTrialData(:,2);
-                testSet.pairColorMatchMaterialCoords = testSet.newTrialData(:,3);
-                testSet.pairMaterialMatchMaterialCoords = testSet.newTrialData(:,4);
-                testSet.firstChosen = testSet.newTrialData(:,5);
-                testSet.newNTrials = testSet.newTrialData(:,6);
-                testSet.pFirstChosen = testSet.firstChosen./testSet.newNTrials;
-                
-                % Model training data
-                [trainingSet.returnedParams, trainingSet.logLikelyFit, trainingSet.predictedProbabilitiesBasedOnSolution] =  ...
-                    FitColorMaterialModelMLDS(trainingSet.pairColorMatchColorCoords, ...
-                    trainingSet.pairMaterialMatchColorCoords,...
-                    trainingSet.pairColorMatchMaterialCoords, ...
-                    trainingSet.pairMaterialMatchMaterialCoords,...
-                    trainingSet.firstChosen, trainingSet.newNTrials, params);
-                
-                % Now use these parameters to predict the responses for the test data.
-                [negLogLikely,predictedProbabilities{kk}] = FitColorMaterialModelMLDSFun(trainingSet.returnedParams,...
-                    testSet.pairColorMatchColorCoords,testSet.pairMaterialMatchColorCoords,...
-                    testSet.pairColorMatchMaterialCoords,testSet.pairMaterialMatchMaterialCoords,...
-                    testSet.firstChosen, testSet.newNTrials, params);
-                
-                logLikelyhood(kk) = -negLogLikely; clear negLogLikely
-                RMSError(kk) = ComputeRealRMSE(predictedProbabilities{kk}, testSet.pFirstChosen);
-                
-                dataSet{kk}.trainingSet = trainingSet; clear trainingSet
-                dataSet{kk}.testSet = testSet; clear testSet
-            end
-            
-            meanLogLiklihood = mean(logLikelyhood);
-            meanRMSE = mean(RMSError);
-            
-            % Save in the right folder.
-            cd(analysisDir);
-            save([subjectList{ss} '-' num2str(nFolds) 'FoldsCV' '-'  modelCode  '-' distances{d}], ...
-                'dataSet', 'logLikelyhood', 'predictedProbabilities', 'RMSError', ...
-                'meanLogLiklihood', 'meanRMSE');
-            clear dataSet LogLikelyhood predictedProbabilities RMSError
-            cd(codeDir)
+        % Set model types
+        if whichModelType == 1
+            params.whichPositions = 'full';
+            modelCode = 'Full';
+        elseif whichModelType == 2
+            params.whichPositions = 'smoothSpacing';
+            params.smoothOrder = 3;
+            modelCode = 'Cubic';
+        elseif whichModelType == 3
+            params.whichPositions = 'smoothSpacing';
+            params.smoothOrder = 2;
+            modelCode = 'Quadratic';
+        elseif whichModelType == 4
+            params.whichPositions = 'smoothSpacing';
+            params.smoothOrder = 1;
+            modelCode = 'Linear';
+        else
+            error('This model type is not yet implemented.');
         end
+        
+        for kk = 1:nFolds
+            
+            % Separate test and training
+            clear trainingSet testSet
+            trainingIndex = thisPartition{ss}.c.training(kk);
+            testIndex = thisPartition{ss}.c.test(kk);
+            
+            trainingSet.newTrialData = qPlusConcatenateRawData(thisSubject.trialData(trainingIndex,:), indices);
+            testSet.newTrialData = qPlusConcatenateRawData(thisSubject.trialData(testIndex,:), indices);
+            
+            % Concatenated training data
+            trainingSet.pairColorMatchColorCoords = trainingSet.newTrialData(:,1);
+            trainingSet.pairMaterialMatchColorCoords = trainingSet.newTrialData(:,2);
+            trainingSet.pairColorMatchMaterialCoords = trainingSet.newTrialData(:,3);
+            trainingSet.pairMaterialMatchMaterialCoords = trainingSet.newTrialData(:,4);
+            trainingSet.firstChosen = trainingSet.newTrialData(:,5);
+            trainingSet.newNTrials = trainingSet.newTrialData(:,6);
+            trainingSet.pFirstChosen = trainingSet.firstChosen./trainingSet.newNTrials;
+            
+            % Concatenated test data
+            testSet.pairColorMatchColorCoords = testSet.newTrialData(:,1);
+            testSet.pairMaterialMatchColorCoords = testSet.newTrialData(:,2);
+            testSet.pairColorMatchMaterialCoords = testSet.newTrialData(:,3);
+            testSet.pairMaterialMatchMaterialCoords = testSet.newTrialData(:,4);
+            testSet.firstChosen = testSet.newTrialData(:,5);
+            testSet.newNTrials = testSet.newTrialData(:,6);
+            testSet.pFirstChosen = testSet.firstChosen./testSet.newNTrials;
+            
+            % Model training data
+            [trainingSet.returnedParams, trainingSet.logLikelyFit, trainingSet.predictedProbabilitiesBasedOnSolution] =  ...
+                FitColorMaterialModelMLDS(trainingSet.pairColorMatchColorCoords, ...
+                trainingSet.pairMaterialMatchColorCoords,...
+                trainingSet.pairColorMatchMaterialCoords, ...
+                trainingSet.pairMaterialMatchMaterialCoords,...
+                trainingSet.firstChosen, trainingSet.newNTrials, params);
+            
+            % Now use these parameters to predict the responses for the test data.
+            [negLogLikely,predictedProbabilities{kk}] = FitColorMaterialModelMLDSFun(trainingSet.returnedParams,...
+                testSet.pairColorMatchColorCoords,testSet.pairMaterialMatchColorCoords,...
+                testSet.pairColorMatchMaterialCoords,testSet.pairMaterialMatchMaterialCoords,...
+                testSet.firstChosen, testSet.newNTrials, params);
+            
+            logLikelyhood(kk) = -negLogLikely; clear negLogLikely
+            RMSError(kk) = ComputeRealRMSE(predictedProbabilities{kk}, testSet.pFirstChosen);
+            
+            dataSet{kk}.trainingSet = trainingSet; clear trainingSet
+            dataSet{kk}.testSet = testSet; clear testSet
+        end
+        
+        meanLogLiklihood = mean(logLikelyhood);
+        meanRMSE = mean(RMSError);
+        
+        % Save in the right folder.
+        cd(analysisDir);
+        save([subjectList{ss} '-' num2str(nFolds) 'FoldsCV' '-'  modelCode  '-' params.whichDistance], ...
+            'dataSet', 'logLikelyhood', 'predictedProbabilities', 'RMSError', ...
+            'meanLogLiklihood', 'meanRMSE');
+        clear dataSet LogLikelyhood predictedProbabilities RMSError
+        cd(codeDir)
     end
 end
