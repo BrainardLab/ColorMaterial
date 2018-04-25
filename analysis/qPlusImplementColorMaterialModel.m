@@ -7,8 +7,11 @@
 clear; close
 
 % Experiment and Subjects to analyze
-subjectList = {'as', 'lma'};
+subjectList = {'gfn', 'nkh', 'lma', 'as'};
 whichExperiment = 'E3';
+
+% best overall (==1) vs. best with alternative metric
+best = 1; 
 
 % Specify directories
 dataDir = fullfile(getpref('ColorMaterial', 'dataFolder'),['/' whichExperiment '/']);
@@ -17,7 +20,6 @@ analysisDir  = fullfile(getpref('ColorMaterial', 'analysisDir'),['/' whichExperi
 
 % Specify other experimental parameters
 nBlocks = 8;
-distances = {'euclidean'};
 
 % Load structure that matches the experimental design of
 % our initial experiments.
@@ -26,9 +28,54 @@ distances = {'euclidean'};
 % nominal positions -- things that are fixed throughout
 % a particular experimental subproject.
 params = getqPlusPilotExpParams;
-
-params.whichDistance = 'euclidean';
 params.interpCode = 'Cubic';
+
+
+switch subjectList{s}
+    case 'gfn'
+        if best == 1
+            params.whichDistance = 'euclidean';
+            params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+            params.smoothOrder = 3; % cubic
+            params.modelCode = 'Cubic'; 
+        else
+            params.whichDistance = 'cityblock';
+            params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+            params.smoothOrder = 2; % quadratic
+            params.modelCode = 'Quadratic'; 
+        end
+    case 'nkh'
+        if best == 1
+            params.whichDistance = 'euclidean';
+            params.whichPositions = 'full'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+            params.modelCode = 'Full'; 
+        else
+            params.whichDistance = 'cityblock';
+            params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+            params.smoothOrder = 3; % cubic
+            params.modelCode = 'Cubic'; 
+        end
+    
+    case 'lma'
+        if best == 1
+            params.whichDistance = 'cityblock';
+        else
+            params.whichDistance = 'euclidean';
+        end
+        params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+        params.smoothOrder = 2; % quadratic
+        params.modelCode = 'Quadratic'; 
+        
+    case 'as'
+        if best == 1
+            params.whichDistance = 'cityblock';
+        else
+            params.whichDistance = 'euclidean';
+        end
+        params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+        params.smoothOrder = 3; % cubic
+        params.modelCode = 'Cubic'; 
+end
 
 % Add to the parameters structure parameters that 
 % define the modeling we are doing.
@@ -43,10 +90,6 @@ params = getqPlusPilotModelingParams(params);
 tempParams = params; 
 tempParams.whichPositions = 'smoothSpacing'; 
 tempParams.smoothOrder = 3; 
-
-% Set up more modeling parameters
-% 1) Which position type are we fitting? ('full', 'smoothSpacing'). 
-params.whichPositions = 'full';
 
 % 2) Does material/color weight vary in fit? ('weightVary', 'weightFixed').
 params.whichWeight = 'weightVary';
@@ -78,13 +121,11 @@ lowerWeight = 0.05;
 upperWeight = 0.95;
 nWeight = 5;
 
-
 % Load the initialization file. 
 warnState = warning('off','MATLAB:dispatcher:UnresolvedFunctionHandle');
 qpInit = load([dataDir, 'initalizedQuestsExp3-09-Apr-2018.mat']);
 warning(warnState);
 for ss = 1:length(subjectList) 
-    for d = 1:length(distances)
             
         % Set up the quest data structure that updates. 
         clear questDataAllTrials;
@@ -198,7 +239,5 @@ for ss = 1:length(subjectList)
         % Save the outcome
         subject{ss,d} = thisSubject; 
         cd (analysisDir)
-        save([subjectList{ss} distances{d} 'Fit'], 'thisSubject'); clear thisSubject
-        
-    end
+        save([subjectList{ss} params.whichDistance params.modelCode 'Fit'], 'thisSubject'); clear thisSubject
 end
