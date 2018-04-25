@@ -30,8 +30,9 @@ nBlocks = 8;
 params = getqPlusPilotExpParams;
 params.interpCode = 'Cubic';
 
+for ss = 1:length(subjectList) 
 
-switch subjectList{s}
+switch subjectList{ss}
     case 'gfn'
         if best == 1
             params.whichDistance = 'euclidean';
@@ -125,7 +126,6 @@ nWeight = 5;
 warnState = warning('off','MATLAB:dispatcher:UnresolvedFunctionHandle');
 qpInit = load([dataDir, 'initalizedQuestsExp3-09-Apr-2018.mat']);
 warning(warnState);
-for ss = 1:length(subjectList) 
             
         % Set up the quest data structure that updates. 
         clear questDataAllTrials;
@@ -223,13 +223,13 @@ for ss = 1:length(subjectList)
             thisSubject.returnedW, thisSubject.returnedSigma]  = ColorMaterialModelXToParams(thisSubject.returnedParams, params);
         fprintf('Log 10 likelihood of data given our model parameters: %0.2f\n', thisSubject.logLikelyFit);
         
-        params.qpParamsStart = true; 
-        [thisSubject.returnedParamsQP, thisSubject.logLikelyFitQP, thisSubject.predictedProbabilitiesBasedOnSolutionQP] =  FitColorMaterialModelMLDS(thisSubject.pairColorMatchColorCoords, ...
-            thisSubject.pairMaterialMatchColorCoords,...
-            thisSubject.pairColorMatchMaterialCoords, ...
-            thisSubject.pairMaterialMatchMaterialCoords,...
-            thisSubject.firstChosen, thisSubject.newNTrials, params);
-        
+%         params.qpParamsStart = true; 
+%         [thisSubject.returnedParamsQP, thisSubject.logLikelyFitQP, thisSubject.predictedProbabilitiesBasedOnSolutionQP] =  FitColorMaterialModelMLDS(thisSubject.pairColorMatchColorCoords, ...
+%             thisSubject.pairMaterialMatchColorCoords,...
+%             thisSubject.pairColorMatchMaterialCoords, ...
+%             thisSubject.pairMaterialMatchMaterialCoords,...
+%             thisSubject.firstChosen, thisSubject.newNTrials, params);
+%         
         % Could (and probably should) do our code starting at qp params
         % here, and take whichever has the best overall likelihood. Ana
         % wins an ice cream if she implements this and for no cases in our next
