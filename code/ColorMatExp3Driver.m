@@ -7,7 +7,7 @@ function params = ColorMatExp3Driver(exp)
 try
     % Convert all the configfile parameters into simple struct values.
     cfgFile = ConfigFile(exp.configFileName);
-    params = convertToStruct(cfgFile);
+    params = convertToStruct(cfgFile);  
     
     % Load the calibration file and check the calibration age
     [cal, ~] = setCheckCalibration('ColorMaterialCalibration', exp.subject);
@@ -128,23 +128,23 @@ try
             % as given;
             SIMULATE = false;
             if (SIMULATE)
-                targetC = normrnd(0,1);
-                targetM = normrnd(0,1);
-                weight = 0.2; 
-                if positionOne
-                    d1 = sqrt( weight*(3*stim(1) + normrnd(0,1) - targetC)^2 + (1-weight)*(2*stim(3) + normrnd(0,1) - targetM)^2 );
-                    d2 = sqrt( weight*(3*stim(2) + normrnd(0,1) - targetC)^2 + (1-weight)*(2*stim(4) + normrnd(0,1) - targetM)^2 );
-                else
-                    d2 = sqrt( weight*(3*stim(1) + normrnd(0,1) - targetC)^2 + (1-weight)*(2*stim(3) + normrnd(0,1) - targetM)^2 );
-                    d1 = sqrt( weight*(3*stim(2) + normrnd(0,1) - targetC)^2 + (1-weight)*(2*stim(4) + normrnd(0,1) - targetM)^2 );
-                end
-                if (d1 < d2)
-                    outcome = 1;
-                else
-                    outcome = 2;
-                end
+%                 targetC = normrnd(0,1);
+%                 targetM = normrnd(0,1);
+%                 weight = 0.2; 
+%                 if positionOne
+%                     d1 = sqrt( weight*(3*stim(1) + normrnd(0,1) - targetC)^2 + (1-weight)*(2*stim(3) + normrnd(0,1) - targetM)^2 );
+%                     d2 = sqrt( weight*(3*stim(2) + normrnd(0,1) - targetC)^2 + (1-weight)*(2*stim(4) + normrnd(0,1) - targetM)^2 );
+%                 else
+%                     d2 = sqrt( weight*(3*stim(1) + normrnd(0,1) - targetC)^2 + (1-weight)*(2*stim(3) + normrnd(0,1) - targetM)^2 );
+%                     d1 = sqrt( weight*(3*stim(2) + normrnd(0,1) - targetC)^2 + (1-weight)*(2*stim(4) + normrnd(0,1) - targetM)^2 );
+%                 end
+%                 if (d1 < d2)
+%                     outcome = 1;
+%                 else
+%                     outcome = 2;
+%                 end
             else
-                % Flush any key presses from the previous trial and get gey
+                % Flush any key presses from the previous trial and get key
                 key = -1;
                 while (~isempty(key))
                     key = mglGetKeyEvent(0);
@@ -168,7 +168,7 @@ try
                                 end
                                 beep;
                                 win.addOval([params.positionLeft(1) params.positionLeft(2)], [params.checkSize(1), params.checkSize(2)], [0 0 0], 'Name', 'Check','Enabled', true);
-                                win.draw
+                                win.draw;
                                 pause(params.isi)
                                 keepDrawing = false;
                             case 'd'  % right
@@ -179,7 +179,7 @@ try
                                 end
                                 beep;
                                 win.addOval([params.positionRight(1) params.positionRight(2)], [params.checkSize(1), params.checkSize(2)], [0 0 0], 'Name', 'Check','Enabled', true);
-                                win.draw
+                                win.draw;
                                 pause(params.isi)
                                 keepDrawing = false;
                             case 'q'
