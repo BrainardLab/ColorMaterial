@@ -8,7 +8,7 @@
 clear; close all; 
 
 % Subjects to analyze
-subjectList = {'lma', 'gfn', 'nkh', 'as'};
+subjectList = {'hmn', 'jcd', 'ckf', 'sel'};
 nFolds = 8; 
 nTrialsRun = 2160;
 

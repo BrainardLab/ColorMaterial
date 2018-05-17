@@ -237,7 +237,8 @@ warning(warnState);
         % wins the ice cream.
         
         % Save the outcome
-        subject{ss,d} = thisSubject; 
+        subject{ss} = thisSubject; 
         cd (analysisDir)
         save([subjectList{ss} params.whichDistance params.modelCode 'Fit'], 'thisSubject'); clear thisSubject
+        cd(codeDir)
 end

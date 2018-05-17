@@ -38,7 +38,7 @@ params.interpCode = 'Cubic';
 % that defines how we compute likihood in the fitting.
 for ss = 1:length(subjectList)
     
-    switch subjectList{s}
+    switch subjectList{ss}
         case 'gfn'
             params.whichDistance = 'euclidean';
             params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
@@ -80,7 +80,7 @@ for ss = 1:length(subjectList)
     
     % 3) Do we start the parameter search from estimated qpParams? (true/false)
     %  If false, we use our rich set of 75 diffent points (takes much longer)
-    params.qpParamsStart = true;
+    params.qpParamsStart = false;
     
     % Set indices for concatinating trial data
     indices.stimPairs = 1:4;
