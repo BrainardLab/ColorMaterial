@@ -1,17 +1,17 @@
 % qPlusImplementColorMaterialModel
 % Main script for data analysis of qPlus implementation
 
-% 04/10/2018 ar Wrote it. 
+% 04/10/2018 ar Wrote it.
 
 % Initialize
 clear; close
 
 % Experiment and Subjects to analyze
-subjectList = {'gfn', 'nkh', 'lma', 'as'};
+subjectList = {'ofv', 'dca', 'lza', 'ckf', 'hmn', 'sel', 'jcd'};
 whichExperiment = 'E3';
 
 % best overall (==1) vs. best with alternative metric
-best = 1; 
+best = 1;
 
 % Specify directories
 dataDir = fullfile(getpref('ColorMaterial', 'dataFolder'),['/' whichExperiment '/']);
@@ -30,56 +30,143 @@ nBlocks = 8;
 params = getqPlusPilotExpParams;
 params.interpCode = 'Cubic';
 
-for ss = 1:length(subjectList) 
-
-switch subjectList{ss}
-    case 'gfn'
-        if best == 1
-            params.whichDistance = 'euclidean';
-            params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
-            params.smoothOrder = 3; % cubic
-            params.modelCode = 'Cubic'; 
-        else
-            params.whichDistance = 'cityblock';
+for ss = 1:length(subjectList)
+    switch subjectList{ss}
+        
+        case 'gfn'
+            if best == 1
+                params.whichDistance = 'euclidean';
+                params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+                params.smoothOrder = 3; % cubic
+                params.modelCode = 'Cubic';
+            else
+                params.whichDistance = 'cityblock';
+                params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+                params.smoothOrder = 2; % quadratic
+                params.modelCode = 'Quadratic';
+            end
+            
+        case 'nkh'
+            if best == 1
+                params.whichDistance = 'euclidean';
+                params.whichPositions = 'full'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+                params.modelCode = 'Full';
+            else
+                params.whichDistance = 'cityblock';
+                params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+                params.smoothOrder = 3; % cubic
+                params.modelCode = 'Cubic';
+            end
+            
+        case 'lma'
+            if best == 1
+                params.whichDistance = 'cityblock';
+            else
+                params.whichDistance = 'euclidean';
+            end
             params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
             params.smoothOrder = 2; % quadratic
-            params.modelCode = 'Quadratic'; 
-        end
-    case 'nkh'
-        if best == 1
-            params.whichDistance = 'euclidean';
-            params.whichPositions = 'full'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
-            params.modelCode = 'Full'; 
-        else
-            params.whichDistance = 'cityblock';
+            params.modelCode = 'Quadratic';
+            
+        case 'as'
+            if best == 1
+                params.whichDistance = 'cityblock';
+            else
+                params.whichDistance = 'euclidean';
+            end
             params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
             params.smoothOrder = 3; % cubic
-            params.modelCode = 'Cubic'; 
-        end
+            params.modelCode = 'Cubic';
+            
+        case 'ofv'
+            if best == 1
+                params.whichDistance = 'cityblock';
+            else
+                params.whichDistance = 'euclidean';
+            end
+            params.whichPositions = 'full'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+            params.modelCode = 'Full';
+            
+        case 'dca'
+            if best == 1
+                params.whichDistance = 'cityblock';
+                params.whichPositions = 'full'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+                params.modelCode = 'Full';
+            else
+                params.whichDistance = 'euclidean';
+                params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+                params.smoothOrder = 2; % quadratic
+                params.modelCode = 'Quadratic';
+            end
+            
+        case 'lza'
+            if best == 1
+                params.whichDistance = 'cityblock';
+                params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+                params.smoothOrder = 2; % quadratic
+                params.modelCode = 'Quadratic';
+            else
+                params.whichDistance = 'euclidean';
+                params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+                params.smoothOrder = 3; % cubic
+                params.modelCode = 'Cubic';
+            end
+            
+        case 'ckf'
+            if best == 1
+                params.whichDistance = 'euclidean';
+                params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+                params.smoothOrder = 3; % cubic
+                params.modelCode = 'Cubic';
+            else
+                params.whichDistance = 'cityblock';
+                params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+                params.smoothOrder = 2; % cubic
+                params.modelCode = 'Quadratic';
+            end
+            
+        case 'hmn'
+            if best == 1
+                params.whichDistance = 'euclidean';
+            else
+                params.whichDistance = 'cityblock';
+            end
+            params.whichPositions = 'full'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+            params.modelCode = 'Full';
+            
+        case 'sel'
+            if best == 1
+                params.whichDistance = 'cityblock';
+            else
+                params.whichDistance = 'euclidean';
+            end
+            params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+            params.smoothOrder = 2; % quadratic
+            params.modelCode = 'Quadratic';
+            
+        case 'jcd'
+            if best == 1
+                params.whichDistance = 'cityblock';
+            else
+                params.whichDistance = 'euclidean';
+            end
+            params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+            params.smoothOrder = 1; % linear
+            params.modelCode = 'Linear';
+            
+            %         case 'as'
+            %             if best == 1
+            %                 params.whichDistance = 'cityblock';
+            %             else
+            %                 params.whichDistance = 'euclidean';
+            %             end
+            %             params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+            %             params.smoothOrder = 3; % cubic
+            %             params.modelCode = 'Cubic';
+    end
     
-    case 'lma'
-        if best == 1
-            params.whichDistance = 'cityblock';
-        else
-            params.whichDistance = 'euclidean';
-        end
-        params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
-        params.smoothOrder = 2; % quadratic
-        params.modelCode = 'Quadratic'; 
-        
-    case 'as'
-        if best == 1
-            params.whichDistance = 'cityblock';
-        else
-            params.whichDistance = 'euclidean';
-        end
-        params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
-        params.smoothOrder = 3; % cubic
-        params.modelCode = 'Cubic'; 
-end
-
-% Add to the parameters structure parameters that 
-% define the modeling we are doing.
+    % Add to the parameters structure parameters that
+    % define the modeling we are doing.
 %
 % This is things like grid search parameters and information
 % that defines how we compute likihood in the fitting.
