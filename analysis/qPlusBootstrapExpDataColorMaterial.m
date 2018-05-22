@@ -9,7 +9,7 @@
 clear; close
 
 % Experiment and Subjects to analyze
-subjectList = {'gfn', 'nkh' 'as', 'lma'};
+subjectList = {'ofv', 'dca', 'lza', 'ckf', 'hmn', 'sel', 'jcd'};
 whichExperiment = 'E3';
 
 % Specify directories
@@ -61,6 +61,46 @@ for ss = 1:length(subjectList)
             params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
             params.smoothOrder = 3; % cubic
             params.modelCode = 'Cubic';
+            
+        case 'ofv'
+            params.whichDistance = 'cityblock';
+            params.whichPositions = 'full'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+            params.modelCode = 'Full';
+            
+        case 'dca'
+            params.whichDistance = 'cityblock';
+            params.whichPositions = 'full'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+            params.modelCode = 'Full';
+            
+        case 'lza'
+            params.whichDistance = 'cityblock';
+            params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+            params.smoothOrder = 2; % quadratic
+            params.modelCode = 'Quadratic';
+            
+        case 'ckf'
+            params.whichDistance = 'euclidean';
+            params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+            params.smoothOrder = 3; % cubic
+            params.modelCode = 'Cubic';
+            
+        case 'hmn'
+            params.whichDistance = 'euclidean';
+            params.whichPositions = 'full'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+            params.modelCode = 'Full';
+            
+        case 'sel'
+            params.whichDistance = 'cityblock';
+            params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+            params.smoothOrder = 2; % quadratic
+            params.modelCode = 'Quadratic';
+            
+        case 'jcd'
+            params.whichDistance = 'cityblock';
+            params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+            params.smoothOrder = 1; % linear
+            params.modelCode = 'Linear';
+            
     end
     params = getqPlusPilotModelingParams(params);
     
