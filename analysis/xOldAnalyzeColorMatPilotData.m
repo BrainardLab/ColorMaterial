@@ -118,7 +118,7 @@ for s = 1:nSubjects
     
     clear whichPair name
     % material variation across different color steps
-    for cDifference = 1:7;
+    for cDifference = 1:7
         pC{cDifference} = []; %#ok<*SAGROW>
         for j = 1:7 % which material level
             whichPair{j} = [];
