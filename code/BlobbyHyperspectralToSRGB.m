@@ -11,24 +11,27 @@ clear; close all;
 % Load the hyperspectral image.
 
 targetIm = {'C4M4'};%, 'C1M4', 'C7M4', 'C4M1', 'C4M7', 'C1M7', 'C7M1'}; 
-picsDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/CNST_materials/ColorMaterial/E3/';
+picsDir = '/Users1/Shared/Matlab/Experiments/Blobby/ColorSetBlobbyExp2-03-Aug-2017/renderings/Mitsuba';
 
 currentDir = pwd; 
 
-scaleFactor = 150000; % mean luminance of the lowest image. 
+scaleFactor = 650; 
 fileList = {};
 corrNameList = {};
 toneMappingFactor  = 4; 
 
 % load color matching functions
 load T_xyz1931
+S = [400    10    31];
+
+T_sensorXYZ = 683*SplineCmf(S_xyz1931,T_xyz1931,S);
 count = 0; 
 
-
-for s = 1%:2
-    tmpStr = ['MC5'];
-    filename = [picsDir 'Exp2NC' targetIm{s} '-RGB.mat'];
-    corrFilename = ['Corr' tmpStr];
+tmpStr = {'C7M1', 'C1M7', 'C4M4', 'C7M4', 'C5M4',  'C3M4', 'C1M4', 'C4M1', 'C4M3',  'C4M5', 'C4M7'};
+   
+for s = 1:length(tmpStr)
+    filename = [picsDir '/' 'Exp2NC' tmpStr{s} '.mat'];
+    corrFilename = ['Corr2' tmpStr{s}];
     fileList = [fileList, filename];
     corrNameList = [corrNameList, corrFilename];
 end
@@ -42,9 +45,9 @@ for whichFile = 1:length(fileList)
     
     % convert the hyperspectral image to XYZ, then convert XYZ to sRGB
     cd (currentDir)
-    sensorImageXYZ = rtbMultispectralToSensorImage(multispectralImage, S, T_sensorXYZ, S);
+    sensorImageXYZ = MultispectralToSensorImage(multispectralImage, S, T_sensorXYZ, S);
     cd (picsDir)
-    T_sensorXYZ = 683*SplineCmf(S_xyz1931,T_xyz1931,S);
+    
    
     % converts to linear primaries.
     [theXYZCalFormat,m,n] = ImageToCalFormat(sensorImageXYZ);

@@ -8,17 +8,27 @@
 clear; close all;
 
 % Some params
-nTests = 7;
-calNumber = 11;
-expDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/CNST_temp/ColorMaterial/Pilot/ColorMatStimuliRGB/';
-calFileName = 'EyeTrackerLCD'; 
+whichExperiment = 'E3';
+switch whichExperiment
+    case 'Pilot'
+        calFileName = 'EyeTrackerLCD'; 
+        tmpDir = getpref('ColorMaterial', 'stimulusFolder');
+        expDir = [tmpDir(1:47) 'CNST_temp/ColorMaterial/Pilot/ColorMatStimuliRGB/'];
+        nTests = 7;
+        calNumber = 11;
+
+    case 'E3'      
+        calFileName = 'ColorMaterialCalibration'; 
+        expDir = getpref('ColorMaterial', 'stimulusFolder');
+        calNumber = 1;
+end
 
 % Specify color matching function for conversion
 % Note that the numbers are slightly different depending on the color
 % matching functions one chooses.
 S = [380     2   201];
 wls = SToWls(S);
-whichCMF = 'XYZ_1931'; 
+whichCMF = 'XYZ_Phys2'; 
 switch whichCMF
     case 'XYZ_Phys2'
         load T_xyzCIEPhys2
@@ -32,13 +42,21 @@ end
 cal = LoadCalFile(calFileName, calNumber);
 cal = SetGammaMethod(cal, 0);
 cal = SetSensorColorSpace(cal, T_sensorXYZ,  S);
-
-for t  = 1:nTests
-    load([expDir, 'C' num2str(t) 'M4' '-RGB.mat']);
-    materialMatch(t,:) = computeImageMeanFromSettingsBlobby(cal, sensorImageRGB)'; clear sensorImageRGB;
-    clear sensorImageRGB;
-    
-    load([expDir, 'C4M' num2str(t) '-RGB.mat']);
-    colorMatch(t,:) = computeImageMeanFromSettingsBlobby(cal, sensorImageRGB)'; clear sensorImageRGB;
-    clear sensorImageRGB;
+switch whichExperiment
+    case 'Pilot'
+        for t  = 1:nTests
+            load([expDir, 'C' num2str(t) 'M4' '-RGB.mat']);
+            materialMatch(t,:) = computeImageMeanFromSettingsBlobby(cal, sensorImageRGB)'; clear sensorImageRGB;
+            clear sensorImageRGB;
+            
+            load([expDir, 'C4M' num2str(t) '-RGB.mat']);
+            colorMatch(t,:) = computeImageMeanFromSettingsBlobby(cal, sensorImageRGB)'; clear sensorImageRGB;
+            clear sensorImageRGB;
+        end
+    case 'E3'
+        load('Exp3ImageList.mat')
+        for i = 1:length(imageList.imageName)
+            tempImage = load([expDir '/' imageList.imageName{i} '-RGB.mat']);
+            thisStimulus(i,:) = computeImageMeanFromSettingsBlobby(cal, tempImage.sensorImageRGB)'; clear tempImage;
+        end
 end
