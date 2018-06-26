@@ -9,7 +9,7 @@
 clear; close
 
 % Experiment and Subjects to analyze
-subjectList = {'ofv', 'dca', 'lza', 'ckf', 'hmn', 'sel', 'jcd'};
+subjectList = {'nzf'};
 whichExperiment = 'E3';
 
 % Specify directories
@@ -26,7 +26,7 @@ nRepetitions = 100;
 %
 % This is stuff like the number of competitors and thier
 % nominal positions -- things that are fixed throughout
-% a particular experimental subproject.
+% a particular experimental subprojeasct.
 params = getqPlusPilotExpParams;
 
 params.interpCode = 'Cubic';
@@ -101,6 +101,11 @@ for ss = 1:length(subjectList)
             params.smoothOrder = 1; % linear
             params.modelCode = 'Linear';
             
+        case 'nzf'
+            params.whichDistance = 'cityblock';
+            params.whichPositions = 'full'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+            params.modelCode = 'Full';
+            
     end
     params = getqPlusPilotModelingParams(params);
     
@@ -110,10 +115,6 @@ for ss = 1:length(subjectList)
     tempParams = params;
     tempParams.whichPositions = 'smoothSpacing';
     tempParams.smoothOrder = 3;
-    
-    % Set up more modeling parameters
-    % 1) Which position type are we fitting? ('full', 'smoothSpacing').
-    params.whichPositions = 'full';
     
     % 2) Does material/color weight vary in fit? ('weightVary', 'weightFixed').
     params.whichWeight = 'weightVary';
