@@ -5,7 +5,7 @@
 clear; close all; 
 
 % Set params
-subjectList = {'ofv', 'dca', 'lza', 'ckf', 'hmn', 'sel', 'jcd'};
+subjectList = {'nzf', 'nkh','dca', 'hmn', 'ofv', 'gfn', 'ckf', 'lma', 'as', 'lza', 'sel', 'jcd'};
 analysisDir = [getpref('ColorMaterial', 'analysisDir'), '/E3']; 
 whichDistance = 'euclidean'; 
 cd(analysisDir)
@@ -43,5 +43,5 @@ for ss =  1:length(subjectList)
 end
 axis([0 length(subjectList)+1 -70 -40])
 set(gca,'XTick', [0:(length(subjectList)+1)]) 
-set(gca,'XTickLabel', {'', 'ofv', 'dca', 'lza', 'ckf', 'hmn', 'sel', 'jcd', '' }) 
+set(gca,'XTickLabel', {'','nzf', 'nkh','dca', 'hmn', 'ofv', 'gfn', 'ckf', 'lma', 'as', 'lza', 'sel', 'jcd', '' }) 
 FigureSave(['CrossValRes2'],gcf,'pdf');
