@@ -19,10 +19,6 @@ codeDir  = '/Users/ana/Documents/MATLAB/projects/Experiments/ColorMaterial/analy
 subjectList = {'hmneuclideanFull', 'dcacityblockFull', 'gfneuclideanCubic', 'lmacityblockQuadratic', 'ofvcityblockFull',...
     'selcityblockQuadratic', 'ckfeuclideanCubic', 'lzacityblockQuadratic', 'ascityblockCubic', 'jcdcityblockLinear', 'nkheuclideanFull', 'nzfcityblockFull'};
 subjectListID = {'hmn','dca', 'gfn', 'lma', 'ofv', 'sel','ckf', 'lza',  'as ', 'jcd',  'nkh', 'nzf'};
-% subjectList = {'nkheuclideanFull'};
-% subjectListID = {'nkh'};
- 
-
 nSubjects = length(subjectList);
 
 saveFig = 0;
@@ -32,7 +28,7 @@ for s = 1:nSubjects
     % for ww = 1:9
     clear params
     load([analysisDir '/' subjectList{s}, 'Fit.mat'])
-    cmData{s} = load([analysisDir '/' subjectListID{s}, 'cmData.mat']); 
+    colorMaterialData{s} = load([analysisDir '/' subjectListID{s}, 'cmData.mat']); 
     % fixed weight option
     %load([analysisDir '/' subjectList{s}, num2str(ww) 'FitFixedWeight.mat'])
     
@@ -46,15 +42,21 @@ for s = 1:nSubjects
     [colorSlope(s), materialSlope(s)] = qPlusColorMaterialModelPlotSolution(subject{s}.pFirstChosen, ...
         subject{s}.predictedProbabilitiesBasedOnSolution, tmpNewTrials,...
         subject{s}.returnedParams,...
-        params, analysisDir, saveFig, cmData{s}.cmDataPoints);
+        params, analysisDir, saveFig, colorMaterialData{s}.cmDataPoints);
     weight(s) = subject{s}.returnedW;
-%    ll(s,ww) = subject{s}.logLikelyFit;
-    if saveFig
-        FigureSave([subjectList{s} num2str(params.whichPositions) num2str(ww) 'FitFixedWeight'],gcf,'pdf');
-    end
+    %   ll(s,ww) = subject{s}.logLikelyFit;
+    % fixed weight option
+    %     if saveFig
+    %         FigureSave([subjectList{s} num2str(params.whichPositions) num2str(ww) 'FitFixedWeight'],gcf,'pdf');
+    %     end
     %end
 end
 
+% Comparison plots of color-material weights and positions across subjects.
+% 3 panel plot: 
+% 1) weight vs. colorSlope
+% 2) weight vs. materialSlope
+% 3) weight vs. color-materialSlope
 figure; 
 subplot(1,3, 1); hold on; 
 plot(weight, colorSlope, 'ro'); axis square
