@@ -3,7 +3,7 @@ function params = ColorMatExp3Driver(exp)
 % passed.
 
 % 12/08/17   ar Adapted it from the ColorMatExp2Driver.
-% 04/10/18   ar Read through and corrections before the experiment start
+% 04/10/18   ar Read through and made corrections before the experiment start
 try
     % Convert all the configfile parameters into simple struct values.
     cfgFile = ConfigFile(exp.configFileName);
