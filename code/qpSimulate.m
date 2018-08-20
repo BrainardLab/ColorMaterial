@@ -1,4 +1,5 @@
-% Produce different sets of qPlus simulations. 
+% Produce different sets of simulated experimental data (via qPlus simulations). 
+% Part of Quest+ testing and experimentation. 
 
 % Initialize
 clear; close all;
