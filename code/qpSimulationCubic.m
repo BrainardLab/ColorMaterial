@@ -1,5 +1,14 @@
 function qpSimulationCubic(whichDistance, whichSmoothSpacing, filename, DO_INITIALIZE)
-% Functionalize qPlus demo
+% function qpSimulationCubic(whichDistance, whichSmoothSpacing, filename, DO_INITIALIZE)
+
+% Input: 
+% whichDistance - which underlying distance to use in simulation. The code
+%                 assumes the same distance for simulation and the quest
+%                 procedure. 
+% whichSmoothSpacing - which type of position parametrisation to apply (in
+%                      terms of simulated spacing)
+% filename - string to append to filename. 
+% DO_INITIALIZE - initialize or not?
 
 %% Change to our pwd
 cd(fileparts(mfilename('fullpath')));

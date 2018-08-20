@@ -21,9 +21,11 @@ calLMS = SetSensorColorSpace(cal, T_cones_ss2,  S_cones_ss2);
 
 % Define parameters
 load('Exp3ImageList.mat')
-scaleTo = 1;%
 
+% Scaling factor (HARDCODED, based on finding the max primary)
+scaleTo = 1;
 maxPrimary = 1.9*scaleTo; % this is the one for the new set of stimuli. 
+
 % Create image lists with respect to parameters defined above .
 calData.maxPrimary = maxPrimary; 
 calData.date = cal.describe.date; 

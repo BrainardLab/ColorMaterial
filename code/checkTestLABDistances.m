@@ -1,3 +1,7 @@
+% checkTestLABDistances
+% Computes LAB distance for stimuli in Experiment 2/3 (ColorMaterialPaper).
+
+% June 2018 ar Wrote it. 
 
 S = [400, 10, 31];
 load T_xyzCIEPhys2

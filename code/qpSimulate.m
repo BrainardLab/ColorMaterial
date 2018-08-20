@@ -1,5 +1,9 @@
+% Produce different sets of qPlus simulations. 
+
+% Initialize
 clear; close all;
 
+% Set params. 
 nSets = 20; 
 nSmoothOrders = 2; 
 nDistanceTypes = 2; 
@@ -10,7 +14,7 @@ for k = 1:nDistanceTypes
     elseif k == 2
         whichDistance = 'cityblock';
     end
-    for j = 1%:nSmoothOrders
+    for j = 1:nSmoothOrders
         if j == 1
             whichSmoothSpacing = 3;
         elseif j == 2
@@ -22,6 +26,7 @@ for k = 1:nDistanceTypes
             else
                 DO_INITIALIZE = false;
             end
+            % simulate using cubic implementation of Quest+
             qpSimulationCubic(whichDistance, whichSmoothSpacing, i, DO_INITIALIZE)
             cd ([(getpref('ColorMaterial', 'mainCodeDir')), '/code'])
         end

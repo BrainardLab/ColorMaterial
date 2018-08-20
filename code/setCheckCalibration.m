@@ -13,7 +13,7 @@ calAge = GetCalibrationAge(cal);
 calWarningDays = 14;
 calErrorDays = 30;
 if strcmp(whichSubject, 'test')
-    calErrorDays = 60;
+    calErrorDays = 180;
 end
 
 if (calAge < calWarningDays)
@@ -21,7 +21,7 @@ if (calAge < calWarningDays)
 elseif (calAge < calErrorDays)
     fprintf('WARNING: Calibration is %d days old, recalibrate soon!\n',calAge);
 else
-%    error('Calibration is %d days old, recalibrate now!\n',calAge);
+    error('Calibration is %d days old, recalibrate now!\n',calAge);
 end
 
 end

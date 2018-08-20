@@ -1,8 +1,8 @@
 % computeBlobbyStimulusLuminancePilot
 % Loads Blobby images and computes mean. 
 
-% Feb 2018 ar  Adapted it from similar code used for illumination
-% discriminaiton. 
+% 02/18 ar  Adapted it from similar code used for illumination discriminaiton. 
+% 06/18 ar  Adapted it for images used in the main experiment (Exp3/CMpaper)
 
 % Initialize
 clear; close all;

@@ -1,6 +1,6 @@
 % extractxyYFromImages
 % This script is used to calibrate the color steps for rendering the
-% blobbys.
+% blobbys. Extracts values from rendered images. 
 
 % 02/10/2016 ar Wrote it.
 % 03/08/2016 ar Added options to create better spaced reflectances for the
