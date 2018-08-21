@@ -1,5 +1,5 @@
 % combineDataAcrossExperiments. 
-% In Experiment 1 we ran some additional trials. 
+% In Experiment 2 we ran some additional trials. 
 % Here we combine this data, for analysis
 
 % Note that a check which compares the reliability of the two data sets by

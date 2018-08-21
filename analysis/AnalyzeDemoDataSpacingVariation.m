@@ -1,4 +1,5 @@
-% AnalyzeDemoSpacings.m
+% AnalyzeDemoDataSpacingVariation.m
+% This is for the first-generation model (preQuest+). 
 % This script analyzes the recovered of parameters (weights, positions) from the set of simulated data with different spacings.  
 
 % 07/11/2017 ar Wrote it. 
@@ -45,19 +46,18 @@ for i = 1:length(differentSpacings)
     end
 end
 
-
 %      ColorMaterialModelPlotSolution(probabilitiesFromSimulatedData,predictedProbabilitiesBasedOnSolution, ...
 %             resizedDataProb, resizedSolutionProb, ...
 %             returnedParams, params, params.subjectName, params.conditionCode, figDir, ...
 %             saveFig, weibullplots,colIndex, matIndex, probabilitiesForActualPositions, resizedProbabilitiesForActualPositions);
 
 % plot each results for each particular set.
-for i = 4%1:length(differentSpacings)
+for i = 1:length(differentSpacings)
     k{i} = load(['/Users/ana/Dropbox (Aguirre-Brainard Lab)/CNST_analysis/ColorMaterial/demoPlots/' modelFolder{whichModel} ...
         '/DemoData' num2str(whichSimulatedWeight) 'W' num2str(nBlocks) 'Blocks' num2str(nDataSets) 'Spacing' ...
         num2str(differentSpacings(i)) 'LinFitVary.mat']);
    
-    for j = 1%:length(k{i}.dataSet)
+    for j = 1:length(k{i}.dataSet)
         ColorMaterialModelPlotSolution(k{i}.dataSet{j}.probabilitiesFromSimulatedData,...
             k{i}.dataSet{j}.predictedResponses,...
             k{i}.dataSet{j}.resizedProbabilitiesForActualPositions, ...

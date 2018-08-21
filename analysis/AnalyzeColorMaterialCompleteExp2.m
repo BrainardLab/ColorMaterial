@@ -1,13 +1,15 @@
-% AnalyzeColorMaterialExperiments
+% AnalyzeColorMaterialCompleteExp2
 % The script extracts the choice patterns and other data needed for
 % modeling and analysis from experimental code.
 %
 % 09/30/16 ar Adapted it from the previous experimental code.
 % 12/06/16 ar Modified, added comments. Made sure it gives the same result
 %             as the origanal code.
+% 08/20/18 ar Changed the function name, so that we do not confuse it with
+%             analysis for other experiments. 
 
 % Initialize.
-clc; clear ; %close all;
+clc; clear ; close all;
 
 % Specify directories
 

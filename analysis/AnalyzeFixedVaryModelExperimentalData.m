@@ -1,5 +1,6 @@
 % ColorMaterialModelCrossValidationRealData
 % Perform cross valiadation on uses it to extract model paramters.
+% This code is also part of the first-generation modeling effors. 
 %
 % 03/17/2017 ar Wrote it.
 % 04/30/2017 ar Clean up. Adding comments.

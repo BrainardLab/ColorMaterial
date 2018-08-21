@@ -1,4 +1,7 @@
-% ImplementColorMaterialModel
+% xOldAnalyzeExp3PilotData
+% We used this to analyze pilot qPlus data. 
+% It is obsolete: we ended up changing the model parameters and debugging exp code. 
+% We're only keeping this for records. 
 
 % Initialize
 clear; close

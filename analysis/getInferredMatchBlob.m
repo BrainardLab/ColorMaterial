@@ -14,7 +14,7 @@ function [matchDerived, positionDerived] = getInferredMatchBlob(competitorsInLAB
 % positionDerived - position of the inferred match in the competitor space.
 % 
 % 04/09/13 ar Wrote it. 
-
+%     2015 ar Adapted it for blob exp.     
 ratio = (yFit(comp)-xFit)/(yFit(comp)-yFit(referenceComp1)); % compute how far is it from the higher competitor and divide by their distance.
 adjustColor = (competitorsInLAB(:,comp)-competitorsInLAB(:,referenceComp1))*ratio; % get the distance between the two competitors from color coordinates
 matchDerived  = competitorsInLAB(:,comp)-adjustColor;

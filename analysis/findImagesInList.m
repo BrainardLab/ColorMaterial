@@ -1,4 +1,4 @@
-findImagesInList.m
+%findImagesInList.m
 
 images = imageList; 
 list  = compList.imageList; 
