@@ -15,22 +15,16 @@ switch whichExperiment
         subjectList = { 'mdc', 'nsk'};
         %  subjectList = {'ifj', 'ueh', 'krz', 'mdc', 'nsk', 'zpf'};
         conditionCode = {'NC', 'CY', 'CB'};
-        figAndDataDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/CNST_analysis/ColorMaterial/Experiment1';
+        figAndDataDir = [getpref('ColorMaterial', 'analysisDir') '/Experiment1'];
         load([figAndDataDir '/' 'ParamsE1P2FULL.mat'])
     
     case 'Pilot'
         % Specify other experimental parameters
         subjectList = {'zhr', 'vtr', 'scd', 'mcv', 'flj'};
         conditionCode = {'NC'};
-        figAndDataDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/CNST_analysis/ColorMaterial/Pilot';
+        figAndDataDir = [getpref('ColorMaterial', 'analysisDir') '/Pilot'];
         load([figAndDataDir '/' 'pairIndicesPilot.mat'])
         
-    case 'E3'
-        % Specify other experimental parameters
-        subjectList = {'as'};
-        conditionCode = {'NC'};
-        figAndDataDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/CNST_analysis/ColorMaterial/Pilot';
-        load([figAndDataDir '/' 'pairIndicesPilot.mat'])
 end
 nSubjects = length(subjectList);
 nConditions = length(conditionCode);
@@ -39,6 +33,8 @@ weibullplots = 0;
 
 % Get experiment paramters and model parameters. 
 params = getqPlusPilotExpParams;
+params.interpCode = 'Cubic'; 
+params.whichDistance = 'euclidean';
 params = getqPlusPilotModelingParams(params);
 
 % What sort of position fitting ('full', 'smoothSpacing').

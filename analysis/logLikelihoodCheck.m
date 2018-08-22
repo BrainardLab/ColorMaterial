@@ -1,9 +1,11 @@
+% Helper function checking log likelihood computations. 
+
 clear; 
+
 % Specify basic experiment parameters
 whichExperiment = 'E3';
-mainDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/';
-dataDir = [mainDir 'CNST_data/ColorMaterial/E3'];
-analysisDir = [mainDir 'CNST_analysis/ColorMaterial/E3']; 
+dataDir = [getpref('ColorMaterial', 'dataFolder'), '/E3'];
+analysisDir = [getpref('ColorMaterial', 'analysisDir'), '/E3'];
 
 params = getqPlusPilotExpParams;
 

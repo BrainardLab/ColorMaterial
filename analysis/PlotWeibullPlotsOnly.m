@@ -9,8 +9,8 @@
 clear; close all;
 
 % Set directories and set which experiment to bootstrap
-codeDir = '/Users/ana/Documents/MATLAB/projects/Experiments/ColorMaterial/analysis';
-analysisDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/CNST_analysis/ColorMaterial'; 
+codeDir = pwd;
+analysisDir = getpref('ColorMaterial', 'analysisDir'); 
 whichExperiment = 'Pilot'; 
 
 % Set paramters for a given expeirment.

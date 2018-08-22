@@ -1,8 +1,9 @@
-%findImagesInListE1P2b.m
+% findImagesInListE1P2b.m
+% used to integrate across parts of the experiment 2. 
 clear; close all; 
-subjectName = 'mdc'; 
-compList = load(['/Users/Shared/Matlab/Experiments/ColorMaterial/code/' subjectName 'stimulusList.mat']);
-load(['/Users/Shared/Matlab/Experiments/ColorMaterial/code/' subjectName 'stimulusList2b.mat']);
+subjectName = 'mdc'; % nsk (only for subject mdc and nsk)
+compList = load(['/Users/Shared/Matlab/Experiments/ColorMaterial/code/Exp2Individualized/' subjectName 'stimulusList.mat']);
+load(['/Users/Shared/Matlab/Experiments/ColorMaterial/code/Exp2Individualized/' subjectName 'stimulusList2b.mat']);
 
 nTrialsPerCondition = 49; 
 nTrialsPerConditionNew = 42; 

@@ -69,8 +69,8 @@ for s = 1:nSubjects
     thisSubject = subject{s};
     cd (figAndDataDir)
     if strcmp(params.whichPositions, 'full')
-        save([subjectList{s} 'BootstrapCubic' num2str(nRepetitions) '-' params.whichPositions ], 'thisSubject'); clear thisSubject
+        save([subjectList{s} 'Bootstrap' num2str(nRepetitions) '-' params.whichPositions ], 'thisSubject'); clear thisSubject
     else
-    save([subjectList{s} 'BootstrapCubic' num2str(nRepetitions) '-' params.whichPositions params.smoothOrderCode], 'thisSubject', 'params'); clear thisSubject
+    save([subjectList{s} 'Bootstrap' num2str(nRepetitions) '-' params.whichPositions params.smoothOrderCode], 'thisSubject', 'params'); clear thisSubject
     end
 end

@@ -1,8 +1,8 @@
 
-clear all; 
+clear; close all; 
 
 %% Define parameters that set up parameter grid for QUEST+
-lowerLin = 1;
+lowerLin = 0.5; % was 1 in previous iteration. 
 upperLin = 6;
 lowerQuad = -0.3;
 upperQuad = -lowerQuad;

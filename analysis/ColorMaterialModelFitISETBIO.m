@@ -8,7 +8,7 @@
 
 %% Initialize and set directories and some plotting params.
 clear; close all;
-filename = 'DataForFitting15_3000_60'; 
+filename = 'ISETBIODataForFitting15_3000_60'; 
 
 % Some plotting params. Save the plots? Include Weibull plots?
 plotSolution = 1;
@@ -29,7 +29,8 @@ params.subjectName = 'ISETBIO3000';
 
 
 % Load and reformat the data 
-load([filename '.mat']);
+isetbioDir = [getpref('ColorMaterial', 'mainExpDir'), '/analysis/ISETBIOPlay/']
+load([isetbioDir filename '.mat']);
 nLevels = params.numberOfMaterialCompetitors; % note that in our implementation these are the same for both color and material
 codes = params.materialMatchColorCoords;  % note that in our implementation these are the same for both color and material
 [modelFitData, indexMatrix, imageList] = reformatISETBIOData(modelFitData, nLevels, codes); 

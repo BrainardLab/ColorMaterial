@@ -1,6 +1,7 @@
 % CrossValidatateDemoData
 % Perform cross validation on demo data to establish the quality of the model.
-%
+% - first generation modeling efforts -
+% 
 % We want to be able to compare several instancies of our model using cross
 % validation. The main goal is to figure out whether we're overfitting with
 % our many parameters. Here we use the simulated demo data to learn more

@@ -1,4 +1,4 @@
-% combineDataAcrossExperiments. 
+% combineDataAcrossExperimentsExp2. 
 % In Experiment 2 we ran some additional trials. 
 % Here we combine this data, for analysis
 
@@ -11,6 +11,7 @@ clear; close all;
 
 % First set of data
 mainDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/CNST_analysis/ColorMaterial/Experiment1/'; 
+% Only works for two subjects (nsk and mdc)
 subjectName = 'nsk'; 
 a = load([mainDir [subjectName 'SummarizedData.mat']]);
 
