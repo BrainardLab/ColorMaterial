@@ -2,7 +2,7 @@
 %Initialize
 clear; close all;
 whichExperiment = 'Pilot';
-mainDir = '/Users/radonjic/Dropbox (Aguirre-Brainard Lab)/CNST_analysis/ColorMaterial/';
+mainDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/CNST_analysis/ColorMaterial/';
 switch whichExperiment
     case 'E1P2'
         % Specify other experimental parameters

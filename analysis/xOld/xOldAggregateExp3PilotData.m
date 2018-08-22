@@ -1,4 +1,6 @@
-% ImplementColorMaterialModel
+% xOldAggregateExp3PilotData
+% Used for aggregating pilot data in Experiment 3. 
+% Obsolete. 
 
 % Initialize
 clear; close
@@ -13,7 +15,7 @@ mainDir = fullfile(getpref('ColorMaterial', 'mainExpDir'), 'analysis');
 
 % Exp parameters
 % Specify other experimental parameters
-subjectList = {'as'};
+subjectList = {'cjz'};
 nBlocks = 4;
 conditionCode = {'NC'};
 % setIndices for concatinating trial data

@@ -71,7 +71,7 @@ for s = 1:nSubjects
         subject{s}.condition{whichCondition}.totalTrialsColorMatch = NaN(nLevels, nLevels);
         trackIndices = [];
         
-        %% Got to here.
+       
         for whichMaterialOfTheColorMatch = 1:nLevels % for each of these material changes
             for whichColorOfTheMaterialMatch = 1:nLevels % and each of these color levels
                 colorMatchString = [subject{s}.Name conditionCode{whichCondition} 'C4M' num2str(whichMaterialOfTheColorMatch)];
