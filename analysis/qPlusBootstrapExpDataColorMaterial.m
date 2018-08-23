@@ -8,8 +8,11 @@
 % Initialize
 clear; close
 
-% Experiment and Subjects to analyze
-subjectList = {'nzf'};
+% Experiment and subjects to analyze
+subjectList = {'nzf', 'nkh','dca', 'hmn', ...
+    'ofv', 'gfn', 'ckf', 'lma',...
+    'cjz', 'lza', 'sel', 'jcd'};
+
 whichExperiment = 'E3';
 
 % Specify directories
@@ -56,7 +59,7 @@ for ss = 1:length(subjectList)
             params.smoothOrder = 2; % quadratic
             params.modelCode = 'Quadratic';
             
-        case 'as'
+        case 'cjz'
             params.whichDistance = 'cityblock';
             params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
             params.smoothOrder = 3; % cubic
