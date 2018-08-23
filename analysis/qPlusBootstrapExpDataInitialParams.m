@@ -1,6 +1,6 @@
 % qPlusBootstrapExpDataInitialParsms
-% Repeat the bootstrapping, but start with the best fitting params from the
-% full model, instead of the bootstrap params. 
+% Repeat the bootstrapping, but initialize with the best fitting params from the
+% best model rather than our grid of variable parameters. 
 %
 % 06/01/2018 ar Adapted it from previous modeling and bootstrapping
 %               scripts.
@@ -9,8 +9,8 @@
 clear; close
 
 % Set experiment and subjects to analyze
-subjectList = {'as', 'hmn', 'nkh', 'dca', 'ofv', 'gfn', 'ckf', 'lma',  'sel', 'jcd'};%, 'lza'};
-subjectModels = {'ascityblockCubic', 'hmneuclideanFull', 'nkheuclideanFull', 'dcacityblockFull', 'ofvcityblockFull', 'gfneuclideanCubic', 'ckfeuclideanCubic'...
+subjectList = {'cjz', 'hmn', 'nkh', 'dca', 'ofv', 'gfn', 'ckf', 'lma',  'sel', 'jcd', 'lza'};
+subjectModels = {'cjzcityblockCubic', 'hmneuclideanFull', 'nkheuclideanFull', 'dcacityblockFull', 'ofvcityblockFull', 'gfneuclideanCubic', 'ckfeuclideanCubic'...
     'lmacityblockQuadratic',  'selcityblockQuadratic', 'jcdcityblockLinear', 'lzacityblockQuadratic'};
 
 whichExperiment = 'E3';
@@ -24,12 +24,10 @@ analysisDir  = fullfile(getpref('ColorMaterial', 'analysisDir'),['/' whichExperi
 nBlocks = 8;
 nRepetitions = 100;
 
-
 % Set indices for concatinating trial data
 indices.stimPairs = 1:4;
 indices.response1 = 5;
 indices.nTrials = 6;
-
 
 for s = 1:length(subjectList)
     
@@ -62,7 +60,7 @@ for s = 1:length(subjectList)
             params.smoothOrder = 2; % quadratic
             params.modelCode = 'Quadratic';
             
-        case 'as'
+        case 'cjz'
             params.whichDistance = 'cityblock';
             params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
             params.smoothOrder = 3; % cubic
@@ -125,16 +123,10 @@ for s = 1:length(subjectList)
     %  If false, we use our rich set of 75 diffent points (takes much longer)
     params.qpParamsStart = true;
     
-      
     % Load subject data and extract initial parameters
     tempSubjFit =  load([analysisDir '/' subjectModels{s}, 'Fit.mat']); 
-    if length(tempSubjFit.thisSubject.returnedParams) < 16
-        params.qpInitialParams = [tempSubjFit.thisSubject.returnedMaterialMatchColorCoords, tempSubjFit.thisSubject.returnedColorMatchMaterialCoords, ...
-            tempSubjFit.thisSubject.returnedW, tempSubjFit.thisSubject.returnedSigma];
-    else
-        params.qpInitialParams = [tempSubjFit.thisSubject.returnedMaterialMatchColorCoords', tempSubjFit.thisSubject.returnedColorMatchMaterialCoords', ...
-            tempSubjFit.thisSubject.returnedW, tempSubjFit.thisSubject.returnedSigma];
-    end
+    params.qpInitialParams = tempSubjFit.thisSubject.returnedParams;
+    
     clear tempSubjFit
 
     % Load subject bootstrap data
@@ -163,7 +155,8 @@ for s = 1:length(subjectList)
            disp(thisSubject.bs(whichRep).newReturnedParams(end-1))
     end
     % Save
-%     cd (analysisDir)
-%     save([subjectList{s} params.whichDistance params.modelCode 'BootstrapBestParamsFit'], 'thisSubject'); clear thisSubject
-%     cd (codeDir)
+    cd (analysisDir)
+    % this 
+    save([subjectList{s} params.whichDistance params.modelCode 'BootstrapBestParamsFit'], 'thisSubject'); clear thisSubject
+    cd (codeDir)
 end
