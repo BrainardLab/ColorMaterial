@@ -21,7 +21,9 @@ nBlocks = 8;
 
 
 % Subjects to analyze
-subjectList = {'lma', 'gfn', 'nkh', 'as'};
+subjectList = {'nzf', 'nkh','dca', 'hmn', ...
+    'ofv', 'gfn', 'ckf', 'lma',...
+    'cjz', 'lza', 'sel', 'jcd'};
 
 % Load structure that matches the experimental design of
 % our initial experiments.
