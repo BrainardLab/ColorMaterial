@@ -5,7 +5,9 @@
 clear; close all; 
 
 % Set params
-subjectList = {'nzf', 'nkh','dca', 'hmn', 'ofv', 'gfn', 'ckf', 'lma', 'as', 'lza', 'sel', 'jcd'};
+subjectList = {'nzf', 'nkh','dca', 'hmn', ...
+    'ofv', 'gfn', 'ckf', 'lma',...
+    'cjz', 'lza', 'sel', 'jcd'};
 analysisDir = [getpref('ColorMaterial', 'analysisDir'), '/E3']; 
 whichDistance = 'euclidean'; 
 cd(analysisDir)
@@ -45,3 +47,21 @@ axis([0 length(subjectList)+1 -70 -40])
 set(gca,'XTick', [0:(length(subjectList)+1)]) 
 set(gca,'XTickLabel', {'','nzf', 'nkh','dca', 'hmn', 'ofv', 'gfn', 'ckf', 'lma', 'as', 'lza', 'sel', 'jcd', '' }) 
 FigureSave(['CrossValRes2'],gcf,'pdf');
+
+
+
+[H(1),P(1),CI(1,:),STATS{1}]  = ttest(full{1}.logLikelyhood, fullcb{1}.logLikelyhood); 
+[H(2),P(2),CI(2,:),STATS{2}]  = ttest(full{2}.logLikelyhood, cubiccb{2}.logLikelyhood); 
+[H(3),P(3),CI(3,:),STATS{3}]  = ttest(quadratic{3}.logLikelyhood, fullcb{3}.logLikelyhood); 
+[H(4),P(4),CI(4,:),STATS{4}]  = ttest(full{4}.logLikelyhood, fullcb{4}.logLikelyhood); 
+[H(5),P(5),CI(5,:),STATS{5}]  = ttest(full{5}.logLikelyhood, fullcb{5}.logLikelyhood); 
+[H(6),P(6),CI(6,:),STATS{6}]  = ttest(cubic{6}.logLikelyhood, quadraticcb{6}.logLikelyhood); 
+[H(7),P(7),CI(7,:),STATS{7}]  = ttest(cubic{7}.logLikelyhood, quadraticcb{7}.logLikelyhood); 
+[H(8),P(8),CI(8,:),STATS{8}]  = ttest(quadraticcb{8}.logLikelyhood, quadraticcb{8}.logLikelyhood); 
+[H(9),P(9),CI(9,:),STATS{9}]  = ttest(cubic{9}.logLikelyhood, cubiccb{9}.logLikelyhood); 
+[H(10),P(10),CI(10,:),STATS{10}]  = ttest(quadratic{10}.logLikelyhood, quadraticcb{10}.logLikelyhood); 
+[H(11),P(11),CI(11,:),STATS{11}]  = ttest(quadratic{11}.logLikelyhood, quadraticcb{11}.logLikelyhood); 
+[H(12),P(12),CI(12,:),STATS{12}]  = ttest(linear{12}.logLikelyhood, linearcb{12}.logLikelyhood); 
+
+
+
