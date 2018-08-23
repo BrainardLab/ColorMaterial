@@ -12,7 +12,8 @@ mainDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/';
 
 % Exp parameters
 % Specify other experimental parameters
-subjectList = {'as', 'as1', 'as2', 'as3', 'as4'};
+% This can not be re-run because this data is not saved. 
+subjectList = {'cjz', 'cjz1', 'cjz2', 'cjz3', 'cjz4'};
 nBlocks = [4, 1, 1, 1, 1];
 conditionCode = {'NC'};
 figAndDataDir = [mainDir 'CNST_data/ColorMaterial/E3'];

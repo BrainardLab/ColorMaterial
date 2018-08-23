@@ -10,7 +10,7 @@
 clear; close all; 
 
 % Paramters
-subjectList = {'as', 'lma', 'nkh', 'gfn', 'ofv', 'dca', 'lza', 'ckf', 'hmn', 'sel', 'jcd', 'nzf'};
+subjectList = {'cjz', 'lma', 'nkh', 'gfn', 'ofv', 'dca', 'lza', 'ckf', 'hmn', 'sel', 'jcd', 'nzf'};
 whichExperiment = 'E3';
 nTrialsPerBlock = 270;
 nBlocks = 8; 

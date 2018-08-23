@@ -45,7 +45,7 @@ for ss =  1:length(subjectList)
 end
 axis([0 length(subjectList)+1 -70 -40])
 set(gca,'XTick', [0:(length(subjectList)+1)]) 
-set(gca,'XTickLabel', {'','nzf', 'nkh','dca', 'hmn', 'ofv', 'gfn', 'ckf', 'lma', 'as', 'lza', 'sel', 'jcd', '' }) 
+set(gca,'XTickLabel', {'','nzf', 'nkh','dca', 'hmn', 'ofv', 'gfn', 'ckf', 'lma', 'cjz', 'lza', 'sel', 'jcd', '' }) 
 FigureSave(['CrossValRes2'],gcf,'pdf');
 
 

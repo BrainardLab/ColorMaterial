@@ -21,7 +21,8 @@ nBlocks = 8;
 
 
 % Subjects to analyze
-subjectList = {'as'};
+subjectList = {'cjz'};
+
 
 % Load structure that matches the experimental design of
 % our initial experiments.
@@ -163,7 +164,7 @@ for ss = 1:length(subjectList)
                 params.smoothOrder = 2;
                 params.tryWeightValues = tryWeightValues(whichModelType);
                 modelCode = ['Quadratic' 'W' num2str(params.tryWeightValues)];
-            case 'as'
+            case 'cjz'
                 params.whichPositions = 'smoothSpacing';
                 params.smoothOrder = 3;
                 params.tryWeightValues = tryWeightValues(whichModelType);
