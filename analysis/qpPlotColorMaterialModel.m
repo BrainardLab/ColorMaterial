@@ -2,7 +2,7 @@
 % Plots the color material Model results. 
 %
 % 12/16/2017 ar Wrote it. 
-% 05/30/2018 ar Edited it for paper purposes. 
+% 05/30/2018 ar Edited it for paper purposes.
 
 % Initialize
 clear; close all;
@@ -13,12 +13,12 @@ whichExperiment = 'E3';
 mainDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/';
 dataDir = [mainDir 'CNST_data/ColorMaterial/E3'];
 analysisDir = [mainDir 'CNST_analysis/ColorMaterial/E3'];
-codeDir  = '/Users/ana/Documents/MATLAB/projects/Experiments/ColorMaterial/analysis'; 
+codeDir  = '/Users/ana/Documents/MATLAB/projects/Experiments/ColorMaterial/analysis';
 
 % Specify subject model that is being fit.
 subjectList = {'hmneuclideanFull', 'dcacityblockFull', 'gfneuclideanCubic', 'lmacityblockQuadratic', 'ofvcityblockFull',...
-    'selcityblockQuadratic', 'ckfeuclideanCubic', 'lzacityblockQuadratic', 'ascityblockCubic', 'jcdcityblockLinear', 'nkheuclideanFull', 'nzfcityblockFull'};
-subjectListID = {'hmn','dca', 'gfn', 'lma', 'ofv', 'sel','ckf', 'lza',  'as ', 'jcd',  'nkh', 'nzf'};
+    'selcityblockQuadratic', 'ckfeuclideanCubic', 'lzacityblockQuadratic', 'cjzcityblockCubic', 'jcdcityblockLinear', 'nkheuclideanFull', 'nzfcityblockFull'};
+subjectListID = {'hmn','dca', 'gfn', 'lma', 'ofv', 'sel','ckf', 'lza',  'cjz', 'jcd',  'nkh', 'nzf'};
 nSubjects = length(subjectList);
 
 saveFig = 0;
@@ -28,7 +28,10 @@ for s = 1:nSubjects
     % for ww = 1:9
     clear params
     load([analysisDir '/' subjectList{s}, 'Fit.mat'])
-    colorMaterialData{s} = load([analysisDir '/' subjectListID{s}, 'cmData.mat']); 
+    colorMaterialData{s} = load([analysisDir '/' subjectListID{s}, '-colorMaterialDataPoints.mat']);
+    colorOnlyData{s} = load([analysisDir '/' subjectListID{s}, '-colorOnlyDataPoints.mat']);
+    materialOnlyData{s} = load([analysisDir '/' subjectListID{s}, '-materialOnlyDataPoints.mat']);
+    
     % fixed weight option
     %load([analysisDir '/' subjectList{s}, num2str(ww) 'FitFixedWeight.mat'])
     
@@ -43,8 +46,21 @@ for s = 1:nSubjects
         subject{s}.predictedProbabilitiesBasedOnSolution, tmpNewTrials,...
         subject{s}.returnedParams,...
         params, analysisDir, saveFig, colorMaterialData{s}.cmDataPoints);
+    
+    % Note, we need to flip the colorOnly and matrialOnly matrices (because
+    % the first chosen is in the vertical column; the oposite is the case
+    % for color material match aggregation - there material match is in the
+    % vertical column and we're tracking p of choosing the color match in
+    % the graph)
+    
+    qPlusColorMaterialModelPlotSolutionExtended(subject{s}.pFirstChosen, ...
+        subject{s}.predictedProbabilitiesBasedOnSolution, tmpNewTrials,...
+        subject{s}.returnedParams,...
+        params, analysisDir, saveFig, ...
+        colorMaterialData{s}.cmDataPoints, colorOnlyData{s}.cmDataPoints', materialOnlyData{s}.cmDataPoints');
     weight(s) = subject{s}.returnedW;
-    %   ll(s,ww) = subject{s}.logLikelyFit;
+    
+    % ll(s,ww) = subject{s}.logLikelyFit;
     % fixed weight option
     %     if saveFig
     %         FigureSave([subjectList{s} num2str(params.whichPositions) num2str(ww) 'FitFixedWeight'],gcf,'pdf');
