@@ -7,10 +7,10 @@
 clear; close
 
 % Experiment and Subjects to analyze
-subjectList = {'nkh'};
+subjectList = {'nzf', 'nkh','dca', 'hmn', 'ofv', 'gfn', 'ckf', 'lma', 'cjz', 'lza', 'sel', 'jcd'};
 whichExperiment = 'E3';
 
-% best overall (==1) vs. best with alternative metric
+% best overall (== 1) vs. best with alternative metric
 best = 1;
 
 % Specify directories
@@ -72,7 +72,7 @@ for ss = 1:length(subjectList)
             params.smoothOrder = 2; % quadratic
             params.modelCode = 'Quadratic';
             
-        case 'as'
+        case 'cjz'
             if best == 1
                 params.whichDistance = 'cityblock';
             else
@@ -333,7 +333,9 @@ for ss = 1:length(subjectList)
     % Save the outcome
     subject{ss} = thisSubject;
     cd (analysisDir)
+    %save([subjectList{ss} params.whichDistance params.modelCode num2str(round(ww,2)) 'FitFixedWeight.mat'], 'thisSubject', 'params'); clear thisSubject params
     save([subjectList{ss} params.whichDistance params.modelCode num2str(round(ww,2)) 'FitFixedWeight.mat'], 'thisSubject', 'params'); clear thisSubject params
+    
     cd(codeDir)
 end
 end
