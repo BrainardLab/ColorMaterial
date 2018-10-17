@@ -1,6 +1,10 @@
 % qPlusEvaluateCrossValidations
 % Review the results of the cross validations for different models. 
 
+% 06/xx/2018 ar Wrote it
+
+% NOTE: there is a lot of hard-coding here!
+
 % Initialize
 clear; close all; 
 
@@ -49,7 +53,7 @@ set(gca,'XTickLabel', {'','nzf', 'nkh','dca', 'hmn', 'ofv', 'gfn', 'ckf', 'lma',
 FigureSave(['CrossValRes2'],gcf,'pdf');
 
 
-
+% run the ttests for all subjects. 
 [H(1),P(1),CI(1,:),STATS{1}]  = ttest(full{1}.logLikelyhood, fullcb{1}.logLikelyhood); 
 [H(2),P(2),CI(2,:),STATS{2}]  = ttest(full{2}.logLikelyhood, cubiccb{2}.logLikelyhood); 
 [H(3),P(3),CI(3,:),STATS{3}]  = ttest(quadratic{3}.logLikelyhood, fullcb{3}.logLikelyhood); 
