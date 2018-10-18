@@ -38,9 +38,13 @@ for s = 1:nSubjects
     subject{s} = thisSubject; clear thisSubject
     params.subjectName = subjectListID{s};
     
+    % concatenate probabilities across identical trials and compute
+    % relevant data for plotting predicted vs. measured probabilities. 
+    cd(codeDir)
+    subject{s}.concatenatedProbabilities = returnConcatenatedProbabilities(subject{s}.newTrialData); 
     subject{s}.pFirstChosen = ...
-        subject{s}.firstChosen./subject{s}.newNTrials;
-    tmpNewTrials = subject{s}.newNTrials; % pass the number of new trials, for plotting.
+        subject{s}.concatenatedProbabilities(:,5)./subject{s}.concatenatedProbabilities(:,6);
+    tmpNewTrials = subject{s}.concatenatedProbabilities(:,6); % pass the number of new trials, for plotting.
     
     [colorSlope(s), materialSlope(s)] = qPlusColorMaterialModelPlotSolution(subject{s}.pFirstChosen, ...
         subject{s}.predictedProbabilitiesBasedOnSolution, tmpNewTrials,...
