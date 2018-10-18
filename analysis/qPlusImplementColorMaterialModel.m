@@ -1,5 +1,7 @@
 % qPlusImplementColorMaterialModel
 % Main script for data analysis of qPlus implementation
+% Loads data and implements color material model (the one determined to be
+% best for each subject)
 
 % 04/10/2018 ar Wrote it.
 
