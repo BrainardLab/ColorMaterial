@@ -1,4 +1,7 @@
-% qPlusDemoFitColorMaterialModel
+% qPlusTestSetFitColorMaterialModel
+% This code fits the test data produced by simulated data collected within the actual experimental code. 
+
+% 04/xx/2018 ar Wrote it, ahead of starting the experiment. 
 
 % Initialize
 clear; close
