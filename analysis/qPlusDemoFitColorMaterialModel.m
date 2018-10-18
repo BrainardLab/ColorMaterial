@@ -34,16 +34,17 @@ tempParams.smoothOrder = 3;
 params.whichPositions = 'full';
 
 % Does material/color weight vary in fit? ('weightVary', 'weightFixed').
-params.whichWeight = 'weightVary';
+params.whichWeight = 'weightFixed';
 
 % setIndices for concatinating trial data
 indices.stimPairs = 1:4;
 indices.response1 = 5;
 indices.nTrials = 6;
-
-for ss = 1 % we can modigy this is we have sets with different position spacings. 
+tryWeightValues = [0.1:0.1:0.9]; 
+for ss = 1:length(tryWeightValues) % we can modigy this is we have sets with different position spacings. 
+    params.tryWeightValues = tryWeightValues(ss); 
     for d = 1%:length(distances)
-        for i = 1:nSets
+        for i = 1%:nSets
             % Load the data set
             fileName = ['testQuest32Params' num2str(i)]; 
             warnState = warning('off','MATLAB:dispatcher:UnresolvedFunctionHandle');
@@ -112,7 +113,7 @@ for ss = 1 % we can modigy this is we have sets with different position spacings
            
             % Save
             cd (demoDir)
-            save([fileName 'Fit'], 'thisSet'); clear thisSet
+            save([fileName 'W' num2str(ss) 'Fit'], 'thisSet'); clear thisSet
             cd (codeDir)
         end
     end
