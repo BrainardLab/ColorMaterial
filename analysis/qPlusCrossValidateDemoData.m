@@ -55,8 +55,8 @@ nTrialsRun = 2160;
 % To enable the same partition across condition
 % Set cross validation parameters
 for ss = 1
-    for d = 1%:length(distances)
-        for i = 1%:nSets
+    for d = 1:length(distances)
+        for i = 1:nSets
             
             % Partition and get indices.
             % Use the same partition for each model
@@ -152,27 +152,7 @@ for ss = 1
                     'meanLogLiklihood', 'meanRMSE', 'simulatedParams', 'logLikelyqPlus');
                 clear dataSet LogLikelyhood predictedProbabilities RMSError
             end
-        % Could add print outcome here.     
+        % Could add an option to print the outcome here.     
         end
     end
 end
-%         %% Print outputs
-%         if printOutcome
-%             
-%             fprintf('meanLogLikely: %s  %.4f, %s %.4f, %s %.4f.\n', modelCode(1), tmpMeanError(1), modelCode(2), tmpMeanError(2), modelCode(3), tmpMeanError(3));
-%             
-%             for i = 1:nModelTypes
-%                 tmpMeanError(i) = mean(thisSubject.condition{whichCondition}.crossVal(whichModelType).RMSError);
-%             end
-%             fprintf('meanRMSE: %s  %.4f, %s %.4f, %s %.4f.\n', modelCode(1), tmpMeanError(1), modelCode(2), tmpMeanError(2), modelCode(3), tmpMeanError(3));
-%             
-%             modelPair = [1, 2; 1,3; 1,2];
-%             for whichModelPair = 1:length(modelPair)
-%                 [~,P,~,STATS] = ttest(thisSubject.condition{1}.crossVal(modelPair(1)).LogLikelyhood, thisSubject.condition{1}.crossVal(modelPair(2)).LogLikelyhood);
-%                 fprintf('%s Vs %s LogLikely: t(%d) = %.2f, p = %.4f, \n', modelCode(whichModelPair(1)), ...
-%                     modelCode(whichModelPair(2)), STATS.df, STATS.tstat, P);
-%                 [~,P,~,STATS] = ttest(thisSubject.condition{1}.crossVal(whichModelPair(1)).RMSError, ...
-%                     thisSubject.condition{1}.crossVal(whichModelPair(2)).RMSError);
-%                 fprintf('%s Vs %s RMSE: t(%d) = %.2f, p = %.4f, \n', modelCode(whichModelPair(1)), modelCode(whichModelPair(2)), STATS.df, STATS.tstat, P);
-%             end
-%         end
