@@ -130,13 +130,20 @@ try
             if (SIMULATE)
 %                 targetC = normrnd(0,1);
 %                 targetM = normrnd(0,1);
+%                   nominal1C = stim(1); nominal2C = stim(2); nominal1M = stim(3); nominal2M = stim4;
+%                   cubicC = 0.2; quadraticC = 0.1; linearC = 2;
+%                   cubicM = 0.1; quadraticM = 0.5; linearM = 3;
+%                   perceptualC1 = cubicC*nominal1C^3 + quadraticC*nominal1C^2 + linearC*nominal1C;
+%                   perceptualC2 = cubicC*nominal2C^3 + quadraticC*nominal2C^2 + linearC*nominal2C;
+%                   perceptualM1 = cubicM*nominal1M^3 + quadraticM*nominal1M^2 + linearM*nominal1M;
+%                   perceptualM2 = cubicM*nominal2M^3 + quadraticM*nominal2M^2 + linearM*nominal2M;                
 %                 weight = 0.2; 
 %                 if positionOne
-%                     d1 = sqrt( weight*(3*stim(1) + normrnd(0,1) - targetC)^2 + (1-weight)*(2*stim(3) + normrnd(0,1) - targetM)^2 );
-%                     d2 = sqrt( weight*(3*stim(2) + normrnd(0,1) - targetC)^2 + (1-weight)*(2*stim(4) + normrnd(0,1) - targetM)^2 );
+%                     d1 = sqrt( weight*(perceptualC1 + normrnd(0,1) - targetC)^2 + (1-weight)*(perceptualM1 + normrnd(0,1) - targetM)^2 );
+%                     d2 = sqrt( weight*(perceptualC2 + normrnd(0,1) - targetC)^2 + (1-weight)*(perceptualM1 + normrnd(0,1) - targetM)^2 );
 %                 else
-%                     d2 = sqrt( weight*(3*stim(1) + normrnd(0,1) - targetC)^2 + (1-weight)*(2*stim(3) + normrnd(0,1) - targetM)^2 );
-%                     d1 = sqrt( weight*(3*stim(2) + normrnd(0,1) - targetC)^2 + (1-weight)*(2*stim(4) + normrnd(0,1) - targetM)^2 );
+%                     d2 = sqrt( weight*(perceptualC2 + normrnd(0,1) - targetC)^2 + (1-weight)*(perceptualM1 + normrnd(0,1) - targetM)^2 );
+%                     d1 = sqrt( weight*(perceptualC1 + normrnd(0,1) - targetC)^2 + (1-weight)*(perceptualM1 + normrnd(0,1) - targetM)^2 );
 %                 end
 %                 if (d1 < d2)
 %                     outcome = 1;
