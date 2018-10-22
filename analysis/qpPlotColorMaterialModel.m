@@ -10,15 +10,16 @@ clear; close all;
 % Set directories and set which experiment to bootstrap
 % Specify basic experiment parameters
 whichExperiment = 'E3';
-mainDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/';
-dataDir = [mainDir 'CNST_data/ColorMaterial/E3'];
-analysisDir = [mainDir 'CNST_analysis/ColorMaterial/E3'];
-codeDir  = '/Users/ana/Documents/MATLAB/projects/Experiments/ColorMaterial/analysis';
-
+dataDir = [getpref('ColorMaterial', 'dataFolder') '/E3'];
+analysisDir = [getpref('ColorMaterial', 'analysisDir') '/E3'];
+codeDir = [getpref('ColorMaterial', 'mainCodeDir') 'analysis'];
 % Specify subject model that is being fit.
-subjectList = {'hmneuclideanFull', 'dcacityblockFull', 'gfneuclideanCubic', 'lmacityblockQuadratic', 'ofvcityblockFull',...
-    'selcityblockQuadratic', 'ckfeuclideanCubic', 'lzacityblockQuadratic', 'cjzcityblockCubic', 'jcdcityblockLinear', 'nkheuclideanFull', 'nzfcityblockFull'};
-subjectListID = {'hmn','dca', 'gfn', 'lma', 'ofv', 'sel','ckf', 'lza',  'cjz', 'jcd',  'nkh', 'nzf'};
+% subjectList = {'hmneuclideanFull', 'dcacityblockFull', 'gfneuclideanCubic', 'lmacityblockQuadratic', 'ofvcityblockFull',...
+%     'selcityblockQuadratic', 'ckfeuclideanCubic', 'lzacityblockQuadratic', 'cjzcityblockCubic', 'jcdcityblockLinear', 'nkheuclideanFull', 'nzfcityblockFull'};
+subjectList = { 'gfneuclideanCubic', 'lzacityblockQuadratic', 'nzfcityblockFull'};
+% subjectListID = {'hmn','dca', 'gfn', 'lma', 'ofv', 'sel','ckf', 'lza',  'cjz', 'jcd',  'nkh', 'nzf'};
+subjectListID = { 'gfn', 'lza', 'nzf'};
+
 nSubjects = length(subjectList);
 
 saveFig = 0;
@@ -37,10 +38,10 @@ for s = 1:nSubjects
     
     subject{s} = thisSubject; clear thisSubject
     params.subjectName = subjectListID{s};
+    cd (codeDir)
     
     % concatenate probabilities across identical trials and compute
     % relevant data for plotting predicted vs. measured probabilities. 
-    cd(codeDir)
     subject{s}.concatenatedProbabilities = returnConcatenatedProbabilities(subject{s}.newTrialData); 
     subject{s}.pFirstChosen = ...
         subject{s}.concatenatedProbabilities(:,5)./subject{s}.concatenatedProbabilities(:,6);
@@ -56,8 +57,7 @@ for s = 1:nSubjects
     % for color material match aggregation - there material match is in the
     % vertical column and we're tracking p of choosing the color match in
     % the graph)
-    
-    qPlusColorMaterialModelPlotSolutionExtended(subject{s}.pFirstChosen, ...
+     qPlusColorMaterialModelPlotSolutionExtended(subject{s}.pFirstChosen, ...
         subject{s}.predictedProbabilitiesBasedOnSolution, tmpNewTrials,...
         subject{s}.returnedParams,...
         params, analysisDir, saveFig, ...

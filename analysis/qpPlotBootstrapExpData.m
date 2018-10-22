@@ -12,9 +12,9 @@ clear; close all;
 
 % Set directories and set which experiment to bootstrap
 whichExperiment = 'E3';
-mainDir = '/Users/ana/Dropbox (Aguirre-Brainard Lab)/';
-analysisDir  = fullfile(getpref('ColorMaterial', 'analysisDir'),['/' whichExperiment '/']);
-codeDir  = '/Users/ana/Documents/MATLAB/projects/Experiments/ColorMaterial/analysis'; 
+dataDir = [getpref('ColorMaterial', 'dataFolder') '/E3'];
+analysisDir = [getpref('ColorMaterial', 'analysisDir') '/E3'];
+codeDir = [getpref('ColorMaterial', 'mainCodeDir') 'analysis'];
 
 % Specify subject list+models to fit  and also the number of conditions. 
 subjectList = {'hmneuclideanFull', 'dcacityblockFull', 'gfneuclideanCubic', 'lmacityblockQuadratic', 'ofvcityblockFull',...
