@@ -126,30 +126,46 @@ try
             % Simulated observer models an observer where perception
             % positions match nominal positions and color-material weight i
             % as given;
-            SIMULATE = false;
+            SIMULATE = true;
             if (SIMULATE)
-%                 targetC = normrnd(0,1);
-%                 targetM = normrnd(0,1);
-%                   nominal1C = stim(1); nominal2C = stim(2); nominal1M = stim(3); nominal2M = stim4;
-%                   cubicC = 0.2; quadraticC = 0.1; linearC = 2;
-%                   cubicM = 0.1; quadraticM = 0.5; linearM = 3;
-%                   perceptualC1 = cubicC*nominal1C^3 + quadraticC*nominal1C^2 + linearC*nominal1C;
-%                   perceptualC2 = cubicC*nominal2C^3 + quadraticC*nominal2C^2 + linearC*nominal2C;
-%                   perceptualM1 = cubicM*nominal1M^3 + quadraticM*nominal1M^2 + linearM*nominal1M;
-%                   perceptualM2 = cubicM*nominal2M^3 + quadraticM*nominal2M^2 + linearM*nominal2M;                
-%                 weight = 0.2; 
-%                 if positionOne
-%                     d1 = sqrt( weight*(perceptualC1 + normrnd(0,1) - targetC)^2 + (1-weight)*(perceptualM1 + normrnd(0,1) - targetM)^2 );
-%                     d2 = sqrt( weight*(perceptualC2 + normrnd(0,1) - targetC)^2 + (1-weight)*(perceptualM1 + normrnd(0,1) - targetM)^2 );
-%                 else
-%                     d2 = sqrt( weight*(perceptualC2 + normrnd(0,1) - targetC)^2 + (1-weight)*(perceptualM1 + normrnd(0,1) - targetM)^2 );
-%                     d1 = sqrt( weight*(perceptualC1 + normrnd(0,1) - targetC)^2 + (1-weight)*(perceptualM1 + normrnd(0,1) - targetM)^2 );
-%                 end
-%                 if (d1 < d2)
-%                     outcome = 1;
-%                 else
-%                     outcome = 2;
-%                 end
+                targetC = normrnd(0,1);
+                targetM = normrnd(0,1);
+                
+%                 % case 1 (gfn)
+%                 returnedMaterialMatchColorCoords = [-13.5030 -10.7896 -6.0141 0 6.4294 12.4506 17.2402];
+%                 returnedColorMatchMaterialCoords = [-6.4315 -4.8765 -2.5810 0 2.4118 4.1994 4.9079];
+%                 weight = 0.1635;
+%                 % case 2
+                returnedMaterialMatchColorCoords = [-6.7600 -4.5008 -2.2474 0 2.2415 4.4772 6.7069];
+                returnedColorMatchMaterialCoords = [-6.8409 -4.3864 -2.1061 0 1.9319 3.6897 5.2732];
+                weight = 0.5249;
+                % case 3
+%                 returnedMaterialMatchColorCoords = [ -4.3522   -3.2997   -1.5065         0    2.8210    4.5997    5.7661];
+%                 returnedColorMatchMaterialCoords = [-18.7953  -10.9407   -6.1138         0   10.7032   16.3053   18.9543];
+%                 weight = 0.8762;
+                nominalRangeColor = [-3:1:3];
+                nominalRangeMaterial = [-3:1:3];
+                nominalC1 = find(nominalRangeColor == stim(1));
+                nominalC2 = find(nominalRangeColor == stim(2));
+                nominalM1 = find(nominalRangeMaterial == stim(3));
+                nominalM2 = find(nominalRangeMaterial == stim(4));
+                perceptualC1 = returnedMaterialMatchColorCoords(nominalC1);
+                perceptualC2 = returnedMaterialMatchColorCoords(nominalC2);
+                perceptualM1 = returnedColorMatchMaterialCoords(nominalM1);
+                perceptualM2 = returnedColorMatchMaterialCoords(nominalM2);
+              
+                if positionOne
+                    d1 = sqrt( weight*(perceptualC1 + normrnd(0,1) - targetC)^2 + (1-weight)*(perceptualM1 + normrnd(0,1) - targetM)^2 );
+                    d2 = sqrt( weight*(perceptualC2 + normrnd(0,1) - targetC)^2 + (1-weight)*(perceptualM2 + normrnd(0,1) - targetM)^2 );
+                else
+                    d1 = sqrt( weight*(perceptualC2 + normrnd(0,1) - targetC)^2 + (1-weight)*(perceptualM2 + normrnd(0,1) - targetM)^2 );
+                    d2 = sqrt( weight*(perceptualC1 + normrnd(0,1) - targetC)^2 + (1-weight)*(perceptualM1 + normrnd(0,1) - targetM)^2 );
+                end
+                if (d1 < d2)
+                    outcome = 1;
+                else
+                    outcome = 2;
+                end
             else
                 % Flush any key presses from the previous trial and get key
                 key = -1;
@@ -210,32 +226,33 @@ try
             % experiment.  We never query it to decide what to do, but we
             % will use it to fit the data at the end.
             questDataAllTrials = qpUpdate(questDataAllTrials,stim,outcome);
-            
-            if rem(indexTrial,qPExpParams.nTrialsPerQuest)==0
-                done = (indexTrial)/qPExpParams.nTrialsPerQuest;
-                left = length(questOrder)-done;
-                if left > 0
-                    % Flush any key presses from the previous trial.
-                    key = -1;
-                    while (~isempty(key))
-                        key = mglGetKeyEvent(0);
-                    end
-                    % Report the progress
-                    Speak(['Set ' num2str(done) 'done']);
-                    if left == 1
-                        Speak([num2str(left) 'more set to go']);
-                    else
-                        Speak([num2str(left) 'more sets to go']);
-                    end
-                    Speak('Take a break or press a button to continue.');
-                    
-                    % Pause until button press
-                    pauseExp = true;
-                    while pauseExp
-                        key = mglGetKeyEvent(Inf);
-                        if ~isempty(key)
-                            if key.charCode == 'k'
-                                pauseExp = false;
+            if SIMULATE == false
+                if rem(indexTrial,qPExpParams.nTrialsPerQuest)==0
+                    done = (indexTrial)/qPExpParams.nTrialsPerQuest;
+                    left = length(questOrder)-done;
+                    if left > 0
+                        % Flush any key presses from the previous trial.
+                        key = -1;
+                        while (~isempty(key))
+                            key = mglGetKeyEvent(0);
+                        end
+                        % Report the progress
+                        Speak(['Set ' num2str(done) 'done']);
+                        if left == 1
+                            Speak([num2str(left) 'more set to go']);
+                        else
+                            Speak([num2str(left) 'more sets to go']);
+                        end
+                        Speak('Take a break or press a button to continue.');
+                        
+                        % Pause until button press
+                        pauseExp = true;
+                        while pauseExp
+                            key = mglGetKeyEvent(Inf);
+                            if ~isempty(key)
+                                if key.charCode == 'k'
+                                    pauseExp = false;
+                                end
                             end
                         end
                     end
