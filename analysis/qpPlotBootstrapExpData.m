@@ -29,6 +29,13 @@ conditionCode = {'NC'};
 nSubjects = length(subjectList);
 nConditions = length(conditionCode);
 
+% Option to plot weights from simulations. HARDCODED for select observers!  
+plotSimulations = false; 
+if plotSimulations
+    weightFromSimulation = [NaN, NaN, 0.32, NaN, NaN, NaN,  NaN, 0.69, NaN, NaN,  0.72, NaN];
+end
+
+
 % Which confidence interval
 CIrange = 68.27; % confidence interval range. %68.27%, 95.45% and 99.73% 
 CIlo = (1-CIrange/100)/2;
@@ -220,6 +227,9 @@ for s = 1:nSubjects
         'MarkerFaceColor', color , 'MarkerEdgeColor', color, 'MarkerSize', thisMarkerSize, 'color', color, 'LineWidth', 2)
     plot(s, subject{s}.bootstrapMean(end-1), 'kx', 'MarkerSize', thisMarkerSize, 'LineWidth', 2)
     plot(s, weightSecondBest(s), 'rs', 'MarkerSize', thisMarkerSize, 'LineWidth', 2)
+    if plotSimulations
+    plot(s, weightFromSimulation(s), 'bs', 'MarkerSize', thisMarkerSize, 'LineWidth', 2)
+    end
 end
 
 axis([0 nSubjects+1 0 1])
