@@ -21,9 +21,12 @@ nBlocks = 8;
 
 
 % Subjects to analyze
-subjectList = {'nzf', 'nkh','dca', 'hmn', ...
-    'ofv', 'gfn', 'ckf', 'lma',...
-    'cjz', 'lza', 'sel', 'jcd'};
+% subjectList = {'nzf', 'nkh','dca', 'hmn', ...
+%     'ofv', 'gfn', 'ckf', 'lma',...
+%     'cjz', 'lza', 'sel', 'jcd'};
+
+subjectList = {'gfksim','lzasim','nkhsim'};
+
 
 % Load structure that matches the experimental design of
 % our initial experiments.
@@ -33,7 +36,7 @@ subjectList = {'nzf', 'nkh','dca', 'hmn', ...
 % a particular experimental subproject.
 params = getqPlusPilotExpParams;
 
-params.whichDistance = 'cityblock';
+params.whichDistance = 'euclidean';
 
 params.interpCode = 'Cubic';
 

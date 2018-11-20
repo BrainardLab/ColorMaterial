@@ -9,7 +9,9 @@
 clear; close
 
 % Experiment and Subjects to analyze
-subjectList = {'nzf', 'nkh','dca', 'hmn', 'ofv', 'gfn', 'ckf', 'lma', 'cjz', 'lza', 'sel', 'jcd'};
+% subjectList = {'nzf', 'nkh','dca', 'hmn', 'ofv', 'gfn', 'ckf', 'lma', 'cjz', 'lza', 'sel', 'jcd'};
+
+subjectList = {'lzasim'};
 whichExperiment = 'E3';
 
 % best overall (== 1) vs. best with alternative metric
@@ -29,16 +31,15 @@ nBlocks = 8;
 % This is stuff like the number of competitors and thier
 % nominal positions -- things that are fixed throughout
 % a particular experimental subproject.
-tryWeightValues = [0.1:0.1:0.9]; 
+%tryWeightValues = [0.1:0.1:0.9]; 
 
 for ss = 1:length(subjectList)
-    for ww = 1:length(tryWeightValues)
+    %for ww = 1:length(tryWeightValues)
         
     params = getqPlusPilotExpParams;
     params.interpCode = 'Cubic';
     
     switch subjectList{ss}
-        
         case 'gfn'
             if best == 1
                 params.whichDistance = 'euclidean';
@@ -52,6 +53,19 @@ for ss = 1:length(subjectList)
                 params.modelCode = 'Quadratic';
             end
             
+        case 'gfksim'
+            if best == 1
+                params.whichDistance = 'euclidean';
+                params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+                params.smoothOrder = 3; % cubic
+                params.modelCode = 'Cubic';
+            else
+                params.whichDistance = 'cityblock';
+                params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+                params.smoothOrder = 3; % cubic
+                params.modelCode = 'Cubic';
+            end
+            
         case 'nkh'
             if best == 1
                 params.whichDistance = 'euclidean';
@@ -62,6 +76,17 @@ for ss = 1:length(subjectList)
                 params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
                 params.smoothOrder = 3; % cubic
                 params.modelCode = 'Cubic';
+            end
+            
+        case 'nkhsim'
+            if best == 1
+                params.whichDistance = 'euclidean';
+                params.whichPositions = 'full'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+                params.modelCode = 'Full';
+            else
+                params.whichDistance = 'cityblock';
+                params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+                params.modelCode = 'Full';
             end
             
         case 'lma'
@@ -118,6 +143,19 @@ for ss = 1:length(subjectList)
                 params.modelCode = 'Cubic';
             end
             
+        case 'lzasim'
+            if best == 1
+                params.whichDistance = 'euclidean';
+                params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+                params.smoothOrder = 2; % quadratic
+                params.modelCode = 'Quadratic';
+            else
+                params.whichDistance = 'cityblock';
+                params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+                params.smoothOrder = 2; % quadratic
+                params.modelCode = 'Quadratic';
+            end
+            
         case 'ckf'
             if best == 1
                 params.whichDistance = 'euclidean';
@@ -168,7 +206,6 @@ for ss = 1:length(subjectList)
             end
             params.whichPositions = 'full'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
             params.modelCode = 'Full';
-            
     end
     
     % Add to the parameters structure parameters that
@@ -189,8 +226,9 @@ for ss = 1:length(subjectList)
     params.qpParamsStart = false;
     
     % 2) Does material/color weight vary in fit? ('weightVary', 'weightFixed').
-    params.whichWeight = 'weightFixed';
-    params.tryWeightValues = tryWeightValues(ww);
+    params.whichWeight = 'weightVary';
+    %params.whichWeight = 'weightFixed';
+    %params.tryWeightValues = tryWeightValues(ww);
     
     % 3) Do we start the parameter search from estimated qpParams? (true/false)
     %  If false, we use our rich set of 75 diffent points (takes much longer)
@@ -319,7 +357,7 @@ for ss = 1:length(subjectList)
     [thisSubject.returnedMaterialMatchColorCoords, thisSubject.returnedColorMatchMaterialCoords, ...
         thisSubject.returnedW, thisSubject.returnedSigma]  = ColorMaterialModelXToParams(thisSubject.returnedParams, params);
     fprintf('Log 10 likelihood of data given our model parameters: %0.2f\n', thisSubject.logLikelyFit);
-    
+    params.qpParamsStart = true;
     [thisSubject.returnedParamsQP, thisSubject.logLikelyFitQP, thisSubject.predictedProbabilitiesBasedOnSolutionQP] =  FitColorMaterialModelMLDS(thisSubject.pairColorMatchColorCoords, ...
         thisSubject.pairMaterialMatchColorCoords,...
         thisSubject.pairColorMatchMaterialCoords, ...
@@ -336,8 +374,8 @@ for ss = 1:length(subjectList)
     subject{ss} = thisSubject;
     cd (analysisDir)
     %save([subjectList{ss} params.whichDistance params.modelCode num2str(round(ww,2)) 'FitFixedWeight.mat'], 'thisSubject', 'params'); clear thisSubject params
-    save([subjectList{ss} params.whichDistance params.modelCode num2str(round(ww,2)) 'FitFixedWeight.mat'], 'thisSubject', 'params'); clear thisSubject params
+    save([subjectList{ss} params.whichDistance params.modelCode  'Fit.mat'], 'thisSubject', 'params'); clear thisSubject params
     
     cd(codeDir)
-end
+%end
 end

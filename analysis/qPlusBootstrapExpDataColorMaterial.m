@@ -8,10 +8,15 @@
 % Initialize
 clear; close
 
+SIMULATED = true; 
 % Experiment and subjects to analyze
-subjectList = {'nzf', 'nkh','dca', 'hmn', ...
-    'ofv', 'gfn', 'ckf', 'lma',...
-    'cjz', 'lza', 'sel', 'jcd'};
+if SIMULATED
+        subjectList = { 'gfksim','lzasim','nkhsim'};
+else
+    subjectList = {'nzf', 'nkh','dca', 'hmn', ...
+        'ofv', 'gfn', 'ckf', 'lma',...
+        'cjz', 'lza', 'sel', 'jcd'};
+end
 
 whichExperiment = 'E3';
 
@@ -48,7 +53,18 @@ for ss = 1:length(subjectList)
             params.smoothOrder = 3; % cubic
             params.modelCode = 'Cubic';
             
+        case 'gfksim' 
+            params.whichDistance = 'euclidean';
+            params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+            params.smoothOrder = 3; % cubic
+            params.modelCode = 'Cubic';
+            
         case 'nkh'
+            params.whichDistance = 'euclidean';
+            params.whichPositions = 'full'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+            params.modelCode = 'Full';
+            
+        case 'nkhsim'
             params.whichDistance = 'euclidean';
             params.whichPositions = 'full'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
             params.modelCode = 'Full';
@@ -81,6 +97,12 @@ for ss = 1:length(subjectList)
             params.smoothOrder = 2; % quadratic
             params.modelCode = 'Quadratic';
             
+        case 'lzasim'
+            params.whichDistance = 'euclidean';
+            params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+            params.smoothOrder = 2; % quadratic
+            params.modelCode = 'Quadratic';
+       
         case 'ckf'
             params.whichDistance = 'euclidean';
             params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').

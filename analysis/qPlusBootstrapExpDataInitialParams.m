@@ -8,11 +8,17 @@
 % Initialize
 clear; close
 
+SIMULATED = true ;
 % Set experiment and subjects to analyze
-subjectList = {'cjz', 'hmn', 'nkh', 'dca', 'ofv', 'gfn', 'ckf', 'lma',  'sel', 'jcd', 'lza'};
-subjectModels = {'cjzcityblockCubic', 'hmneuclideanFull', 'nkheuclideanFull', 'dcacityblockFull', 'ofvcityblockFull', 'gfneuclideanCubic', 'ckfeuclideanCubic'...
-    'lmacityblockQuadratic',  'selcityblockQuadratic', 'jcdcityblockLinear', 'lzacityblockQuadratic'};
-
+if SIMULATED
+    subjectList = {'gfksim','lzasim','nkhsim'};
+    subjectModels = {'gfksimeuclideanCubic','lzasimeuclideanQuadratic','nkhsimeuclideanFull'};
+    
+else
+    subjectList = {'cjz', 'hmn', 'nkh', 'dca', 'ofv', 'gfn', 'ckf', 'lma',  'sel', 'jcd', 'lza'};
+    subjectModels = {'cjzcityblockCubic', 'hmneuclideanFull', 'nkheuclideanFull', 'dcacityblockFull', 'ofvcityblockFull', 'gfneuclideanCubic', 'ckfeuclideanCubic'...
+        'lmacityblockQuadratic',  'selcityblockQuadratic', 'jcdcityblockLinear', 'lzacityblockQuadratic'};
+end
 whichExperiment = 'E3';
 
 % Specify directories
@@ -104,6 +110,21 @@ for s = 1:length(subjectList)
             params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
             params.smoothOrder = 1; % linear
             params.modelCode = 'Linear';
+            
+        case 'gfksim'
+            params.whichDistance = 'euclidean';
+            params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+            params.smoothOrder = 3; % cubic
+            params.modelCode = 'Cubic';
+        case 'nkhsim'
+            params.whichDistance = 'euclidean';
+            params.whichPositions = 'full'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+            params.modelCode = 'Full';
+        case 'lzasim'
+            params.whichDistance = 'euclidean';
+            params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+            params.smoothOrder = 2; % quadratic
+            params.modelCode = 'Quadratic';
             
     end
 

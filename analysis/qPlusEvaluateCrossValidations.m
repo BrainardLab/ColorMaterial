@@ -8,10 +8,17 @@
 % Initialize
 clear; close all; 
 
+SIMULATED = true;
+
 % Set params
-subjectList = {'nzf', 'nkh','dca', 'hmn', ...
-    'ofv', 'gfn', 'ckf', 'lma',...
-    'cjz', 'lza', 'sel', 'jcd'};
+if SIMULATED
+    subjectList = { 'gfksim','lzasim','nkhsim'};
+else
+    subjectList = {'nzf', 'nkh','dca', 'hmn', ...
+        'ofv', 'gfn', 'ckf', 'lma',...
+        'cjz', 'lza', 'sel', 'jcd'};
+end
+
 analysisDir = [getpref('ColorMaterial', 'analysisDir'), '/E3']; 
 whichDistance = 'euclidean'; 
 cd(analysisDir)
@@ -24,6 +31,7 @@ for ss = 1:length(subjectList)
     linear{ss} = load([subjectList{ss} '-8FoldsCV-Linear-' whichDistance '.mat']);
     hyp1(ss,3) = ttest(quadratic{ss}.logLikelyhood, linear{ss}.logLikelyhood, 'tail' , 'right');
 end
+
 whichDistance = 'cityblock'; 
 for ss = 1:length(subjectList)
     fullcb{ss} = load([subjectList{ss} '-8FoldsCV-Full-' whichDistance '.mat']);
@@ -54,18 +62,25 @@ FigureSave(['CrossValRes2'],gcf,'pdf');
 
 
 % run the ttests for all subjects. 
-[H(1),P(1),CI(1,:),STATS{1}]  = ttest(full{1}.logLikelyhood, fullcb{1}.logLikelyhood); 
-[H(2),P(2),CI(2,:),STATS{2}]  = ttest(full{2}.logLikelyhood, cubiccb{2}.logLikelyhood); 
-[H(3),P(3),CI(3,:),STATS{3}]  = ttest(quadratic{3}.logLikelyhood, fullcb{3}.logLikelyhood); 
-[H(4),P(4),CI(4,:),STATS{4}]  = ttest(full{4}.logLikelyhood, fullcb{4}.logLikelyhood); 
-[H(5),P(5),CI(5,:),STATS{5}]  = ttest(full{5}.logLikelyhood, fullcb{5}.logLikelyhood); 
-[H(6),P(6),CI(6,:),STATS{6}]  = ttest(cubic{6}.logLikelyhood, quadraticcb{6}.logLikelyhood); 
-[H(7),P(7),CI(7,:),STATS{7}]  = ttest(cubic{7}.logLikelyhood, quadraticcb{7}.logLikelyhood); 
-[H(8),P(8),CI(8,:),STATS{8}]  = ttest(quadraticcb{8}.logLikelyhood, quadraticcb{8}.logLikelyhood); 
-[H(9),P(9),CI(9,:),STATS{9}]  = ttest(cubic{9}.logLikelyhood, cubiccb{9}.logLikelyhood); 
-[H(10),P(10),CI(10,:),STATS{10}]  = ttest(quadratic{10}.logLikelyhood, quadraticcb{10}.logLikelyhood); 
-[H(11),P(11),CI(11,:),STATS{11}]  = ttest(quadratic{11}.logLikelyhood, quadraticcb{11}.logLikelyhood); 
-[H(12),P(12),CI(12,:),STATS{12}]  = ttest(linear{12}.logLikelyhood, linearcb{12}.logLikelyhood); 
+if SIMULATED
+    [H(1),P(1),CI(1,:),STATS{1}]  = ttest(cubic{1}.logLikelyhood, cubiccb{1}.logLikelyhood);
+    [H(2),P(2),CI(2,:),STATS{2}]  = ttest(quadratic{2}.logLikelyhood, quadraticcb{2}.logLikelyhood);
+    [H(3),P(3),CI(3,:),STATS{3}]  = ttest(full{3}.logLikelyhood, fullcb{3}.logLikelyhood);
+else
+    [H(1),P(1),CI(1,:),STATS{1}]  = ttest(full{1}.logLikelyhood, fullcb{1}.logLikelyhood);
+    [H(2),P(2),CI(2,:),STATS{2}]  = ttest(full{2}.logLikelyhood, cubiccb{2}.logLikelyhood);
+    [H(3),P(3),CI(3,:),STATS{3}]  = ttest(quadratic{3}.logLikelyhood, fullcb{3}.logLikelyhood);
+    [H(4),P(4),CI(4,:),STATS{4}]  = ttest(full{4}.logLikelyhood, fullcb{4}.logLikelyhood);
+    [H(5),P(5),CI(5,:),STATS{5}]  = ttest(full{5}.logLikelyhood, fullcb{5}.logLikelyhood);
+    [H(6),P(6),CI(6,:),STATS{6}]  = ttest(cubic{6}.logLikelyhood, quadraticcb{6}.logLikelyhood);
+    [H(7),P(7),CI(7,:),STATS{7}]  = ttest(cubic{7}.logLikelyhood, quadraticcb{7}.logLikelyhood);
+    [H(8),P(8),CI(8,:),STATS{8}]  = ttest(quadraticcb{8}.logLikelyhood, quadraticcb{8}.logLikelyhood);
+    [H(9),P(9),CI(9,:),STATS{9}]  = ttest(cubic{9}.logLikelyhood, cubiccb{9}.logLikelyhood);
+    [H(10),P(10),CI(10,:),STATS{10}]  = ttest(quadratic{10}.logLikelyhood, quadraticcb{10}.logLikelyhood);
+    [H(11),P(11),CI(11,:),STATS{11}]  = ttest(quadratic{11}.logLikelyhood, quadraticcb{11}.logLikelyhood);
+    [H(12),P(12),CI(12,:),STATS{12}]  = ttest(linear{12}.logLikelyhood, linearcb{12}.logLikelyhood);
+end
+
 
 
 
