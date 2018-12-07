@@ -26,8 +26,8 @@ for i = 1:size(subjectData,1)
     
     % Now loop through all the other trials and see when the pair repeat
     for j = 1:size(subjectData,1)
-        if (subjectData(j,c1Index)==thisDataTrial(c2Index)) & (subjectData(j,c2Index)==thisDataTrial(c1Index)) & ...
-                (subjectData(j,m1Index)==thisDataTrial(m2Index)) & (subjectData(j,m2Index)==thisDataTrial(m1Index))
+        if (subjectData(j,c1Index)==thisDataTrial(c2Index)) && (subjectData(j,c2Index)==thisDataTrial(c1Index)) && ...
+                (subjectData(j,m1Index)==thisDataTrial(m2Index)) && (subjectData(j,m2Index)==thisDataTrial(m1Index))
             if j ~= i
                 indexList{i} = [indexList{i}, j];
                 % combine total trials

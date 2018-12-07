@@ -12,21 +12,27 @@ clear; close all;
 whichExperiment = 'E3';
 dataDir = [getpref('ColorMaterial', 'dataFolder') '/E3'];
 analysisDir = [getpref('ColorMaterial', 'analysisDir') '/E3'];
-codeDir = [getpref('ColorMaterial', 'mainCodeDir') 'analysis'];
-% Specify subject model that is being fit.
-% subjectList = {'hmneuclideanFull', 'dcacityblockFull', 'gfneuclideanCubic', 'lmacityblockQuadratic', 'ofvcityblockFull',...
-%     'selcityblockQuadratic', 'ckfeuclideanCubic', 'lzacityblockQuadratic', 'cjzcityblockCubic', 'jcdcityblockLinear', 'nkheuclideanFull', 'nzfcityblockFull'};
-subjectList = { 'gfneuclideanCubic', 'lzacityblockQuadratic', 'nzfcityblockFull'};
-% subjectListID = {'hmn','dca', 'gfn', 'lma', 'ofv', 'sel','ckf', 'lza',  'cjz', 'jcd',  'nkh', 'nzf'};
-subjectListID = { 'gfn', 'lza', 'nzf'};
+codeDir = [getpref('ColorMaterial', 'mainExpDir'), '/analysis'];
 
+SIMULATE = false; 
+% Specify subject model that is being fit.
+if SIMULATE == false
+    subjectList = {'hmneuclideanFull', 'dcacityblockFull', 'gfneuclideanCubic', 'lmacityblockQuadratic', 'ofvcityblockFull',...
+        'selcityblockQuadratic', 'ckfeuclideanCubic', 'lzacityblockQuadratic', 'cjzcityblockCubic', 'jcdcityblockLinear', 'nkheuclideanFull', 'nzfcityblockFull'};
+    subjectListID = {'hmn','dca', 'gfn', 'lma', 'ofv', 'sel','ckf', 'lza',  'cjz', 'jcd',  'nkh', 'nzf'};
+elseif SIMULATE == true
+    subjectListID = { 'gfn', 'lza', 'nzf'};
+    subjectList = { 'gfneuclideanCubic', 'lzacityblockQuadratic', 'nzfcityblockFull'};
+end
 nSubjects = length(subjectList);
 
 saveFig = 0;
 for s = 1:nSubjects
     % Load subject data
+    
     % fixed weight option
     % for ww = 1:9
+    
     clear params
     load([analysisDir '/' subjectList{s}, 'Fit.mat'])
     colorMaterialData{s} = load([analysisDir '/' subjectListID{s}, '-colorMaterialDataPoints.mat']);
@@ -34,7 +40,7 @@ for s = 1:nSubjects
     materialOnlyData{s} = load([analysisDir '/' subjectListID{s}, '-materialOnlyDataPoints.mat']);
     
     % fixed weight option
-    %load([analysisDir '/' subjectList{s}, num2str(ww) 'FitFixedWeight.mat'])
+    % load([analysisDir '/' subjectList{s}, num2str(ww) 'FitFixedWeight.mat'])
     
     subject{s} = thisSubject; clear thisSubject
     params.subjectName = subjectListID{s};
@@ -51,25 +57,26 @@ for s = 1:nSubjects
         subject{s}.predictedProbabilitiesBasedOnSolution, tmpNewTrials,...
         subject{s}.returnedParams,...
         params, analysisDir, saveFig, colorMaterialData{s}.cmDataPoints);
-    
+     
     % Note, we need to flip the colorOnly and matrialOnly matrices (because
     % the first chosen is in the vertical column; the oposite is the case
     % for color material match aggregation - there material match is in the
     % vertical column and we're tracking p of choosing the color match in
     % the graph)
-     qPlusColorMaterialModelPlotSolutionExtended(subject{s}.pFirstChosen, ...
+    qPlusColorMaterialModelPlotSolutionExtended(subject{s}.pFirstChosen, ...
         subject{s}.predictedProbabilitiesBasedOnSolution, tmpNewTrials,...
         subject{s}.returnedParams,...
         params, analysisDir, saveFig, ...
         colorMaterialData{s}.cmDataPoints, colorOnlyData{s}.cmDataPoints', materialOnlyData{s}.cmDataPoints');
     weight(s) = subject{s}.returnedW;
     
-    % ll(s,ww) = subject{s}.logLikelyFit;
     % fixed weight option
+    % ll(s,ww) = subject{s}.logLikelyFit;
     %     if saveFig
     %         FigureSave([subjectList{s} num2str(params.whichPositions) num2str(ww) 'FitFixedWeight'],gcf,'pdf');
     %     end
     %end
+    
 end
 
 % Comparison plots of color-material weights and positions across subjects.

@@ -1,4 +1,4 @@
-% qPlusPlotBootstrapExpData
+% qPlusPlotBootstrapSimExpData
 %
 % Plot the results of bootstrapping
 %
@@ -17,13 +17,11 @@ analysisDir = [getpref('ColorMaterial', 'analysisDir') '/E3'];
 codeDir = [getpref('ColorMaterial', 'mainCodeDir') 'analysis'];
 
 % Specify subject list+models to fit  and also the number of conditions. 
-subjectList = {'hmneuclideanFull', 'dcacityblockFull', 'gfneuclideanCubic', 'lmacityblockQuadratic', 'ofvcityblockFull',...
- 'selcityblockQuadratic', 'ckfeuclideanCubic', 'lzacityblockQuadratic', 'cjzcityblockCubic', 'jcdcityblockLinear', 'nkheuclideanFull', 'nzfcityblockFull'};
+subjectList = {'gfksimeuclideanCubic', 'lzasimeuclideanQuadratic', 'nkhsimeuclideanFull'};
 
-subjectSecondBest = {'hmncityblockFull', 'dcaeuclideanQuadratic', 'gfncityblockQuadratic', 'lmaeuclideanQuadratic', 'ofveuclideanFull', ...
-'seleuclideanQuadratic', 'ckfcityblockQuadratic', 'lzaeuclideanCubic', 'cjzeuclideanCubic', 'jcdeuclideanLinear', 'nkhcityblockCubic', 'nzfeuclideanFull'};
+subjectSecondBest = {'gfncityblockQuadratic',  'lzacityblockQuadratic', 'nkheuclideanFull'};
 
-subjectListID = {'hmn','dca', 'gfn', 'lma', 'ofv', 'sel','ckf', 'lza',  'cjz', 'jcd',  'nkh', 'nzf'};
+subjectListID = {'gfn',  'lza',   'nkh'};
 
 conditionCode = {'NC'};
 nSubjects = length(subjectList);
@@ -203,7 +201,7 @@ for s = 1:nSubjects
     set(gca,'XTickLabel',num2str(get(gca,'XTick')','%.1f'), 'FontName','Helvetica','FontSize',thisFontSize)
     cd (analysisDir)
 end
-FigureSave(['AllSubjectsCMRatioVsWeights'],gcf,'pdf');
+FigureSave(['SimulatedSubjectsCMRatioVsWeights'],gcf,'pdf');
 
 % Make a plot for all subjects
 
@@ -215,10 +213,14 @@ for i = 1:length(subjectListID)
 end
 
 for s = 1:nSubjects
+    % this is the confidence interval around the extracted weight from the
+    % full data. 
     errorbar(s, weight(s), [weight(s) - subject{s}.bootstrapCI(1, end-1)], ...
         [subject{s}.bootstrapCI(2, end-1) - weight(s)], 'o', ...
         'MarkerFaceColor', color , 'MarkerEdgeColor', color, 'MarkerSize', thisMarkerSize, 'color', color, 'LineWidth', 2)
+    % This is the mean of the bootstrapped weight
     plot(s, subject{s}.bootstrapMean(end-1), 'kx', 'MarkerSize', thisMarkerSize, 'LineWidth', 2)
+    % This is the weight from the 'real observer'
     plot(s, weightSecondBest(s), 'rs', 'MarkerSize', thisMarkerSize, 'LineWidth', 2)
 end
 
@@ -230,23 +232,8 @@ set(gca,'YTickLabel',num2str(get(gca,'YTick')','%.2f'))
 set(gca, 'Xtick', xTick,'FontName','Helvetica','FontSize',thisFontSize);
 set(gca, 'XTickLabel', labelList, 'FontName','Helvetica','FontSize',thisFontSize);
 cd (analysisDir)
-FigureSave(['Figure5:qPlusBestBootstrap'],gcf,'pdf');
+FigureSave(['FigureB1Simulated:qPlusBestBootstrap'],gcf,'pdf');
 
-for s = 1:12
+for s = 1:3
 [RHO(s),PVAL(s)] = corr([subject{s}.colorSlope./subject{s}.materialSlope]', subject{s}.returnedW'); 
 end
-
-
-figure;
-xTick = 0:nSubjects;
-for i = 1:length(subjectList)
-    labelList{i+1} = subjectListID{i};
-end
-labelList{length(subjectListID)+2} = '';
-for s = 1:nSubjects
-    plot(s, 0.2, 'o',  'MarkerFaceColor', colorsPerSubject(s,:), 'MarkerEdgeColor', colorsPerSubject(s,:), 'MarkerSize', thisMarkerSize); hold on;
-end
-axis([0 nSubjects+1 0 2])
-set(gca, 'Xtick', xTick, 'FontSize', thisFontSize-2,'XTickLabel', labelList);
-xlabel('Observers', 'FontSize', thisFontSize-2);
-FigureSave('SubjectMappingCode', gcf, 'pdf')

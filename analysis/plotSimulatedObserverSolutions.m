@@ -12,7 +12,7 @@ whichExperiment = 'E3';
 analysisDir  = fullfile(getpref('ColorMaterial', 'analysisDir'),['/' whichExperiment '/']);
 
 % Load real observers and their simulated counterparts
-subjectListSim = {'gfksimeuclideanCubic', 'lzasimcityblockQuadratic', 'nkhsimeuclideanFull'};
+subjectListSim = {'gfksimeuclideanCubic', 'lzasimeuclideanQuadratic', 'nkhsimeuclideanFull'};
 subjectList = {'gfneuclideanCubic', 'lzacityblockQuadratic', 'nkheuclideanFull'};
 
 for s = 1:length(subjectList)
