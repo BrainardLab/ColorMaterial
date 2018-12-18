@@ -51,7 +51,6 @@ subplot(1,2,2); hold on;
 for s = 1:length(subjectList)
 plot(simulated{s}.thisSubject.returnedColorMatchMaterialCoords, recovered{s}.thisSubject.returnedColorMatchMaterialCoords,...
         'o', 'MarkerFaceColor', colors{s}, 'MarkerEdgeColor', colors{s},  'MarkerSize', thisMarkerSize);
-
 end
 line([xMin, xMax],[yMin,yMax], 'color', 'k')
 axis([xMin xMax yMin yMax]); axis square;
