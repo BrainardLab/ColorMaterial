@@ -19,8 +19,7 @@ codeDir = [getpref('ColorMaterial', 'mainCodeDir') 'analysis'];
 % Specify subject list+models to fit  and also the number of conditions. 
 subjectList = {'gfksimeuclideanCubic', 'lzasimeuclideanQuadratic', 'nkhsimeuclideanFull'};
 
-subjectSecondBest = {'gfncityblockQuadratic',  'lzacityblockQuadratic', 'nkheuclideanFull'};
-
+subjectSecondBest = {'gfneuclideanCubic',  'lzacityblockQuadratic', 'nkheuclideanFull'};
 subjectListID = {'gfn',  'lza',   'nkh'};
 
 conditionCode = {'NC'};
@@ -97,7 +96,7 @@ for s = 1:nSubjects
     end
   
     % Get the second best option.
-    k = load([analysisDir '/' subjectSecondBest{s}, 'Fit.mat']);
+    k = load([analysisDir '/' subjectSecondBest{s}, 'BootstrapBestParamsFit.mat']);
     weightSecondBest(s) = k.thisSubject.returnedW; clear k;
     
     % Accumulate all parameters across repetitions
@@ -216,12 +215,12 @@ for s = 1:nSubjects
     % this is the confidence interval around the extracted weight from the
     % full data. 
     errorbar(s, weight(s), [weight(s) - subject{s}.bootstrapCI(1, end-1)], ...
-        [subject{s}.bootstrapCI(2, end-1) - weight(s)], 'o', ...
-        'MarkerFaceColor', color , 'MarkerEdgeColor', color, 'MarkerSize', thisMarkerSize, 'color', color, 'LineWidth', 2)
-    % This is the mean of the bootstrapped weight
-    plot(s, subject{s}.bootstrapMean(end-1), 'kx', 'MarkerSize', thisMarkerSize, 'LineWidth', 2)
-    % This is the weight from the 'real observer'
-    plot(s, weightSecondBest(s), 'rs', 'MarkerSize', thisMarkerSize, 'LineWidth', 2)
+        [subject{s}.bootstrapCI(2, end-1) - weight(s)], 'ko', ...
+       'MarkerSize', thisMarkerSize, 'color', color, 'LineWidth', 2)
+    
+   % This is the simulated weight (the 'real observer')
+     errorbar(s, weightSecondBest(s), 'o', ...
+        'MarkerFaceColor', color , 'MarkerEdgeColor', color, 'MarkerSize', thisMarkerSize, 'LineWidth', 2)
 end
 
 axis([0 nSubjects+1 0 1])
