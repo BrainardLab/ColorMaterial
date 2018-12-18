@@ -126,7 +126,7 @@ try
             % Simulated observer models an observer where perception
             % positions match nominal positions and color-material weight i
             % as given;
-            SIMULATE = true;
+            SIMULATE = false;
             if (SIMULATE)
                 targetC = normrnd(0,1);
                 targetM = normrnd(0,1);
@@ -135,14 +135,23 @@ try
 %                 returnedMaterialMatchColorCoords = [-13.5030 -10.7896 -6.0141 0 6.4294 12.4506 17.2402];
 %                 returnedColorMatchMaterialCoords = [-6.4315 -4.8765 -2.5810 0 2.4118 4.1994 4.9079];
 %                 weight = 0.1635;
-%                 % case 2
-                returnedMaterialMatchColorCoords = [-6.7600 -4.5008 -2.2474 0 2.2415 4.4772 6.7069];
-                returnedColorMatchMaterialCoords = [-6.8409 -4.3864 -2.1061 0 1.9319 3.6897 5.2732];
-                weight = 0.5249;
-                % case 3
+% %                 % case 2
+%                 returnedMaterialMatchColorCoords = [-6.7600 -4.5008 -2.2474 0 2.2415 4.4772 6.7069];
+%                 returnedColorMatchMaterialCoords = [-6.8409 -4.3864 -2.1061 0 1.9319 3.6897 5.2732];
+%                 weight = 0.5249;
+%                 % case 3
 %                 returnedMaterialMatchColorCoords = [ -4.3522   -3.2997   -1.5065         0    2.8210    4.5997    5.7661];
 %                 returnedColorMatchMaterialCoords = [-18.7953  -10.9407   -6.1138         0   10.7032   16.3053   18.9543];
 %                 weight = 0.8762;
+%                 % reviewer test 1
+%                 returnedMaterialMatchColorCoords = [ -3, -2, -1, 0, 1, 2, 3];
+%                 returnedColorMatchMaterialCoords = [ -3, -2, -1, 0, 1, 2, 3];
+%                 weight = 0.5;
+%              %                 % reviewer test 2
+%                 returnedMaterialMatchColorCoords = [ -3, -2, -1, 0, 1, 2, 3];
+%                 returnedColorMatchMaterialCoords = [ -6, -4, -2, 0, 2, 4, 6];
+%                 weight = 0.5;   
+%                 
                 nominalRangeColor = [-3:1:3];
                 nominalRangeMaterial = [-3:1:3];
                 nominalC1 = find(nominalRangeColor == stim(1));
