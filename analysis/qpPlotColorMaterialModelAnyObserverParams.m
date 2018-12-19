@@ -50,10 +50,46 @@ thisSParams{2} = [-14.2331
 4.1071
 0.1921
 1]; 
+
+thisSParams{3} = [  -2.9650
+   -1.9987
+   -0.9577
+         0
+    1.4499
+    2.1794
+    3.2067
+   -3.3879
+   -2.1322
+   -1.1485
+         0
+    1.7660
+    2.2131
+    3.1501
+    0.5237
+    1.0000
+]; 
+
+thisSParams{4} = [   -2.8580
+   -1.8563
+   -1.2394
+         0
+    1.3742
+    2.1816
+    2.7790
+   -7.0603
+   -4.8270
+   -2.3288
+         0
+    2.3663
+    4.5315
+    6.9871
+    0.5662
+    1.0000]; 
+
 load([analysisDir '/' 'nzfcityblockFull', 'Fit.mat'])
-subName = {'nzfMax', 'nzfMin'};  
+subName = {'nzfMax', 'nzfMin', 'EqPos', '2xEqPos'};  
 saveFig = 1; 
-for s = 1:length(thisSParams)
+for s = 4%1:length(thisSParams)
     % Load subject data
     
     % fixed weight option
