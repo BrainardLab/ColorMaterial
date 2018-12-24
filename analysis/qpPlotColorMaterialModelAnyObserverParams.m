@@ -17,6 +17,15 @@ dataDir = [getpref('ColorMaterial', 'dataFolder') '/E3'];
 analysisDir = [getpref('ColorMaterial', 'analysisDir') '/E3'];
 codeDir = [getpref('ColorMaterial', 'mainExpDir'), '/analysis'];
 
+% these are hardcoded observer parameters for Reviewer Figure in the repose
+% i.e., manuscript revision. One can paste any parameters here to visualize
+% the solution. (only the color/material levels positions figure and the
+% color material trade off functions will be shown, but not measured vs.
+% predicted probabilities, because we don't have the measured ones available from this
+% little data)
+% nzf smallest weight and related parametes recovered across bootstrapping
+% iterations
+% Reviewer Figure 2
 thisSParams{1} = [-4.2926
 -3.3973
 -1.596
@@ -33,7 +42,9 @@ thisSParams{1} = [-4.2926
 18.7696
 0.8816
 1]; 
-
+% nzf largest weight and related parametes recovered across bootstrapping
+% iterations
+% Reviewer Figure 2
 thisSParams{2} = [-14.2331
 -10.6353
 -1.8523
@@ -50,7 +61,8 @@ thisSParams{2} = [-14.2331
 4.1071
 0.1921
 1]; 
-
+% simulated positions [-3 to +3] for both dimensions and w = 0.5
+% Reviewer Figure 1
 thisSParams{3} = [  -2.9650
    -1.9987
    -0.9577
@@ -67,8 +79,10 @@ thisSParams{3} = [  -2.9650
     3.1501
     0.5237
     1.0000
-]; 
+];
 
+% simulated positions [-3 to +3] for color and [-6 to +6] for material dimensions and w = 0.5
+% Reviewer Figure 1
 thisSParams{4} = [   -2.8580
    -1.8563
    -1.2394
@@ -89,7 +103,7 @@ thisSParams{4} = [   -2.8580
 load([analysisDir '/' 'nzfcityblockFull', 'Fit.mat'])
 subName = {'nzfMax', 'nzfMin', 'EqPos', '2xEqPos'};  
 saveFig = 1; 
-for s = 4%1:length(thisSParams)
+for s = 1:length(thisSParams)
     % Load subject data
     
     % fixed weight option
