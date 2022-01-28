@@ -130,7 +130,7 @@ for s = 1:nSubjects
     
     subject{s}.bootstrapMean = ...
         mean(subject{s}.bootstrapMeans,2);
-    if subject{s}.bootstrapMean(end-1)~= mean(subject{s}.returnedW)
+    if (abs(max(subject{s}.bootstrapMean(end-1) - mean(subject{s}.returnedW)))/mean(subject{s}.returnedW) > 1e-10)
         error('Oops. Something went wrong in averaging parameter values!')
     end
     
