@@ -4,18 +4,24 @@
 
 % 04/13/2018 ar Adapted it from previous modeling and bootstrapping
 %               scripts.
+% 03/10/2022 dhb Appended _New to output filename as I'm going to try to
+%               rerun to get more bootstrap iterations.
 
 % Initialize
 clear; close
+
+% Start timer
+tic
 
 SIMULATED = true; 
 % Experiment and subjects to analyze
 if SIMULATED
         subjectList = { 'gfksim','lzasim','nkhsim'};
 else
-    subjectList = {'nzf', 'nkh','dca', 'hmn', ...
-        'ofv', 'gfn', 'ckf', 'lma',...
-        'cjz', 'lza', 'sel', 'jcd'};
+%     subjectList = {'nzf', 'nkh','dca', 'hmn', ...
+%         'ofv', 'gfn', 'ckf', 'lma',...
+%         'cjz', 'lza', 'sel', 'jcd'};
+    subjectList = {'nzf'};
 end
 
 whichExperiment = 'E3';
@@ -27,7 +33,7 @@ analysisDir  = fullfile(getpref('ColorMaterial', 'analysisDir'),['/' whichExperi
 
 % Specify other experimental parameters
 nBlocks = 8;
-nRepetitions = 100;
+nRepetitions = 10;
 
 % Load structure that matches the experimental design of
 % our initial experiments.
@@ -276,9 +282,13 @@ for ss = 1:length(subjectList)
             params);
         %    disp(thisSet.bs(whichRep).returnedParams(end-1))
     end
+
     % Save
     cd (analysisDir)
-    save([subjectList{ss} params.whichDistance params.modelCode 'BootstrapFit'], 'thisSubject'); clear thisSubject
+    save([subjectList{ss} params.whichDistance params.modelCode 'BootstrapFit_New'], 'thisSubject'); clear thisSubject
     cd (codeDir)
 end
+
+% Report timer
+tok
 
