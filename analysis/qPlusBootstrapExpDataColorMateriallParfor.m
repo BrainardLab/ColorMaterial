@@ -251,11 +251,11 @@ for ss = 1:length(subjectList)
     parfor whichRep = 1:nRepetitions
         
         % Resample the data for this iteration of bootstraping
-        clear nTrials id bootstrapData bootstrapDataAggregated
-        nTrials = size(thisSubject.rawTrialData,1);
-        id = randi(nTrials,[nTrials 1]);
-        bootstrapData = thisSubject.rawTrialData(id,:);
-        bootstrapDataAggregated{whichRep} = qPlusConcatenateRawData(bootstrapData, indices);
+        %clear nTrials id bootstrapData bootstrapDataAggregated
+        nTrials{whichRep} = size(thisSubject.rawTrialData,1);
+        id{whichRep} = randi(nTrials{whichRep},[nTrials{whichRep} 1]);
+        bootstrapData{whichRep} = thisSubject.rawTrialData(id{whichRep},:);
+        bootstrapDataAggregated{whichRep} = qPlusConcatenateRawData(bootstrapData{whichRep}, indices);
         bootstrapDataAggregatedFirstChosen{whichRep} = bootstrapDataAggregated{whichRep}(:,5);
         bootstrapDataAggregatednTrials{whichRep} = bootstrapDataAggregated{whichRep}(:,6);
  
