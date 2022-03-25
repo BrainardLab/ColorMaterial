@@ -11,7 +11,7 @@ clear; close
 % Start timing
 tic;
 
-SIMULATED = true ;
+SIMULATED = false;
 % Set experiment and subjects to analyze
 if SIMULATED
     subjectList = {'gfksim','lzasim','nkhsim'};
