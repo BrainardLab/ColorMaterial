@@ -176,7 +176,7 @@ for s = 1:length(subjectList)
     
     % Save
     cd (analysisDir)
-    save([subjectList{s} params.whichDistance params.modelCode 'BootstrapBestParamsFit'], 'thisSubject'); clear thisSubject
+    save([subjectList{s} params.whichDistance params.modelCode 'BootstrapBestParamsFit_New'], 'thisSubject'); clear thisSubject
     cd (codeDir)
 end
 
