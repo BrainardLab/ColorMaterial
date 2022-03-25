@@ -15,9 +15,13 @@ if SIMULATED
     subjectModels = {'gfksimeuclideanCubic','lzasimeuclideanQuadratic','nkhsimeuclideanFull'};
     
 else
-    subjectList = {'cjz', 'hmn', 'nkh', 'dca', 'ofv', 'gfn', 'ckf', 'lma',  'sel', 'jcd', 'lza'};
-    subjectModels = {'cjzcityblockCubic', 'hmneuclideanFull', 'nkheuclideanFull', 'dcacityblockFull', 'ofvcityblockFull', 'gfneuclideanCubic', 'ckfeuclideanCubic'...
-        'lmacityblockQuadratic',  'selcityblockQuadratic', 'jcdcityblockLinear', 'lzacityblockQuadratic'};
+%     subjectList = {'cjz', 'hmn', 'nkh', 'dca', 'ofv', 'gfn', 'ckf', 'lma',  'sel', 'jcd', 'lza' 'nzf'};
+%     subjectModels = {'cjzcityblockCubic', 'hmneuclideanFull', 'nkheuclideanFull', 'dcacityblockFull', 'ofvcityblockFull', 'gfneuclideanCubic', 'ckfeuclideanCubic'...
+%         'lmacityblockQuadratic',  'selcityblockQuadratic', 'jcdcityblockLinear', 'lzacityblockQuadratic', 'nzfcityblockFull'};
+
+    subjectList = {'nzf'};
+    subjectModels = {'nzfcityblockFull'};
+
 end
 whichExperiment = 'E3';
 
@@ -28,7 +32,7 @@ analysisDir  = fullfile(getpref('ColorMaterial', 'analysisDir'),['/' whichExperi
 
 % Specify other experimental parameters
 nBlocks = 8;
-nRepetitions = 100;
+nRepetitions = 1000;
 
 % Set indices for concatinating trial data
 indices.stimPairs = 1:4;
@@ -152,7 +156,7 @@ for s = 1:length(subjectList)
 
     % Load subject bootstrap data
     clear thisSubject
-    load([analysisDir '/' subjectModels{s}, 'BootstrapFit.mat'])
+    load([analysisDir '/' subjectModels{s}, 'BootstrapFit_New.mat'])
 
     % Do bootstraps in parfor
     parfor whichRep = 1:nRepetitions
