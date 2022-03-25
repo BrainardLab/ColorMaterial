@@ -182,7 +182,6 @@ for ss = 1:length(subjectList)
     qpInit = load([dataDir, 'initalizedQuestsExp3-09-Apr-2018.mat']);
     warning(warnState);
     
-    
     % Set up the quest data structure that updates.
     clear questDataAllTrials;
     questDataAllTrials = qpInit.questData{end};
@@ -290,5 +289,5 @@ for ss = 1:length(subjectList)
 end
 
 % Report timer
-tok
+toc
 
