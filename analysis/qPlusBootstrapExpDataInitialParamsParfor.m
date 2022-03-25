@@ -8,6 +8,9 @@
 % Initialize
 clear; close
 
+% Start timing
+tic;
+
 SIMULATED = true ;
 % Set experiment and subjects to analyze
 if SIMULATED
@@ -176,6 +179,9 @@ for s = 1:length(subjectList)
     save([subjectList{s} params.whichDistance params.modelCode 'BootstrapBestParamsFit'], 'thisSubject'); clear thisSubject
     cd (codeDir)
 end
+
+% Finish timing
+toc
 
 function [returnedParams,logLikelyFit,predictedProbabilitiesBasedOnSolution] = InnerLoopFun(i,thisSubject,params)
 
