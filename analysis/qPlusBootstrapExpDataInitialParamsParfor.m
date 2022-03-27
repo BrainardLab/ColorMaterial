@@ -117,6 +117,11 @@ for s = 1:length(subjectList)
             params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
             params.smoothOrder = 1; % linear
             params.modelCode = 'Linear';
+
+        case 'nzf'
+            params.whichDistance = 'cityblock';
+            params.whichPositions = 'full'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
+            params.modelCode = 'Full';
             
         case 'gfksim'
             params.whichDistance = 'euclidean';
@@ -131,8 +136,7 @@ for s = 1:length(subjectList)
             params.whichDistance = 'euclidean';
             params.whichPositions = 'smoothSpacing'; %1) Which position type are we fitting? ('full', 'smoothSpacing').
             params.smoothOrder = 2; % quadratic
-            params.modelCode = 'Quadratic';
-            
+            params.modelCode = 'Quadratic';     
     end
 
     % Add to the parameters structure parameters that
