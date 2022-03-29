@@ -21,7 +21,7 @@ else
 %     subjectList = {'nzf', 'nkh','dca', 'hmn', ...
 %         'ofv', 'gfn', 'ckf', 'lma',...
 %         'cjz', 'lza', 'sel', 'jcd'};
-    subjectList = {'nzf'};
+    subjectList = {'dca'};
 end
 
 whichExperiment = 'E3';
