@@ -33,7 +33,7 @@ analysisDir  = fullfile(getpref('ColorMaterial', 'analysisDir'),['/' whichExperi
 
 % Specify other experimental parameters
 nBlocks = 8;
-nRepetitions = 10;
+nRepetitions = 1000;
 
 % Load structure that matches the experimental design of
 % our initial experiments.
