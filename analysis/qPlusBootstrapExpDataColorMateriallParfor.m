@@ -266,7 +266,7 @@ for ss = 1:length(subjectList)
 
     % Deal bootstraps the way before we wrote the parfor loop.
     for whichRep = 1:nRepetitions
-        thisSubject.bs(whichRep).bootstrapDataAggregated{whichRep};
+        thisSubject.bs(whichRep).bootstrapDataAggregated{whichRep} = bootstrapDataAggregated{whichRep};
         thisSubject.bs(whichRep).bootstrapDataAggregatedFirstChosen = bootstrapDataAggregatedFirstChosen{whichRep};
         thisSubject.bs(whichRep).bootstrapDataAggregatednTrials = bootstrapDataAggregatednTrials{whichRep};
         thisSubject.bs(whichRep).pFirstChosen = bootstrapDataAggregatedFirstChosen{whichRep}./...
