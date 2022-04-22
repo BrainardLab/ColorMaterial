@@ -6,7 +6,7 @@
 %               scripts.
 
 % Initialize
-clear; close
+clear; close;
 
 SIMULATED = true ;
 % Set experiment and subjects to analyze
