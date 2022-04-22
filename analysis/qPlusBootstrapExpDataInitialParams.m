@@ -8,7 +8,7 @@
 % Initialize
 clear; close;
 
-SIMULATED = true ;
+SIMULATED = false;
 % Set experiment and subjects to analyze
 if SIMULATED
     subjectList = {'gfksim','lzasim','nkhsim'};
@@ -152,16 +152,16 @@ for s = 1:length(subjectList)
 
     % Load subject bootstrap data
     clear thisSubject
-    load([analysisDir '/' subjectModels{s}, 'BootstrapFit.mat'])
+    load([analysisDir '/' subjectModels{s}, 'BootstrapFit_New.mat'])
 
     for whichRep = 1:nRepetitions
         
         % Convert the information about pairs to 'our prefered representation'
         clear pairColorMatchColorCoords pairMaterialMatchColorCoords pairColorMatchMaterialCoords pairMaterialMatchMaterialCoords
-        pairColorMatchColorCoords = thisSubject.bs(whichRep).bootstrapDataAggregated(:,1);
-        pairMaterialMatchColorCoords = thisSubject.bs(whichRep).bootstrapDataAggregated(:,2);
-        pairColorMatchMaterialCoords = thisSubject.bs(whichRep).bootstrapDataAggregated(:,3);
-        pairMaterialMatchMaterialCoords = thisSubject.bs(whichRep).bootstrapDataAggregated(:,4);
+        pairColorMatchColorCoords = thisSubject.bs(whichRep).bootstrapDataAggregated{whichRep}(:,1);
+        pairMaterialMatchColorCoords = thisSubject.bs(whichRep).bootstrapDataAggregated{whichRep}(:,2);
+        pairColorMatchMaterialCoords = thisSubject.bs(whichRep).bootstrapDataAggregated{whichRep}(:,3);
+        pairMaterialMatchMaterialCoords = thisSubject.bs(whichRep).bootstrapDataAggregated{whichRep}(:,4);
         
         [thisSubject.bs(whichRep).newReturnedParams, thisSubject.bs(whichRep).newLogLikelyFit, ...
             thisSubject.bs(whichRep).newPredictedProbabilitiesBasedOnSolution] = ...
@@ -178,6 +178,6 @@ for s = 1:length(subjectList)
     % Save
     cd (analysisDir)
     % this 
-    save([subjectList{s} params.whichDistance params.modelCode 'BootstrapBestParamsFit'], 'thisSubject'); clear thisSubject
+    save([subjectList{s} params.whichDistance params.modelCode 'BootstrapBestParamsFit_New'], 'thisSubject'); clear thisSubject
     cd (codeDir)
 end
