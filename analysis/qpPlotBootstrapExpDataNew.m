@@ -17,19 +17,19 @@ analysisDir = [getpref('ColorMaterial', 'analysisDir') '/E3'];
 codeDir = [getpref('ColorMaterial', 'mainCodeDir') 'analysis'];
 
 % Specify subject list+models to fit  and also the number of conditions. 
-% subjectList = {'hmneuclideanFull', 'dcacityblockFull', 'gfneuclideanCubic', 'lmacityblockQuadratic', 'ofvcityblockFull',...
-%  'selcityblockQuadratic', 'ckfeuclideanCubic', 'lzacityblockQuadratic', 'cjzcityblockCubic', 'jcdcityblockLinear', 'nkheuclideanFull', 'nzfcityblockFull'};
-% 
-% subjectSecondBest = {'hmncityblockFull', 'dcaeuclideanQuadratic', 'gfncityblockQuadratic', 'lmaeuclideanQuadratic', 'ofveuclideanFull', ...
-% 'seleuclideanQuadratic', 'ckfcityblockQuadratic', 'lzaeuclideanCubic', 'cjzeuclideanCubic', 'jcdeuclideanLinear', 'nkhcityblockCubic', 'nzfeuclideanFull'};
-% 
-% subjectListID = {'hmn','dca', 'gfn', 'lma', 'ofv', 'sel','ckf', 'lza',  'cjz', 'jcd',  'nkh', 'nzf'};
+subjectList = {'hmneuclideanFull', 'dcacityblockFull', 'gfneuclideanCubic', 'lmacityblockQuadratic', 'ofvcityblockFull',...
+  'selcityblockQuadratic', 'ckfeuclideanCubic', 'lzacityblockQuadratic', 'cjzcityblockCubic', 'jcdcityblockLinear', 'nkheuclideanFull', 'nzfcityblockFull'};
 
-subjectList = {'nzfcityblockFull'};
+subjectSecondBest = {'hmncityblockFull', 'dcaeuclideanQuadratic', 'gfncityblockQuadratic', 'lmaeuclideanQuadratic', 'ofveuclideanFull', ...
+  'seleuclideanQuadratic', 'ckfcityblockQuadratic', 'lzaeuclideanCubic', 'cjzeuclideanCubic', 'jcdeuclideanLinear', 'nkhcityblockCubic', 'nzfeuclideanFull'};
 
-subjectSecondBest = {'nzfeuclideanFull'};
+subjectListID = {'hmn','dca', 'gfn', 'lma', 'ofv', 'sel','ckf', 'lza',  'cjz', 'jcd',  'nkh', 'nzf'};
 
-subjectListID = {'nzf'};
+%subjectList = {'nzfcityblockFull'};
+
+%subjectSecondBest = {'nzfeuclideanFull'};
+
+%subjectListID = {'nzf'};
 
 conditionCode = {'NC'};
 nSubjects = length(subjectList);

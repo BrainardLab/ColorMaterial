@@ -25,8 +25,6 @@ else
     subjectList = {'cjz', 'hmn', 'nkh', 'dca', 'ofv', 'gfn', 'ckf', 'lma',  'sel', 'jcd', 'lza'};
     subjectModels = {'cjzcityblockCubic', 'hmneuclideanFull', 'nkheuclideanFull', 'dcacityblockFull', 'ofvcityblockFull', 'gfneuclideanCubic', 'ckfeuclideanCubic'...
         'lmacityblockQuadratic',  'selcityblockQuadratic', 'jcdcityblockLinear', 'lzacityblockQuadratic'};
-
-
 end
 whichExperiment = 'E3';
 
@@ -169,7 +167,8 @@ for s = 1:length(subjectList)
 
     % Do bootstraps in parfor
     parfor whichRep = 1:nRepetitions
-        [newReturnedParams{whichRep},newLogLikelyFit{whichRep},newPredictedProbabilitiesBasedOnSolution{whichRep}] = InnerLoopFun(whichRep,thisSubject,params);
+        [newReturnedParams{whichRep},newLogLikelyFit{whichRep},newPredictedProbabilitiesBasedOnSolution{whichRep}] = ...
+            InnerLoopFun(whichRep,thisSubject,params);
         disp(newReturnedParams{whichRep}(end-1));
     end
 
@@ -193,10 +192,10 @@ function [returnedParams,logLikelyFit,predictedProbabilitiesBasedOnSolution] = I
 
 % Convert the information about pairs to 'our prefered representation'
 bs = thisSubject.bs(i);
-pairColorMatchColorCoords = bs.bootstrapDataAggregated(:,1);
-pairMaterialMatchColorCoords = bs.bootstrapDataAggregated(:,2);
-pairColorMatchMaterialCoords = bs.bootstrapDataAggregated(:,3);
-pairMaterialMatchMaterialCoords = bs.bootstrapDataAggregated(:,4);
+pairColorMatchColorCoords = bs.bootstrapDataAggregated{i}(:,1);
+pairMaterialMatchColorCoords = bs.bootstrapDataAggregated{i}(:,2);
+pairColorMatchMaterialCoords = bs.bootstrapDataAggregated{i}(:,3);
+pairMaterialMatchMaterialCoords = bs.bootstrapDataAggregated{i}(:,4);
 
 [returnedParams, logLikelyFit, ...
     predictedProbabilitiesBasedOnSolution] = ...
