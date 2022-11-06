@@ -21,10 +21,19 @@ else
 %     subjectList = {'cjz', 'hmn', 'nkh', 'dca', 'ofv', 'gfn', 'ckf', 'lma',  'sel', 'jcd', 'lza' 'nzf'};
 %     subjectModels = {'cjzcityblockCubic', 'hmneuclideanFull', 'nkheuclideanFull', 'dcacityblockFull', 'ofvcityblockFull', 'gfneuclideanCubic', 'ckfeuclideanCubic'...
 %         'lmacityblockQuadratic',  'selcityblockQuadratic', 'jcdcityblockLinear', 'lzacityblockQuadratic', 'nzfcityblockFull'};
+% 
+%     subjectList = {'cjz', 'hmn', 'nkh', 'dca', 'ofv', 'gfn', 'ckf', 'lma',  'sel', 'jcd', 'lza'};
+%     subjectModels = {'cjzcityblockCubic', 'hmneuclideanFull', 'nkheuclideanFull', 'dcacityblockFull', 'ofvcityblockFull', 'gfneuclideanCubic', 'ckfeuclideanCubic'...
+%         'lmacityblockQuadratic',  'selcityblockQuadratic', 'jcdcityblockLinear', 'lzacityblockQuadratic'};
 
-    subjectList = {'cjz', 'hmn', 'nkh', 'dca', 'ofv', 'gfn', 'ckf', 'lma',  'sel', 'jcd', 'lza'};
-    subjectModels = {'cjzcityblockCubic', 'hmneuclideanFull', 'nkheuclideanFull', 'dcacityblockFull', 'ofvcityblockFull', 'gfneuclideanCubic', 'ckfeuclideanCubic'...
-        'lmacityblockQuadratic',  'selcityblockQuadratic', 'jcdcityblockLinear', 'lzacityblockQuadratic'};
+     % The data for 'nzf' seems to come in a little differently, or maybe
+     % the first time we read comes in differently, or ....  
+     %
+     % In any case the indexing in the innerLoop function is not quite
+     % right for all data that this reads, for reasons I'm not going to
+     % track down right now.  DHB 11/6/22
+    subjectList = {'nzf' 'lza'};
+    subjectModels = {'nzfcityblockFull' 'lzacityblockQuadratic'};
 end
 whichExperiment = 'E3';
 
@@ -166,7 +175,7 @@ for s = 1:length(subjectList)
     load([analysisDir '/' subjectModels{s}, 'BootstrapFit_New.mat'])
 
     % Do bootstraps in parfor
-    parfor whichRep = 1:nRepetitions
+    for whichRep = 1:nRepetitions
         [newReturnedParams{whichRep},newLogLikelyFit{whichRep},newPredictedProbabilitiesBasedOnSolution{whichRep}] = ...
             InnerLoopFun(whichRep,thisSubject,params);
         disp(newReturnedParams{whichRep}(end-1));
