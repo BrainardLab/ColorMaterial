@@ -5,14 +5,17 @@
 % 06/01/2018 ar Adapted it from previous modeling and bootstrapping
 %               scripts.
 
+% After running this script, save variables subject subjectID and wieght to
+% generate overall summary file, in form I gave to Marco. DHB 11/07/22
+
 % Initialize
 clear; close
 
 % Start timing
 tic;
 
-SIMULATED = false;
 % Set experiment and subjects to analyze
+SIMULATED = false;
 if SIMULATED
     subjectList = {'gfksim','lzasim','nkhsim'};
     subjectModels = {'gfksimeuclideanCubic','lzasimeuclideanQuadratic','nkhsimeuclideanFull'};
